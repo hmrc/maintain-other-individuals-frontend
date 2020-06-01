@@ -57,13 +57,13 @@ addAnOtherIndividual.additional-content = Do you want to add a new individual?
 addAnOtherIndividual.add-them-now = Yes, I want to add them now
 addAnOtherIndividual.add-them-later = No, not now
 addAnOtherIndividual.no-complete = No, all of the individuals are up to date
-addAnOtherIndividual.error.required = Select yes if you want to add another new individual
+addAnOtherIndividual.error.required = Select yes if you want to add another individual
 addAnOtherIndividual.maxedOut = You cannot enter another individual as you have entered a maximum of 25.
 addAnOtherIndividual.maxedOut.paragraph = Check the individuals you have added. If you have further individuals to add, write to HMRC with their details.
 
-addAnOtherIndividualYesNo.title = Do you want to add another new individual?
-addAnOtherIndividualYesNo.heading = Do you want to add another new individual?
-addAnOtherIndividualYesNo.error.required = Select yes if you want to add another new individual
+addAnOtherIndividualYesNo.title = Do you want to add another individual?
+addAnOtherIndividualYesNo.heading = Do you want to add another individual?
+addAnOtherIndividualYesNo.error.required = Select yes if you want to add another individual
 
 entities.otherIndividuals = Other individuals
 entities.otherIndividual = Other individual
@@ -81,3 +81,172 @@ otherIndividual.whenRemoved.error.required = The date the other individual was r
 otherIndividual.whenRemoved.error.invalid = Enter a real date when the other individual was removed from the trust
 otherIndividual.whenRemoved.error.future = The date the other individual was removed from the trust must be today or in the past
 otherIndividual.whenRemoved.error.past = The date the other individual was removed must be on or after the date they were added
+
+otherIndividual.addressYesNo.checkYourAnswersLabel = Do you know {0}’s address?
+otherIndividual.addressYesNo.title = Do you know the individual’s address?
+otherIndividual.addressYesNo.heading = Do you know {0}’s address?
+otherIndividual.addressYesNo.error.required = Select yes if you know the individual’s address
+
+otherIndividual.checkDetails.title = Check individual details
+otherIndividual.checkDetails.heading = Check individual details
+
+otherIndividual.dateOfBirth.checkYourAnswersLabel = What is {0}’s date of birth?
+otherIndividual.dateOfBirth.title = What is the individual’s date of birth?
+otherIndividual.dateOfBirth.heading = What is {0}’s date of birth?
+otherIndividual.dateOfBirth.error.required.all = Enter a date of birth
+otherIndividual.dateOfBirth.error.required.two = Date of birth must include a {0} and a {1}
+otherIndividual.dateOfBirth.error.required = Date of birth must include a {0}
+otherIndividual.dateOfBirth.error.invalid = Enter a real date of birth
+otherIndividual.dateOfBirth.error.future = Date of birth must be today or in the past
+otherIndividual.dateOfBirth.error.past = Date of birth must be after 31 December 1499
+
+otherIndividual.dateOfBirthYesNo.checkYourAnswersLabel = Do you know {0}’s date of birth?
+otherIndividual.dateOfBirthYesNo.title = Do you know the individual’s date of birth?
+otherIndividual.dateOfBirthYesNo.heading = Do you know {0}’s date of birth?
+otherIndividual.dateOfBirthYesNo.error.required = Select yes if you know the individual’s date of birth
+
+otherIndividual.idCardDetails.checkYourAnswersLabel = What are {0}’s ID card details?
+otherIndividual.idCardDetails.title = What are the individual’s ID card details?
+otherIndividual.idCardDetails.heading = What are {0}’s ID card details?
+otherIndividual.idCardDetails.country = ID card country of issue
+otherIndividual.idCardDetails.country.error.required = Enter the individual’s ID card country of issue
+otherIndividual.idCardDetails.country.error.length = The individual’s ID card country must be 100 characters or less
+otherIndividual.idCardDetails.number = ID card number
+otherIndividual.idCardDetails.number.hint = For example, 502135326
+otherIndividual.idCardDetails.number.error.required = Enter the individual’s ID card number
+otherIndividual.idCardDetails.number.error.length = The individual’s ID card number must be 30 characters or less
+otherIndividual.idCardDetails.number.error.invalid = ID card number can only include letters and numbers
+otherIndividual.idCardDetails.expiryDate = Expiry date
+otherIndividual.idCardDetails.expiryDate.hint = Expiry date can be in the past. For example, 31 3 1980
+otherIndividual.idCardDetails.expiryDate.error.required.all = Enter the ID card expiry date
+otherIndividual.idCardDetails.expiryDate.error.required.two = ID card expiry date must include a {0} and {1}
+otherIndividual.idCardDetails.expiryDate.error.required = ID card expiry date must include a {0}
+otherIndividual.idCardDetails.expiryDate.error.invalid = Enter a real expiry date
+otherIndividual.idCardDetails.expiryDate.error.future = ID card expiry date must be after 31 December 1499 and before 01 January 2100
+otherIndividual.idCardDetails.expiryDate.error.past = ID card expiry date must be after 31 December 1499 and before 01 January 2100
+
+otherIndividual.idCardDetailsYesNo.checkYourAnswersLabel = Do you know {0}’s ID card details?
+otherIndividual.idCardDetailsYesNo.title = Do you know the individual’s ID card details?
+otherIndividual.idCardDetailsYesNo.heading = Do you know {0}’s ID card details?
+otherIndividual.idCardDetailsYesNo.error.required = Select yes if you know the individual’s ID card details
+
+otherIndividual.name.default = the individual
+otherIndividual.name.checkYourAnswersLabel = What is the name of the individual?
+otherIndividual.name.title = What is the name of the individual?
+otherIndividual.name.heading = What is the name of the individual?
+otherIndividual.name.firstName = First name
+otherIndividual.name.middleName = Middle names (optional)
+otherIndividual.name.lastName = Last name
+otherIndividual.name.error.firstName.required = Enter the individual's first name
+otherIndividual.name.error.firstName.invalid = Individual's first name must only include letters a to z, numbers 0 to 9, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+otherIndividual.name.error.lastName.required = Enter the individual's last name
+otherIndividual.name.error.lastName.invalid = Individual's last name must only include letters a to z, numbers 0 to 9, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+otherIndividual.name.error.firstName.length = Individual's first name must be 35 characters or less
+otherIndividual.name.error.middleName.length = Individual's middle names must be 35 characters or less
+otherIndividual.name.error.middleName.invalid = Individual's middle names must only include letters a to z, numbers 0 to 9, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+otherIndividual.name.error.lastName.length = Individual's last name must be 35 characters or less
+
+otherIndividual.nationalInsuranceNumberYesNo.checkYourAnswersLabel = Do you know {0}’s National Insurance number?
+otherIndividual.nationalInsuranceNumberYesNo.title = Do you know the individual’s National Insurance number?
+otherIndividual.nationalInsuranceNumberYesNo.heading = Do you know {0}’s National Insurance number?
+otherIndividual.nationalInsuranceNumberYesNo.error.required = Select yes if you know the individual’s National Insurance number
+
+otherIndividual.nationalInsuranceNumber.checkYourAnswersLabel = What is {0}’s National Insurance number?
+otherIndividual.nationalInsuranceNumber.title = What is the individual’s National Insurance number?
+otherIndividual.nationalInsuranceNumber.heading = What is {0}’s National Insurance number?
+otherIndividual.nationalInsuranceNumber.hint = It is on their National Insurance card, benefit letter, payslip or P60. For example, ‘QQ 12 34 56 C’.
+otherIndividual.nationalInsuranceNumber.error.required = Enter the individual’s National Insurance number
+otherIndividual.nationalInsuranceNumber.error.invalidFormat = Enter the individual’s National Insurance number in the correct format
+
+otherIndividual.passportDetailsYesNo.checkYourAnswersLabel = Do you know {0}’s passport details?
+otherIndividual.passportDetailsYesNo.title = Do you know the individual’s passport details?
+otherIndividual.passportDetailsYesNo.heading = Do you know {0}’s passport details?
+otherIndividual.passportDetailsYesNo.error.required = Select yes if you know the individual’s passport details
+
+otherIndividual.passportDetails.checkYourAnswersLabel = What are {0}’s passport details?
+otherIndividual.passportDetails.title = What are the individual’s passport details?
+otherIndividual.passportDetails.heading = What are {0}’s passport details?
+otherIndividual.passportDetails.country = Passport country of issue
+otherIndividual.passportDetails.country.error.required = Enter the individual’s passport country of issue
+otherIndividual.passportDetails.country.error.length = The individual’s passport country must be 100 characters or less
+otherIndividual.passportDetails.number = Passport number
+otherIndividual.passportDetails.number.hint = For example, 502135326
+otherIndividual.passportDetails.number.error.required = Enter the individual’s passport number
+otherIndividual.passportDetails.number.error.length = The individual’s passport number must be 30 characters or less
+otherIndividual.passportDetails.number.error.invalid = Passport number can only include letters and numbers
+otherIndividual.passportDetails.expiryDate = Expiry date
+otherIndividual.passportDetails.expiryDate.hint = Expiry date can be in the past. For example, 31 3 1980
+otherIndividual.passportDetails.expiryDate.error.required.all = Enter the passport expiry date
+otherIndividual.passportDetails.expiryDate.error.required.two = Passport expiry date must include a {0} and {1}
+otherIndividual.passportDetails.expiryDate.error.required = Passport expiry date must include {0}
+otherIndividual.passportDetails.expiryDate.error.invalid = Enter a real expiry date
+otherIndividual.passportDetails.expiryDate.error.future = Passport expiry date must be after 31 December 1499 and before 01 January 2100
+otherIndividual.passportDetails.expiryDate.error.past = Passport expiry date must be after 31 December 1499 and before 01 January 2100
+
+otherIndividual.ukAddress.checkYourAnswersLabel = What is {0}’s address?
+otherIndividual.ukAddress.title = What is the individual’s address?
+otherIndividual.ukAddress.heading = What is {0}’s address?
+ukAddress.error.line1.required = Enter address line 1
+ukAddress.error.line2.required = Enter address line 2
+ukAddress.error.postcode.required = Enter a postcode
+ukAddress.error.line1.length = Address line 1 must be 35 characters or less
+ukAddress.error.line2.length = Address line 2 must be 35 characters or less
+ukAddress.error.line3.length = Address line 3 must be 35 characters or less
+ukAddress.error.line4.length = Address line 4 must be 35 characters or less
+ukAddress.error.line1.invalidCharacters = Address line 1 must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+ukAddress.error.line2.invalidCharacters = Address line 2 must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+ukAddress.error.line3.invalidCharacters = Address line 3 must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+ukAddress.error.line4.invalidCharacters = Address line 4 must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+ukAddress.error.postcode.invalidCharacters = Enter a real postcode
+site.address.uk.title = What is the address?
+site.address.uk.heading = What is {0}’s address?
+site.address.uk.line1 = Address line 1
+site.address.uk.line2 = Address line 2
+site.address.uk.line3 = Address line 3 (optional)
+site.address.uk.line4 = Address line 4 (optional)
+site.address.uk.postcode = Postcode
+site.address.uk.postcode.hint = For example AB1 1AB
+
+otherIndividual.nonUkAddress.checkYourAnswersLabel = What is {0}’s address?
+otherIndividual.nonUkAddress.title = What is the individual’s address?
+otherIndividual.nonUkAddress.heading = What is {0}’s address?
+internationalAddress.error.line1.required = Enter address line 1
+internationalAddress.error.line2.required = Enter address line 2
+internationalAddress.error.country.required = Select a country
+internationalAddress.error.line1.length = Address line 1 must be 35 characters or less
+internationalAddress.error.line2.length = Address line 2 must be 35 characters or less
+internationalAddress.error.line3.length = Address line 3 must be 35 characters or less
+internationalAddress.error.line1.invalidCharacters = Address line 1 must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+internationalAddress.error.line2.invalidCharacters = Address line 2 must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+internationalAddress.error.line3.invalidCharacters = Address line 3 must only include letters a to z, numbers, ampersands (&), apostrophes, commas, forward slashes, full stops, hyphens, round brackets and spaces
+site.address.nonUk.line1 = Address line 1
+site.address.nonUk.line2 = Address line 2
+site.address.nonUk.line3 = Address line 3 (optional)
+site.address.nonUk.country = Country
+site.address.nonUk.country.select = Select a country
+
+otherIndividual.whenIndividualAdded.checkYourAnswersLabel = When was {0} added as an individual?
+otherIndividual.whenIndividualAdded.title = When was the individual added to the trust?
+otherIndividual.whenIndividualAdded.heading = When was {0} added as an individual?
+otherIndividual.whenIndividualAdded.hint = Check the trust deed or the power of appointment document. For example, 31 3 1980
+otherIndividual.whenIndividualAdded.error.required.all = Enter the date the individual was added to the trust
+otherIndividual.whenIndividualAdded.error.required.two = The date the individual was added to the trust must include a {0} and a {1}
+otherIndividual.whenIndividualAdded.error.required = The date the individual was added to the trust must include a {0}
+otherIndividual.whenIndividualAdded.error.invalid = Enter a real date
+otherIndividual.whenIndividualAdded.error.future = The date the individual was added to the trust must be today or in the past
+otherIndividual.whenIndividualAdded.error.past = The date the individual was added to the trust cannot be before the start date of the trust
+
+otherIndividual.liveInTheUkYesNo.checkYourAnswersLabel = Does {0} live in the UK?
+otherIndividual.liveInTheUkYesNo.title = Does the individual live in the UK?
+otherIndividual.liveInTheUkYesNo.heading = Does {0} live in the UK?
+otherIndividual.liveInTheUkYesNo.error.required = Select yes if the individual lives in the UK
+
+otherIndividual.interrupt.page.title = Information you need to add other individuals
+otherIndividual.interrupt.page.heading = Information you need to add other individuals
+otherIndividual.interrupt.page.subheading = Other individuals
+otherIndividual.interrupt.page.p1 = For any other individuals, such as family members, friends or third parties, who are involved in the trust, you need their:
+otherIndividual.interrupt.page.b1 = National Insurance number
+otherIndividual.interrupt.page.b2 = Passport and address
+otherIndividual.interrupt.page.b3 = ID card and address
+otherIndividual.interrupt.page.b4 = address
+

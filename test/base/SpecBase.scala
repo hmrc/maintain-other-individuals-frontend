@@ -21,6 +21,7 @@ import java.time.LocalDate
 import config.FrontendAppConfig
 import controllers.actions._
 import models.UserAnswers
+import navigation.FakeNavigator
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
 import org.scalatest.{TestSuite, TryValues}
@@ -43,6 +44,8 @@ trait SpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with ScalaFutur
   this: TestSuite =>
 
   val userAnswersId = "id"
+
+  val fakeNavigator = new FakeNavigator()
 
   def emptyUserAnswers = UserAnswers(userAnswersId, "UTRUTRUTR", LocalDate.now(), Json.obj())
 
