@@ -1,24 +1,97 @@
 # microservice specific routes
 
-GET        /add                                         controllers.AddAnOtherIndividualController.onPageLoad()
-POST       /add                                         controllers.AddAnOtherIndividualController.submitOne()
-POST       /add-another                                 controllers.AddAnOtherIndividualController.submitAnother()
-POST       /complete                                    controllers.AddAnOtherIndividualController.submitComplete()
+GET        /add                                              controllers.AddAnOtherIndividualController.onPageLoad()
+POST       /add                                              controllers.AddAnOtherIndividualController.submitOne()
+POST       /add-another                                      controllers.AddAnOtherIndividualController.submitAnother()
+POST       /complete                                         controllers.AddAnOtherIndividualController.submitComplete()
 
-GET        /:index/remove                               controllers.individual.remove.RemoveOtherIndividualController.onPageLoad(index: Int)
-POST       /:index/remove                               controllers.individual.remove.RemoveOtherIndividualController.onSubmit(index: Int)
+GET        /:index/remove                                    controllers.individual.remove.RemoveOtherIndividualController.onPageLoad(index: Int)
+POST       /:index/remove                                    controllers.individual.remove.RemoveOtherIndividualController.onSubmit(index: Int)
 
-GET        /:index/when-removed                         controllers.individual.remove.WhenRemovedController.onPageLoad(index: Int)
-POST       /:index/when-removed                         controllers.individual.remove.WhenRemovedController.onSubmit(index: Int)
+GET        /:index/when-removed                             controllers.individual.remove.WhenRemovedController.onPageLoad(index: Int)
+POST       /:index/when-removed                             controllers.individual.remove.WhenRemovedController.onSubmit(index: Int)
 
-GET        /assets/*file                                controllers.Assets.versioned(path="/public", file: Asset)
+GET        /information-you-need                            controllers.InterruptPageController.onPageLoad()
 
-GET        /language/:lang                              controllers.LanguageSwitchController.switchToLanguage(lang: String)
+GET        /name                                            controllers.NameController.onPageLoad(mode: Mode = NormalMode)
+POST       /name                                            controllers.NameController.onSubmit(mode: Mode = NormalMode)
+GET        /change-name                                     controllers.NameController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-name                                     controllers.NameController.onSubmit(mode: Mode = CheckMode)
 
-GET        /this-service-has-been-reset                 controllers.SessionExpiredController.onPageLoad
+GET        /know-date-of-birth                              controllers.DateOfBirthYesNoController.onPageLoad(mode: Mode = NormalMode)
+POST       /know-date-of-birth                              controllers.DateOfBirthYesNoController.onSubmit(mode: Mode = NormalMode)
+GET        /change-know-date-of-birth                       controllers.DateOfBirthYesNoController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-know-date-of-birth                       controllers.DateOfBirthYesNoController.onSubmit(mode: Mode = CheckMode)
 
-GET        /feature-not-available                       controllers.FeatureNotAvailableController.onPageLoad()
+GET        /date-of-birth                                   controllers.DateOfBirthController.onPageLoad(mode: Mode = NormalMode)
+POST       /date-of-birth                                   controllers.DateOfBirthController.onSubmit(mode: Mode = NormalMode)
+GET        /change-date-of-birth                            controllers.DateOfBirthController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-date-of-birth                            controllers.DateOfBirthController.onSubmit(mode: Mode = CheckMode)
 
-GET        /unauthorised                                controllers.UnauthorisedController.onPageLoad
+GET        /has-national-insurance-number                   controllers.NationalInsuranceNumberYesNoController.onPageLoad(mode: Mode = NormalMode)
+POST       /has-national-insurance-number                   controllers.NationalInsuranceNumberYesNoController.onSubmit(mode: Mode = NormalMode)
+GET        /change-has-national-insurance-number            controllers.NationalInsuranceNumberYesNoController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-has-national-insurance-number            controllers.NationalInsuranceNumberYesNoController.onSubmit(mode: Mode = CheckMode)
 
-GET        /:utr                                        controllers.IndexController.onPageLoad(utr: String)
+GET        /national-insurance-number                       controllers.NationalInsuranceNumberController.onPageLoad(mode: Mode = NormalMode)
+POST       /national-insurance-number                       controllers.NationalInsuranceNumberController.onSubmit(mode: Mode = NormalMode)
+GET        /change-national-insurance-number                controllers.NationalInsuranceNumberController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-national-insurance-number                controllers.NationalInsuranceNumberController.onSubmit(mode: Mode = CheckMode)
+
+GET        /has-address                                     controllers.AddressYesNoController.onPageLoad(mode: Mode = NormalMode)
+POST       /has-address                                     controllers.AddressYesNoController.onSubmit(mode: Mode = NormalMode)
+GET        /change-has-address                              controllers.AddressYesNoController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-has-address                              controllers.AddressYesNoController.onSubmit(mode: Mode = CheckMode)
+
+GET        /has-uk-address                                  controllers.LiveInTheUkYesNoController.onPageLoad(mode: Mode = NormalMode)
+POST       /has-uk-address                                  controllers.LiveInTheUkYesNoController.onSubmit(mode: Mode = NormalMode)
+GET        /change-has-uk-address                           controllers.LiveInTheUkYesNoController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-has-uk-address                           controllers.LiveInTheUkYesNoController.onSubmit(mode: Mode = CheckMode)
+
+GET        /has-passport                                    controllers.PassportDetailsYesNoController.onPageLoad(mode: Mode = NormalMode)
+POST       /has-passport                                    controllers.PassportDetailsYesNoController.onSubmit(mode: Mode = NormalMode)
+GET        /change-has-passport                             controllers.PassportDetailsYesNoController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-has-passport                             controllers.PassportDetailsYesNoController.onSubmit(mode: Mode = CheckMode)
+
+GET        /passport                                        controllers.PassportDetailsController.onPageLoad(mode: Mode = NormalMode)
+POST       /passport                                        controllers.PassportDetailsController.onSubmit(mode: Mode = NormalMode)
+GET        /change-passport                                 controllers.PassportDetailsController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-passport                                 controllers.PassportDetailsController.onSubmit(mode: Mode = CheckMode)
+
+GET        /has-id-card                                     controllers.IdCardDetailsYesNoController.onPageLoad(mode: Mode = NormalMode)
+POST       /has-id-card                                     controllers.IdCardDetailsYesNoController.onSubmit(mode: Mode = NormalMode)
+GET        /change-has-id-card                              controllers.IdCardDetailsYesNoController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-has-id-card                              controllers.IdCardDetailsYesNoController.onSubmit(mode: Mode = CheckMode)
+
+GET        /id-card                                         controllers.IdCardDetailsController.onPageLoad(mode: Mode = NormalMode)
+POST       /id-card                                         controllers.IdCardDetailsController.onSubmit(mode: Mode = NormalMode)
+GET        /change-id-card                                  controllers.IdCardDetailsController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-id-card                                  controllers.IdCardDetailsController.onSubmit(mode: Mode = CheckMode)
+
+GET        /uk-address                                      controllers.UkAddressController.onPageLoad(mode: Mode = NormalMode)
+POST       /uk-address                                      controllers.UkAddressController.onSubmit(mode: Mode = NormalMode)
+GET        /change-uk-address                               controllers.UkAddressController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-uk-address                               controllers.UkAddressController.onSubmit(mode: Mode = CheckMode)
+
+GET        /non-uk-address                                  controllers.NonUkAddressController.onPageLoad(mode: Mode = NormalMode)
+POST       /non-uk-address                                  controllers.NonUkAddressController.onSubmit(mode: Mode = NormalMode)
+GET        /change-non-uk-address                           controllers.NonUkAddressController.onPageLoad(mode: Mode = CheckMode)
+POST       /change-non-uk-address                           controllers.NonUkAddressController.onSubmit(mode: Mode = CheckMode)
+
+GET        /when-added                                      controllers.WhenIndividualAddedController.onPageLoad()
+POST       /when-added                                      controllers.WhenIndividualAddedController.onSubmit()
+
+GET         /check-details                                  controllers.CheckDetailsController.onPageLoad()
+POST        /check-details                                  controllers.CheckDetailsController.onSubmit()
+
+GET        /assets/*file                                    controllers.Assets.versioned(path="/public", file: Asset)
+
+GET        /language/:lang                                  controllers.LanguageSwitchController.switchToLanguage(lang: String)
+
+GET        /this-service-has-been-reset                     controllers.SessionExpiredController.onPageLoad
+
+GET        /feature-not-available                           controllers.FeatureNotAvailableController.onPageLoad()
+
+GET        /unauthorised                                    controllers.UnauthorisedController.onPageLoad
+
+GET        /:utr                                            controllers.IndexController.onPageLoad(utr: String)

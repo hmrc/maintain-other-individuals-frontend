@@ -45,6 +45,9 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
 
   lazy val trustsStoreUrl: String = configuration.get[Service]("microservice.services.trusts-store").baseUrl
 
+  lazy val locationCanonicalList: String = configuration.get[String]("location.canonical.list.all")
+  lazy val locationCanonicalListNonUK: String = configuration.get[String]("location.canonical.list.nonUK")
+
   lazy val maintainATrustOverview: String = configuration.get[String]("urls.maintainATrustOverview")
 
   lazy val languageTranslationEnabled: Boolean =

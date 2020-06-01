@@ -21,7 +21,7 @@ import connectors.TrustStoreConnector
 import controllers.actions.StandardActionSets
 import forms.{AddAnOtherIndividualFormProvider, YesNoFormProvider}
 import javax.inject.Inject
-import models.AddAnOtherIndividual
+import models.{AddAnOtherIndividual, NormalMode}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -94,7 +94,7 @@ class AddAnOtherIndividualController @Inject()(
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.cleanup)
               _ <- repository.set(updatedAnswers)
-            } yield Redirect(controllers.routes.FeatureNotAvailableController.onPageLoad())
+            } yield Redirect(controllers.routes.InterruptPageController.onPageLoad())
           } else {
             for {
               _ <- trustStoreConnector.setTaskComplete(request.userAnswers.utr)
@@ -129,7 +129,7 @@ class AddAnOtherIndividualController @Inject()(
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.cleanup)
                 _ <- repository.set(updatedAnswers)
-              } yield Redirect(controllers.routes.FeatureNotAvailableController.onPageLoad())
+              } yield Redirect(controllers.routes.NameController.onPageLoad(NormalMode))
 
             case AddAnOtherIndividual.YesLater =>
               Future.successful(Redirect(appConfig.maintainATrustOverview))
