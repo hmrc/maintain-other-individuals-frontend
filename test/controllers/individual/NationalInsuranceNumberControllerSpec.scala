@@ -19,44 +19,92 @@ package controllers.individual
 import base.SpecBase
 import forms.NationalInsuranceNumberFormProvider
 import models.{Name, NormalMode}
+import navigation.Navigator
+import org.mockito.Matchers.{any, eq => eqTo}
+import org.mockito.Mockito.{reset, verify, when}
+import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
-import pages.individual.{NamePage, NationalInsuranceNumberPage, NationalInsuranceNumberYesNoPage}
-import play.api.mvc.Call
+import pages.individual.{IndexPage, NamePage, NationalInsuranceNumberPage, NationalInsuranceNumberYesNoPage}
+import play.api.data.Form
+import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import services.TrustServiceImpl
 import views.html.individual.NationalInsuranceNumberView
 
-class NationalInsuranceNumberControllerSpec extends SpecBase with MockitoSugar {
+import scala.concurrent.Future
 
-  def onwardRoute = Call("GET", "/foo")
+class NationalInsuranceNumberControllerSpec extends SpecBase with MockitoSugar with BeforeAndAfterEach {
 
   val formProvider = new NationalInsuranceNumberFormProvider()
-  val form = formProvider.withPrefix("otherIndividual.nationalInsuranceNumber")
+  val form: Form[String] = formProvider.apply("otherIndividual.nationalInsuranceNumber", Nil)
 
-  val individualName = Name("FirstName", None, "LastName")
+  val index = 0
+  val individualName: Name = Name("FirstName", None, "LastName")
 
-  lazy val nationalInsuranceNumberRoute = routes.NationalInsuranceNumberController.onPageLoad(NormalMode).url
+  lazy val nationalInsuranceNumberRoute: String = routes.NationalInsuranceNumberController.onPageLoad(NormalMode).url
+
+  val mockTrustsService: TrustServiceImpl = mock[TrustServiceImpl]
+
+  override protected def beforeEach(): Unit = {
+    reset(mockTrustsService)
+    when(mockTrustsService.getIndividualNinos(any(), any())(any(), any()))
+      .thenReturn(Future.successful(Nil))
+  }
 
   "NationalInsuranceNumber Controller" must {
 
-    "return OK and the correct view for a GET" in {
+    "return OK and the correct view for a GET" when {
 
-      val userAnswers = emptyUserAnswers.set(NamePage, individualName).success.value
+      "adding" in {
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+        val userAnswers = emptyUserAnswers.set(NamePage, individualName).success.value
 
-      val request = FakeRequest(GET, nationalInsuranceNumberRoute)
+        val application = applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(bind[TrustServiceImpl].toInstance(mockTrustsService))
+          .build()
 
-      val result = route(application, request).value
+        val request = FakeRequest(GET, nationalInsuranceNumberRoute)
 
-      val view = application.injector.instanceOf[NationalInsuranceNumberView]
+        val result = route(application, request).value
 
-      status(result) mustEqual OK
+        val view = application.injector.instanceOf[NationalInsuranceNumberView]
 
-      contentAsString(result) mustEqual
-        view(form, individualName.displayName, NormalMode)(request, messages).toString
+        status(result) mustEqual OK
 
-      application.stop()
+        contentAsString(result) mustEqual
+          view(form, individualName.displayName, NormalMode)(request, messages).toString
+
+        verify(mockTrustsService).getIndividualNinos(any(), eqTo(None))(any(), any())
+
+        application.stop()
+      }
+
+      "amending" in {
+
+        val userAnswers = emptyUserAnswers
+          .set(IndexPage, index).success.value
+          .set(NamePage, individualName).success.value
+
+        val application = applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(bind[TrustServiceImpl].toInstance(mockTrustsService))
+          .build()
+
+        val request = FakeRequest(GET, nationalInsuranceNumberRoute)
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[NationalInsuranceNumberView]
+
+        status(result) mustEqual OK
+
+        contentAsString(result) mustEqual
+          view(form, individualName.displayName, NormalMode)(request, messages).toString
+
+        verify(mockTrustsService).getIndividualNinos(any(), eqTo(Some(index)))(any(), any())
+
+        application.stop()
+      }
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
@@ -65,7 +113,9 @@ class NationalInsuranceNumberControllerSpec extends SpecBase with MockitoSugar {
         .set(NamePage, individualName).success.value
         .set(NationalInsuranceNumberPage, "answer").success.value
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(bind[TrustServiceImpl].toInstance(mockTrustsService))
+        .build()
 
       val request = FakeRequest(GET, nationalInsuranceNumberRoute)
 
@@ -86,11 +136,12 @@ class NationalInsuranceNumberControllerSpec extends SpecBase with MockitoSugar {
 
       val userAnswers = emptyUserAnswers.set(NamePage, individualName).success.value
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(bind[TrustServiceImpl].toInstance(mockTrustsService))
+        .build()
 
-      val request =
-        FakeRequest(POST, nationalInsuranceNumberRoute)
-          .withFormUrlEncodedBody(("value", ""))
+      val request = FakeRequest(POST, nationalInsuranceNumberRoute)
+        .withFormUrlEncodedBody(("value", ""))
 
       val boundForm = form.bind(Map("value" -> ""))
 
@@ -104,6 +155,57 @@ class NationalInsuranceNumberControllerSpec extends SpecBase with MockitoSugar {
         view(boundForm, individualName.displayName, NormalMode)(request, messages).toString
 
       application.stop()
+    }
+
+    "redirect to the next page when valid data is submitted is submitted" when {
+
+      "adding" in {
+
+        val answers = emptyUserAnswers.set(NationalInsuranceNumberYesNoPage, true).success.value
+
+        val application = applicationBuilder(userAnswers = Some(answers))
+          .overrides(
+            bind[Navigator].toInstance(fakeNavigator),
+            bind[TrustServiceImpl].toInstance(mockTrustsService)
+          ).build()
+
+        val request = FakeRequest(POST, nationalInsuranceNumberRoute)
+          .withFormUrlEncodedBody(("value", "JP123456A"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustEqual fakeNavigator.desiredRoute.url
+
+        verify(mockTrustsService).getIndividualNinos(any(), eqTo(None))(any(), any())
+
+        application.stop()
+      }
+
+      "amending" in {
+
+        val answers = emptyUserAnswers.set(IndexPage, index).success.value
+
+        val application = applicationBuilder(userAnswers = Some(answers))
+          .overrides(
+            bind[Navigator].toInstance(fakeNavigator),
+            bind[TrustServiceImpl].toInstance(mockTrustsService)
+          ).build()
+
+        val request = FakeRequest(POST, nationalInsuranceNumberRoute)
+          .withFormUrlEncodedBody(("value", "JP123456A"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustEqual fakeNavigator.desiredRoute.url
+
+        verify(mockTrustsService).getIndividualNinos(any(), eqTo(Some(index)))(any(), any())
+
+        application.stop()
+      }
     }
 
     "redirect to Session Expired for a GET if no existing data is found" in {
@@ -121,33 +223,12 @@ class NationalInsuranceNumberControllerSpec extends SpecBase with MockitoSugar {
       application.stop()
     }
 
-    "redirect to the next page when valid data is submitted  is submitted" in {
-
-      val answers = emptyUserAnswers.set(NationalInsuranceNumberYesNoPage, true).success.value
-
-      val application =
-        applicationBuilder(userAnswers = Some(answers)).build()
-
-      val request =
-        FakeRequest(POST, nationalInsuranceNumberRoute)
-          .withFormUrlEncodedBody(("value", "JP123456A"))
-
-      val result = route(application, request).value
-
-      status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result).value mustEqual controllers.individual.add.routes.WhenIndividualAddedController.onPageLoad().url
-
-      application.stop()
-    }
-
     "redirect to Session Expired for a POST if no existing data is found" in {
 
       val application = applicationBuilder(userAnswers = None).build()
 
-      val request =
-        FakeRequest(POST, nationalInsuranceNumberRoute)
-          .withFormUrlEncodedBody(("value", "answer"))
+      val request = FakeRequest(POST, nationalInsuranceNumberRoute)
+        .withFormUrlEncodedBody(("value", "answer"))
 
       val result = route(application, request).value
 

@@ -16,8 +16,6 @@
 
 package controllers
 
-import java.time.LocalDate
-
 import base.SpecBase
 import connectors.TrustStoreConnector
 import forms.{AddAnOtherIndividualFormProvider, YesNoFormProvider}
@@ -36,6 +34,7 @@ import utils.AddAnOtherIndividualViewHelper
 import viewmodels.addAnother.AddRow
 import views.html.{AddAnOtherIndividualView, AddAnOtherIndividualYesNoView, MaxedOutOtherIndividualsView}
 
+import java.time.LocalDate
 import scala.concurrent.{ExecutionContext, Future}
 
 class AddAnOtherIndividualControllerSpec extends SpecBase with ScalaFutures {
@@ -75,7 +74,9 @@ class AddAnOtherIndividualControllerSpec extends SpecBase with ScalaFutures {
     ))
 
   class FakeService(data: OtherIndividuals) extends TrustService {
-    override def getOtherIndividuals(utr: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[OtherIndividuals] = Future.successful(data)
+    override def getOtherIndividuals(utr: String)
+                                    (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[OtherIndividuals] =
+      Future.successful(data)
 
     override def getOtherIndividual(utr: String, index: Int)
                                    (implicit hc: HeaderCarrier, ex: ExecutionContext): Future[OtherIndividual] =
@@ -84,6 +85,10 @@ class AddAnOtherIndividualControllerSpec extends SpecBase with ScalaFutures {
     override def removeOtherIndividual(utr: String, otherIndividual: RemoveOtherIndividual)
                                       (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] =
       Future.successful(HttpResponse(OK, ""))
+
+    override def getIndividualNinos(identifier: String, index: Option[Int])
+                                   (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[String]] =
+      ???
   }
 
   "AddAnOtherIndividual Controller" when {

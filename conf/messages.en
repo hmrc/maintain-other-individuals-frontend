@@ -216,6 +216,7 @@ otherIndividual.nationalInsuranceNumber.heading = What is {0}’s National Insur
 otherIndividual.nationalInsuranceNumber.hint = It is on their National Insurance card, benefit letter, payslip or P60. For example, ‘QQ 12 34 56 C’.
 otherIndividual.nationalInsuranceNumber.error.required = Enter the individual’s National Insurance number
 otherIndividual.nationalInsuranceNumber.error.invalidFormat = Enter the individual’s National Insurance number in the correct format
+otherIndividual.nationalInsuranceNumber.error.notUnique = Enter a National Insurance number that has not already been used to add an individual
 
 otherIndividual.passportDetailsYesNo.checkYourAnswersLabel = Do you know {0}’s passport details?
 otherIndividual.passportDetailsYesNo.title = Do you know the individual’s passport details?
