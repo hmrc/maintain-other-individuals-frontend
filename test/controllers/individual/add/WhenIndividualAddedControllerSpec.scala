@@ -206,7 +206,7 @@ import java.time.{LocalDate, ZoneOffset}
         val result = route(application, getRequest()).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.SessionExpiredController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.routes.SessionExpiredController.onPageLoad.url
 
         application.stop()
       }
@@ -247,7 +247,7 @@ import java.time.{LocalDate, ZoneOffset}
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual controllers.routes.SessionExpiredController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.routes.SessionExpiredController.onPageLoad.url
 
         application.stop()
       }

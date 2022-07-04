@@ -119,7 +119,7 @@ class OtherIndividualNavigator @Inject()() extends Navigator {
   private def checkDetailsRoute(answers: UserAnswers): Call = {
     answers.get(IndexPage) match {
       case None =>
-        controllers.routes.SessionExpiredController.onPageLoad()
+        controllers.routes.SessionExpiredController.onPageLoad
       case Some(x) =>
         controllers.individual.amend.routes.CheckDetailsController.renderFromUserAnswers(x)
     }

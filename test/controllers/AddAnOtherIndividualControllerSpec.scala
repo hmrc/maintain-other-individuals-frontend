@@ -41,7 +41,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class AddAnOtherIndividualControllerSpec extends SpecBase with ScalaFutures with BeforeAndAfterEach {
 
-  lazy val getRoute: String = controllers.routes.AddAnOtherIndividualController.onPageLoad().url
+  lazy val getRoute: String = controllers.routes.AddAnOtherIndividualController.onPageLoad.url
   lazy val submitOneRoute: String = controllers.routes.AddAnOtherIndividualController.submitOne().url
   lazy val submitAnotherRoute: String = controllers.routes.AddAnOtherIndividualController.submitAnother().url
   lazy val submitCompleteRoute: String = controllers.routes.AddAnOtherIndividualController.submitComplete().url
@@ -117,7 +117,7 @@ class AddAnOtherIndividualControllerSpec extends SpecBase with ScalaFutures with
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual controllers.routes.SessionExpiredController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.routes.SessionExpiredController.onPageLoad.url
 
         application.stop()
       }
@@ -133,7 +133,7 @@ class AddAnOtherIndividualControllerSpec extends SpecBase with ScalaFutures with
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual controllers.routes.SessionExpiredController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.routes.SessionExpiredController.onPageLoad.url
 
         application.stop()
       }
@@ -203,7 +203,7 @@ class AddAnOtherIndividualControllerSpec extends SpecBase with ScalaFutures with
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual controllers.routes.InterruptPageController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.routes.InterruptPageController.onPageLoad.url
 
         application.stop()
       }

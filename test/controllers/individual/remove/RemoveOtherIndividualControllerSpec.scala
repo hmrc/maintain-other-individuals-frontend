@@ -134,7 +134,7 @@ class RemoveOtherIndividualControllerSpec extends SpecBase with ScalaCheckProper
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual controllers.routes.AddAnOtherIndividualController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.routes.AddAnOtherIndividualController.onPageLoad.url
 
         application.stop()
       }
@@ -191,7 +191,7 @@ class RemoveOtherIndividualControllerSpec extends SpecBase with ScalaCheckProper
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual controllers.routes.AddAnOtherIndividualController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.routes.AddAnOtherIndividualController.onPageLoad.url
 
         application.stop()
       }
@@ -233,7 +233,7 @@ class RemoveOtherIndividualControllerSpec extends SpecBase with ScalaCheckProper
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual controllers.routes.SessionExpiredController.onPageLoad().url
+      redirectLocation(result).value mustEqual controllers.routes.SessionExpiredController.onPageLoad.url
 
       application.stop()
     }
@@ -252,7 +252,7 @@ class RemoveOtherIndividualControllerSpec extends SpecBase with ScalaCheckProper
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual controllers.routes.SessionExpiredController.onPageLoad().url
+      redirectLocation(result).value mustEqual controllers.routes.SessionExpiredController.onPageLoad.url
 
       application.stop()
     }
@@ -271,7 +271,7 @@ class RemoveOtherIndividualControllerSpec extends SpecBase with ScalaCheckProper
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual controllers.routes.AddAnOtherIndividualController.onPageLoad().url
+      redirectLocation(result).value mustEqual controllers.routes.AddAnOtherIndividualController.onPageLoad.url
 
       application.stop()
     }

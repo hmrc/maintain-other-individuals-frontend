@@ -39,7 +39,7 @@ class DataRequiredActionImpl @Inject()(implicit val executionContext: ExecutionC
       case None =>
         logger.warn(s"[Session][UTR: ${request.userAnswers.map(_.identifier).getOrElse("No UTR")}][Session ID: ${utils.Session.id(hc)}]" +
           s" no user answers found for this session, informing user session has expired")
-        Future.successful(Left(Redirect(routes.SessionExpiredController.onPageLoad())))
+        Future.successful(Left(Redirect(routes.SessionExpiredController.onPageLoad)))
       case Some(data) =>
         Future.successful(Right(DataRequest(request.request, data, request.user)))
     }

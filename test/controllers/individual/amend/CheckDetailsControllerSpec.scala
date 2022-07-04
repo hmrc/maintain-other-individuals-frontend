@@ -43,7 +43,7 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
   private lazy val checkDetailsRoute = routes.CheckDetailsController.extractAndRender(index).url
   private lazy val submitDetailsRoute = routes.CheckDetailsController.onSubmit(index).url
 
-  private lazy val onwardRoute = controllers.routes.AddAnOtherIndividualController.onPageLoad().url
+  private lazy val onwardRoute = controllers.routes.AddAnOtherIndividualController.onPageLoad.url
 
   private val name = Name("John", None, "Doe")
   private val startDate = LocalDate.parse("2019-03-09")

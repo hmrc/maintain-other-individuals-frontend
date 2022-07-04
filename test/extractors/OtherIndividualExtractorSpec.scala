@@ -19,14 +19,15 @@ package extractors
 import generators.ModelGenerators
 import models.Constant.GB
 import models.{CombinedPassportOrIdCard, IdCard, Name, NationalInsuranceNumber, OtherIndividual, Passport, UkAddress, UserAnswers, YesNoDontKnow}
-import org.scalatest.{FreeSpec, MustMatchers}
+import org.scalatest.matchers.must.Matchers
+import org.scalatest.freespec.AnyFreeSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import pages.individual._
 import play.api.libs.json.Json
 
 import java.time.LocalDate
 
-class OtherIndividualExtractorSpec extends FreeSpec with ScalaCheckPropertyChecks with ModelGenerators with MustMatchers {
+class OtherIndividualExtractorSpec extends AnyFreeSpec with ScalaCheckPropertyChecks with ModelGenerators with Matchers {
 
   val answers: UserAnswers = UserAnswers(
     "Id",

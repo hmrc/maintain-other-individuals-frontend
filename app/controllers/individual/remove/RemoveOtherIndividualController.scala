@@ -108,7 +108,7 @@ class RemoveOtherIndividualController @Inject()(
                 Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
             }
           } else {
-            Future.successful(Redirect(controllers.routes.AddAnOtherIndividualController.onPageLoad().url))
+            Future.successful(Redirect(controllers.routes.AddAnOtherIndividualController.onPageLoad.url))
           }
         }
       )

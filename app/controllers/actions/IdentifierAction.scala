@@ -68,7 +68,7 @@ class AuthenticatedIdentifierAction @Inject()(
         block(IdentifierRequest(request, OrganisationUser(internalId, enrolments)))
       case Some(_) ~ _ ~ _ =>
         logger.info(s"[Authentication] Unauthorised due to affinityGroup being Individual")
-        Future.successful(Redirect(controllers.routes.UnauthorisedController.onPageLoad()))
+        Future.successful(Redirect(controllers.routes.UnauthorisedController.onPageLoad))
       case _ =>
         logger.warn(s"[Authentication] Unable to retrieve internal id")
         throw new UnauthorizedException("Unable to retrieve internal Id")

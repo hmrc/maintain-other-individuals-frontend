@@ -75,7 +75,7 @@ class IndexControllerSpec extends SpecBase {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result) mustBe Some(controllers.routes.AddAnOtherIndividualController.onPageLoad().url)
+      redirectLocation(result) mustBe Some(controllers.routes.AddAnOtherIndividualController.onPageLoad.url)
 
       verify(mockTrustsStoreService).updateTaskStatus(eqTo(identifier), eqTo(InProgress))(any(), any())
 

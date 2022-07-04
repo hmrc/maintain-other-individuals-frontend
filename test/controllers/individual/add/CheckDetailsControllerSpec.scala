@@ -38,9 +38,9 @@ import scala.concurrent.Future
 
 class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFutures {
 
-  private lazy val checkDetailsRoute = routes.CheckDetailsController.onPageLoad().url
+  private lazy val checkDetailsRoute = routes.CheckDetailsController.onPageLoad.url
   private lazy val submitDetailsRoute = routes.CheckDetailsController.onSubmit().url
-  private lazy val onwardRoute = controllers.routes.AddAnOtherIndividualController.onPageLoad().url
+  private lazy val onwardRoute = controllers.routes.AddAnOtherIndividualController.onPageLoad.url
 
   private val name = Name("First", None, "Last")
   private val dateOfBirth = LocalDate.parse("2010-02-03")
