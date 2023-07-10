@@ -92,7 +92,7 @@ class WhenRemovedControllerSpec extends SpecBase with MockitoSugar {
       status(result) mustEqual OK
 
       contentAsString(result) mustEqual
-        view(form, index, name)(getRequest, messages).toString
+        view(form, index, name)(getRequest(), messages).toString
 
       application.stop()
     }
@@ -112,7 +112,7 @@ class WhenRemovedControllerSpec extends SpecBase with MockitoSugar {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustEqual controllers.routes.AddAnOtherIndividualController.onPageLoad.url
+      redirectLocation(result).value mustEqual controllers.routes.AddAnOtherIndividualController.onPageLoad().url
 
       application.stop()
     }

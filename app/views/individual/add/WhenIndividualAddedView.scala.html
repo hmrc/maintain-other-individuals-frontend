@@ -32,7 +32,7 @@
     showBackLink = true
 ) {
 
-    @formHelper(action = WhenIndividualAddedController.onSubmit(mode), 'autoComplete -> "off") {
+    @formHelper(action = WhenIndividualAddedController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @errorSummary(form.errors)
 

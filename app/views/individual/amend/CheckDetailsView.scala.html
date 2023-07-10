@@ -36,7 +36,7 @@
     showBackLink = true
 ) {
 
-    @formHelper(action = CheckDetailsController.onSubmit(index), 'autoComplete -> "off") {
+    @formHelper(action = CheckDetailsController.onSubmit(index), Symbol("autoComplete") -> "off") {
 
         @heading("otherIndividual.checkDetails.heading")
 

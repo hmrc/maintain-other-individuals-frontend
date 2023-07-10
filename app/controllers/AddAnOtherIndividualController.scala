@@ -74,13 +74,13 @@ class AddAnOtherIndividualController @Inject()(
               form = addAnotherForm,
               inProgressOtherIndividuals = otherIndividualRows.inProgress,
               completeOtherIndividuals = otherIndividualRows.complete,
-              heading = otherIndividuals.addToHeading
+              heading = otherIndividuals.addToHeading()
             ))
           case _ if otherIndividuals.isMaxedOut =>
             Ok(completeView(
               inProgressOtherIndividuals = otherIndividualRows.inProgress,
               completeOtherIndividuals = otherIndividualRows.complete,
-              heading = otherIndividuals.addToHeading
+              heading = otherIndividuals.addToHeading()
             ))
         }
       }) recoverWith {
@@ -125,7 +125,7 @@ class AddAnOtherIndividualController @Inject()(
                 formWithErrors,
                 rows.inProgress,
                 rows.complete,
-                otherIndividuals.addToHeading
+                otherIndividuals.addToHeading()
               )
             ))
           },

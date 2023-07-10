@@ -13,9 +13,7 @@ lazy val root = (project in file("."))
   .settings(
     DefaultBuildSettings.scalaSettings,
     DefaultBuildSettings.defaultSettings(),
-    SbtDistributablesPlugin.publishingSettings,
-    scalaVersion := "2.12.16",
-    SilencerSettings(),
+    scalaVersion := "2.13.11",
     inConfig(Test)(testSettings),
     majorVersion := 0,
     name := appName,
@@ -37,8 +35,9 @@ lazy val root = (project in file("."))
     ScoverageKeys.coverageMinimumStmtTotal := 85,
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true,
+    scalacOptions += "-Wconf:src=routes/.*:s",
+      scalacOptions += "-Wconf:cat=unused-imports&src=html/.*:s",
     scalacOptions += "-feature",
-    scalacOptions += "-P:silencer:pathFilters=views;routes",
     libraryDependencies ++= AppDependencies(),
     retrieveManaged := true,
     // concatenate js
@@ -71,3 +70,5 @@ lazy val testSettings: Seq[Def.Setting[_]] = Seq(
 )
 
 addCommandAlias("scalastyleAll", "all scalastyle test:scalastyle it:scalastyle")
+
+libraryDependencySchemes ++= Seq("org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always)

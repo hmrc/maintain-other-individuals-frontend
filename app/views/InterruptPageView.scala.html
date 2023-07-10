@@ -39,7 +39,7 @@
 
     @bulletList("otherIndividual.interrupt.page", Seq("b1", "b2", "b3", "b4"))
 
-    @formHelper(action = InterruptPageController.onSubmit, 'autoComplete -> "off") {
+    @formHelper(action = InterruptPageController.onSubmit(), Symbol("autoComplete") -> "off") {
         @submitButton(Some(messages("site.continue")))
     }
 }
