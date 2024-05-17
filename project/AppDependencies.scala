@@ -1,7 +1,7 @@
 import sbt.*
 
 object AppDependencies {
-  val bootstrapVersion = "8.5.0"
+  val bootstrapVersion = "8.6.0"
   val mongoVersion = "1.9.0"
 
   private lazy val compile = Seq(
@@ -20,7 +20,7 @@ object AppDependencies {
     "org.scalatestplus"           %% "mockito-5-10"             % "3.2.18.0",
     "org.jsoup"                   %  "jsoup"                    % "1.17.2",
     "org.wiremock"                %  "wiremock-standalone"      % "3.5.4",
-    "wolfendale"                  %% "scalacheck-gen-regexp"    % "0.1.2",
+    "io.github.wolfendale"        %% "scalacheck-gen-regexp"    % "1.1.0",
     "com.vladsch.flexmark"        %  "flexmark-all"             % "0.64.8"
   ).map(_ % Test )
 
