@@ -29,7 +29,7 @@
     submitButton: SubmitButton
 )
 
-@(answerSection: Seq[Section])(implicit request: Request[_], messages: Messages)
+@(answerSection: Seq[Section])(implicit request: RequestHeader, messages: Messages)
 
 @main_template(
     title = messages("otherIndividual.checkDetails.title"),

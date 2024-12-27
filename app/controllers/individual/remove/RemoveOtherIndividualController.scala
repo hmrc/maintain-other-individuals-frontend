@@ -34,15 +34,15 @@ import views.html.individual.remove.RemoveOtherIndividualView
 import scala.concurrent.{ExecutionContext, Future}
 
 class RemoveOtherIndividualController @Inject()(
-                                                     override val messagesApi: MessagesApi,
-                                                     repository: PlaybackRepository,
-                                                     standardActionSets: StandardActionSets,
-                                                     trustService: TrustService,
-                                                     formProvider: YesNoFormProvider,
-                                                     val controllerComponents: MessagesControllerComponents,
-                                                     view: RemoveOtherIndividualView,
-                                                     errorHandler: ErrorHandler
-                                                  )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
+                                                 override val messagesApi: MessagesApi,
+                                                 repository: PlaybackRepository,
+                                                 standardActionSets: StandardActionSets,
+                                                 trustService: TrustService,
+                                                 formProvider: YesNoFormProvider,
+                                                 val controllerComponents: MessagesControllerComponents,
+                                                 view: RemoveOtherIndividualView,
+                                                 errorHandler: ErrorHandler
+                                               )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
   private val messagesPrefix: String = "removeOtherIndividualYesNo"
 
@@ -68,7 +68,7 @@ class RemoveOtherIndividualController @Inject()(
         case _ =>
           logger.error(s"[Remove Individual][UTR: ${request.userAnswers.identifier}][Session ID: ${utils.Session.id(hc)}]" +
             s" no other individual found in trusts service to remove")
-          Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
+          errorHandler.internalServerErrorTemplate.map(res => InternalServerError(res))
       }
 
   }
@@ -105,7 +105,7 @@ class RemoveOtherIndividualController @Inject()(
               case _ =>
                 logger.error(s"[Remove Individual][UTR: ${request.userAnswers.identifier}][Session ID: ${utils.Session.id(hc)}]" +
                   s" no other individual found in trusts service to remove")
-                Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
+                errorHandler.internalServerErrorTemplate.map(res => InternalServerError(res))
             }
           } else {
             Future.successful(Redirect(controllers.routes.AddAnOtherIndividualController.onPageLoad().url))

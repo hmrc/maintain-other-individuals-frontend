@@ -1,7 +1,7 @@
 import scoverage.ScoverageKeys
 import uk.gov.hmrc.DefaultBuildSettings
 
-ThisBuild / scalaVersion := "2.13.14"
+ThisBuild / scalaVersion := "2.13.15"
 ThisBuild / majorVersion := 0
 
 lazy val appName: String = "maintain-other-individuals-frontend"

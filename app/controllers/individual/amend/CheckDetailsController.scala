@@ -74,7 +74,7 @@ class CheckDetailsController @Inject()(
         case _ =>
           logger.error(s"[Amend Individual][UTR: ${request.userAnswers.identifier}][Session ID: ${utils.Session.id(hc)}]" +
             s" no other individual found in trusts service to maintain")
-          Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
+          errorHandler.internalServerErrorTemplate.map(res => InternalServerError(res))
       }
   }
 
@@ -94,7 +94,7 @@ class CheckDetailsController @Inject()(
       } getOrElse {
         logger.error(s"[Amend Individual][UTR: ${request.userAnswers.identifier}][Session ID: ${utils.Session.id(hc)}]" +
           s" unable to submit amended other individual due to problems mapping user answers")
-        Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
+        errorHandler.internalServerErrorTemplate.map(res => InternalServerError(res))
       }
   }
 }

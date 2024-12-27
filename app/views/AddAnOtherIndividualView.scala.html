@@ -34,7 +34,7 @@
 @(form: Form[_],
     inProgressOtherIndividuals: Seq[AddRow],
     completeOtherIndividuals: Seq[AddRow],
-    heading: String)(implicit request: Request[_], messages: Messages)
+    heading: String)(implicit request: RequestHeader, messages: Messages)
 
 @main_template(
     title = s"${errorPrefix(form)}$heading",

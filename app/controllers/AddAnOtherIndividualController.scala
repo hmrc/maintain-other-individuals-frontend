@@ -52,7 +52,7 @@ class AddAnOtherIndividualController @Inject()(
                                                 errorHandler: ErrorHandler
                                               )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
-  val addAnotherForm : Form[AddAnOtherIndividual] = addAnotherFormProvider()
+  val addAnotherForm: Form[AddAnOtherIndividual] = addAnotherFormProvider()
 
   val yesNoForm: Form[Boolean] = yesNoFormProvider.withPrefix("addAnOtherIndividualYesNo")
 
@@ -87,7 +87,7 @@ class AddAnOtherIndividualController @Inject()(
         case _ =>
           logger.error(s"[Add an Individual][UTR: ${request.userAnswers.identifier}][Session ID: ${utils.Session.id(hc)}]" +
             s" error in getting other individuals from trusts to show user on add to page")
-          Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
+          errorHandler.internalServerErrorTemplate.map(res => InternalServerError(res))
       }
   }
 
@@ -147,7 +147,7 @@ class AddAnOtherIndividualController @Inject()(
         case _ =>
           logger.error(s"[Add an Individual][UTR: ${request.userAnswers.identifier}][Session ID: ${utils.Session.id(hc)}]" +
             s" error in getting other individuals from trusts, cannot add another")
-          Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
+          errorHandler.internalServerErrorTemplate.map(res => InternalServerError(res))
       }
   }
 

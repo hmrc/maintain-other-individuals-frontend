@@ -20,7 +20,6 @@ import config.FrontendAppConfig
 import connectors.TrustConnector
 import controllers.actions._
 import handlers.ErrorHandler
-import javax.inject.Inject
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -30,7 +29,8 @@ import utils.print.OtherIndividualPrintHelper
 import viewmodels.AnswerSection
 import views.html.individual.add.CheckDetailsView
 
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.Inject
+import scala.concurrent.ExecutionContext
 
 class CheckDetailsController @Inject()(
                                         override val messagesApi: MessagesApi,
@@ -59,7 +59,7 @@ class CheckDetailsController @Inject()(
         case None =>
           logger.error(s"[Check Details Individual][UTR: ${request.userAnswers.identifier}][Session ID: ${utils.Session.id(hc)}]" +
             s" unable to map user answers to OtherIndividual due to errors")
-          Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate(request.request)))
+          errorHandler.internalServerErrorTemplate(request.request).map(html => InternalServerError(html))
         case Some(otherIndividual) =>
           connector.addOtherIndividual(request.userAnswers.identifier, otherIndividual).map(_ =>
             Redirect(controllers.routes.AddAnOtherIndividualController.onPageLoad())
