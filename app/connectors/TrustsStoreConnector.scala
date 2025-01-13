@@ -36,7 +36,6 @@ class TrustsStoreConnector @Inject()(http: HttpClientV2, config: FrontendAppConf
     http.post(url"$fullUrl")
       .withBody(Json.toJson(taskStatus))
       .execute[HttpResponse]
-    //    http.POST[TaskStatus, HttpResponse](url, taskStatus)
   }
 
 }
