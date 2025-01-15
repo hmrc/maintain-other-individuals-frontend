@@ -62,7 +62,7 @@ class TrustConnector @Inject()(http: HttpClientV2, config: FrontendAppConfig) {
   def removeOtherIndividual(identifier: String, otherIndividual: RemoveOtherIndividual)
                            (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
     val fullUrl: String = s"$otherIndividualsUrl/$identifier/remove"
-    http.post(url"$fullUrl")
+    http.put(url"$fullUrl")
       .withBody(Json.toJson(otherIndividual))
       .execute[HttpResponse]
   }
