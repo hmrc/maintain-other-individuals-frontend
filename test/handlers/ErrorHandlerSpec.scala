@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package config
+package handlers
 
 import base.SpecBase
-import play.api.i18n.MessagesApi
-import views.html.ErrorTemplate
+import play.api.i18n.{Lang, MessagesApi}
+import views.html.{ErrorTemplate, PageNotFoundView}
 
 import scala.concurrent.Await
 import scala.concurrent.duration.DurationInt
@@ -27,7 +27,9 @@ class ErrorHandlerSpec extends SpecBase {
 
   private val messageApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   private val errorTemplate: ErrorTemplate = app.injector.instanceOf[ErrorTemplate]
-  private val errorHandler: ErrorHandler = new ErrorHandler(messageApi, errorTemplate)
+  private val errornotFoundTemplate: PageNotFoundView = app.injector.instanceOf[PageNotFoundView]
+
+  private val errorHandler: handlers.ErrorHandler = new handlers.ErrorHandler(messageApi, errorTemplate, errornotFoundTemplate)
 
   "ErrorHandler" must {
 
@@ -40,6 +42,19 @@ class ErrorHandlerSpec extends SpecBase {
 
       result.body must include("pageTitle")
       result.body must include("message")
+    }
+
+    "return a not found template" in {
+      val result = Await.result(errorHandler.notFoundTemplate(fakeRequest), 1.seconds)
+
+      result.body must include(messageApi("pageNotFound.title")(Lang("en")))
+      result.body must include(messageApi("pageNotFound.p1")(Lang("en")))
+      result.body must include(messageApi("pageNotFound.p2")(Lang("en")))
+      result.body must include(messageApi("pageNotFound.p2")(Lang("en")))
+      result.body must include(messageApi("pageNotFound.heading")(Lang("en")))
+      result.body must include(messageApi("pageNotFound.link")(Lang("en")))
+
+
     }
 
 
