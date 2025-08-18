@@ -1,4 +1,3 @@
-import scoverage.ScoverageKeys
 import uk.gov.hmrc.DefaultBuildSettings
 
 ThisBuild / scalaVersion := "2.13.16"
@@ -9,6 +8,7 @@ lazy val appName: String = "maintain-other-individuals-frontend"
 lazy val microservice = Project(appName, file("."))
   .enablePlugins(PlayScala, SbtDistributablesPlugin, SbtSassify)
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
+  .settings(CodeCoverageSettings())
   .settings(
     routesImport += "models._",
     TwirlKeys.templateImports ++= Seq(
@@ -22,11 +22,6 @@ lazy val microservice = Project(appName, file("."))
       "controllers.routes._"
     ),
     PlayKeys.playDefaultPort := 9799,
-    ScoverageKeys.coverageExcludedFiles := "<empty>;Reverse.*;.*filters.*;.*handlers.*;.*components.*;.*Mode.*;" +
-      ".*BuildInfo.*;.*javascript.*;.*FrontendAuditConnector.*;.*Routes.*;.*GuiceInjector;.*package.*;",
-    ScoverageKeys.coverageMinimumStmtTotal := 90,
-    ScoverageKeys.coverageFailOnMinimum := true,
-    ScoverageKeys.coverageHighlighting := true,
     scalacOptions ++= Seq(
       "-feature",
       "-Wconf:src=routes/.*:s",
@@ -62,5 +57,3 @@ lazy val it = project
   .enablePlugins(PlayScala)
   .dependsOn(microservice % "test->test")
   .settings(DefaultBuildSettings.itSettings())
-
-addCommandAlias("scalastyleAll", "all scalastyle Test/scalastyle it/scalastyle")
