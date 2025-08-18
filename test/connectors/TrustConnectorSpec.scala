@@ -21,7 +21,7 @@ import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 import generators.Generators
-import models.{Name, OtherIndividual, OtherIndividuals, TrustDetails, YesNoDontKnow}
+import models.{Name, OtherIndividual, OtherIndividuals, RemoveOtherIndividual, TrustDetails, YesNoDontKnow}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, Inside}
 import play.api.libs.json.{JsBoolean, Json}
@@ -56,7 +56,12 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
 
   private def amendOtherIndividualUrl(identifier: String, index: Int) = s"/trusts/other-individuals/amend/$identifier/$index"
 
+  private def addOtherIndividualUrl(identifier: String) = s"/trusts/other-individuals/add/$identifier"
+
   private def isTrust5mldUrl(identifier: String) = s"/trusts/$identifier/is-trust-5mld"
+
+  private def removeOtherIndividualUrl(identifier: String) = s"/trusts/other-individuals/$identifier/remove"
+
 
   "trust connector" when {
 
@@ -347,5 +352,81 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
       }
     }
 
+  }
+
+  "adding an individual" must {
+
+    "Return OK when the request is successful for add" in {
+
+      val application = applicationBuilder()
+        .configure(
+          Seq(
+            "microservice.services.trusts.port" -> server.port(),
+            "auditing.enabled" -> false
+          ): _*
+        ).build()
+
+      val connector = application.injector.instanceOf[TrustConnector]
+
+      server.stubFor(
+        post(urlEqualTo(addOtherIndividualUrl(identifier)))
+          .willReturn(ok)
+      )
+
+      val individual = OtherIndividual(
+        name = Name(
+          firstName = "First",
+          middleName = None,
+          lastName = "Last"
+        ),
+        dateOfBirth = None,
+        countryOfNationality = None,
+        countryOfResidence = None,
+        identification = None,
+        address = None,
+        mentalCapacityYesNo = None,
+        entityStart = LocalDate.parse("2020-03-27"),
+        provisional = false
+      )
+
+      val result = connector.addOtherIndividual(identifier, individual)
+
+      result.futureValue.status mustBe OK
+
+      application.stop()
+    }
+  }
+
+
+  "removing an individual" must {
+
+    "Return OK when the request is successful for add" in {
+
+      val application = applicationBuilder()
+        .configure(
+          Seq(
+            "microservice.services.trusts.port" -> server.port(),
+            "auditing.enabled" -> false
+          ): _*
+        ).build()
+
+      val connector = application.injector.instanceOf[TrustConnector]
+
+      server.stubFor(
+        put(urlEqualTo(removeOtherIndividualUrl(identifier)))
+          .willReturn(ok)
+      )
+
+      val individual = RemoveOtherIndividual(
+        index = 0,
+        endDate = LocalDate.parse("2020-03-27")
+      )
+
+      val result = connector.removeOtherIndividual(identifier, individual)
+
+      result.futureValue.status mustBe OK
+
+      application.stop()
+    }
   }
 }
