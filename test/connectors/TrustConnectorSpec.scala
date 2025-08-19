@@ -400,7 +400,7 @@ class TrustConnectorSpec extends SpecBase with Generators with ScalaFutures
 
   "removing an individual" must {
 
-    "Return OK when the request is successful for add" in {
+    "Return OK when the request is successful for remove" in {
 
       val application = applicationBuilder()
         .configure(
