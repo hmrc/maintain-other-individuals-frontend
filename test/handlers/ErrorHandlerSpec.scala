@@ -34,14 +34,21 @@ class ErrorHandlerSpec extends SpecBase {
   "ErrorHandler" must {
 
     "return an error page" in {
+
+      val pageTitle = "pageTitle"
+      val heading   = "heading"
+      val message   = "message"
+
       val result = Await.result(errorHandler.standardErrorTemplate(
-        pageTitle = "pageTitle",
-        heading = "heading",
-        message = "message"
+        pageTitle,
+        heading,
+        message
       )(fakeRequest), 1.seconds)
 
-      result.body must include("pageTitle")
-      result.body must include("message")
+      val expected = errorTemplate(pageTitle, heading, message)(fakeRequest, messages)
+
+      result.body mustBe expected.body
+      result.body must not be empty
     }
 
     "return a not found template" in {
@@ -54,9 +61,7 @@ class ErrorHandlerSpec extends SpecBase {
       result.body must include(messageApi("pageNotFound.heading")(Lang("en")))
       result.body must include(messageApi("pageNotFound.link")(Lang("en")))
 
-
     }
-
 
   }
 }
