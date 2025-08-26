@@ -38,20 +38,20 @@ class InterruptPageControllerSpec extends SpecBase {
       application.stop()
     }
 
-      "redirect to name page for a POST" in {
+    "redirect to name page for a POST" in {
 
-        val application = applicationBuilder(userAnswers = None).build()
+      val application = applicationBuilder(userAnswers = None).build()
 
-        val request = FakeRequest(POST, routes.InterruptPageController.onSubmit.url)
-        val result = route(application, request).value
+      val request = FakeRequest(POST, routes.InterruptPageController.onSubmit.url)
+      val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
+      status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual "/maintain-a-trust/other-individuals/name"
+      redirectLocation(result).value mustEqual "/maintain-a-trust/other-individuals/name"
 
-        application.stop()
+      application.stop()
 
-      }
+    }
 
   }
 }

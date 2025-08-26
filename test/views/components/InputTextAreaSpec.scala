@@ -23,7 +23,7 @@ import play.api.data.Forms.text
 class InputTextAreaSpec extends SpecBase {
 
   val form: Form[String] = Form("value" -> text())
-  "Input text area " should {
+  "Input text area" should {
 
     "render a text area with correct label and id" in {
       val application = applicationBuilder().build()

@@ -23,7 +23,7 @@ import play.api.data.Forms.text
 class InputEmailSpec extends SpecBase {
 
   val form: Form[String] = Form("value" -> text())
-  "Input email component  " should {
+  "Input email component" should {
 
     "render as a Gov.UK input with email as type" in {
       val application = applicationBuilder().build()
