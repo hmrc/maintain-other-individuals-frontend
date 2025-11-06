@@ -32,9 +32,12 @@ import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.http.HttpResponse
 import utils.print.OtherIndividualPrintHelper
 import views.html.individual.amend.CheckDetailsView
-
 import java.time.LocalDate
 import scala.concurrent.Future
+import handlers.ErrorHandler
+import play.api.mvc.RequestHeader
+import play.twirl.api.Html
+import utils.mappers.OtherIndividualMapper
 
 class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFutures {
 
@@ -42,8 +45,9 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
 
   private lazy val checkDetailsRoute = routes.CheckDetailsController.extractAndRender(index).url
   private lazy val submitDetailsRoute = routes.CheckDetailsController.onSubmit(index).url
-
   private lazy val onwardRoute = controllers.routes.AddAnOtherIndividualController.onPageLoad().url
+  private lazy val extractAndRenderRoute = routes.CheckDetailsController.extractAndRender(index).url
+  private lazy val renderFromUaRoute = routes.CheckDetailsController.renderFromUserAnswers(index).url
 
   private val name = Name("John", None, "Doe")
   private val startDate = LocalDate.parse("2019-03-09")
@@ -125,5 +129,53 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
       application.stop()
     }
 
+    "extractAndRender  should return Internal server error via ErrorHandler when service fails" in {
+      val mockService = mock[TrustService]
+      val mockErrHandler = mock[ErrorHandler]
+
+      when(mockService.getOtherIndividual(any(), any())(any(), any()))
+        .thenReturn(Future.failed(new RuntimeException("failed")))
+
+      when(mockErrHandler.internalServerErrorTemplate(any[RequestHeader])).thenReturn(Future.successful(Html("server error")))
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          bind[TrustService].toInstance(mockService),
+          bind[ErrorHandler].toInstance(mockErrHandler)
+        )
+        .build()
+
+      val request = FakeRequest(GET, extractAndRenderRoute)
+      val result = route(application, request).value
+
+      status(result) mustEqual INTERNAL_SERVER_ERROR
+      contentAsString(result) must include("server error")
+
+      application.stop()
+    }
+
+    "onSubmit should return Internal server error via ErrorHandler when mapper returns None" in {
+      val mockMapper = mock[OtherIndividualMapper]
+      val mockErrHandler = mock[ErrorHandler]
+
+      when(mockMapper.apply(any())).thenReturn(None)
+
+      when(mockErrHandler.internalServerErrorTemplate(any[RequestHeader])).thenReturn(Future.successful(Html("server error")))
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          bind[OtherIndividualMapper].toInstance(mockMapper),
+          bind[ErrorHandler].toInstance(mockErrHandler)
+        )
+        .build()
+
+      val request = FakeRequest(POST, submitDetailsRoute)
+      val result = route(application, request).value
+
+      status(result) mustEqual INTERNAL_SERVER_ERROR
+      contentAsString(result) must include("server error")
+
+      application.stop()
+    }
   }
 }

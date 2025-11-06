@@ -124,5 +124,38 @@ class PassportOrIdCardDetailsYesNoControllerSpec extends SpecBase with MockitoSu
 
       application.stop()
     }
+
+    "redirect to Session Expired on GET when IndexPage is missing but Name is present" in {
+      val userAnswersWithNameOnly =
+        super.emptyUserAnswers.set(NamePage, name).success.value
+
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithNameOnly)).build()
+
+      val request = FakeRequest(GET, passportOrIdCardDetailsYesNoRoute)
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.SessionExpiredController.onPageLoad.url
+
+      application.stop()
+    }
+
+    "redirect to Session Expired on POST when IndexPage is missing but Name is present" in {
+      val userAnswersWithNameOnly =
+        super.emptyUserAnswers.set(NamePage, name).success.value
+
+      val application = applicationBuilder(userAnswers = Some(userAnswersWithNameOnly)).build()
+
+      val request =
+        FakeRequest(POST, passportOrIdCardDetailsYesNoRoute)
+          .withFormUrlEncodedBody("value" -> "true")
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+      redirectLocation(result).value mustEqual controllers.routes.SessionExpiredController.onPageLoad.url
+
+      application.stop()
+    }
   }
 }

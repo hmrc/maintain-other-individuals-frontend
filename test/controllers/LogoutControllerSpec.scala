@@ -23,6 +23,7 @@ import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import org.mockito.ArgumentCaptor
 
 class LogoutControllerSpec extends SpecBase {
 
@@ -47,6 +48,29 @@ class LogoutControllerSpec extends SpecBase {
 
     application.stop()
 
+  }
+
+  "logout sends explicit audit when feature flag is enabled" in {
+    val mockAuditConnector = mock[AuditConnector]
+
+    val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+      .configure("microservice.services.features.auditing.logout" -> true)
+      .overrides(bind[AuditConnector].toInstance(mockAuditConnector))
+      .build()
+
+    val request = FakeRequest(GET, routes.LogoutController.logout().url)
+    val result = route(application, request).value
+
+    status(result) mustEqual SEE_OTHER
+    redirectLocation(result).value mustBe frontendAppConfig.logoutUrl
+
+    val captor: ArgumentCaptor[Map[String, String]] =
+      ArgumentCaptor.forClass(classOf[Map[String, String]])
+
+    verify(mockAuditConnector, times(1))
+      .sendExplicitAudit(eqTo("trusts"), captor.capture())(any(), any())
+
+    application.stop()
   }
 
 }
