@@ -16,23 +16,30 @@
 
 package controllers
 
-import javax.inject.Inject
 import models.NormalMode
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.InterruptPageView
+import views.html.NonTaxableInformationPageView
+
+import javax.inject.Inject
 
 class InterruptPageController @Inject()(
                                         val controllerComponents: MessagesControllerComponents,
-                                        view: InterruptPageView
+                                        view: InterruptPageView,
+                                        nonTaxableView : NonTaxableInformationPageView
                                       ) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = Action { implicit request =>
+  def taxablePageLoad: Action[AnyContent] = Action { implicit request =>
     Ok(view())
   }
 
   def onSubmit: Action[AnyContent] = Action {
     Redirect(controllers.individual.routes.NameController.onPageLoad(NormalMode))
+  }
+
+  def nonTaxablePageLoad: Action[AnyContent] = Action { implicit request =>
+    Ok(nonTaxableView())
   }
 }

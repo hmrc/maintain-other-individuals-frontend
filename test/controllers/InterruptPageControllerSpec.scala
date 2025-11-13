@@ -29,7 +29,7 @@ class InterruptPageControllerSpec extends SpecBase {
 
       val application = applicationBuilder().build()
 
-      val request = FakeRequest(GET, routes.InterruptPageController.onPageLoad.url)
+      val request = FakeRequest(GET, routes.InterruptPageController.taxablePageLoad().url)
 
       val result = route(application, request).value
 
@@ -51,6 +51,19 @@ class InterruptPageControllerSpec extends SpecBase {
 
       application.stop()
 
+    }
+
+    "return OK and the non taxable information view for a GET" in {
+
+      val application = applicationBuilder().build()
+
+      val request = FakeRequest(GET, routes.InterruptPageController.nonTaxablePageLoad().url)
+
+      val result = route(application, request).value
+
+      status(result) mustEqual OK
+
+      application.stop()
     }
 
   }

@@ -357,3 +357,20 @@ otherIndividual.interrupt.page.b2 = Passport and address
 otherIndividual.interrupt.page.b3 = ID card and address
 otherIndividual.interrupt.page.b4 = address
 
+otherIndividualsInfo.page.title = Information you need to add other individuals to the trust
+otherIndividualsInfo.page.heading = Information you need to add other individuals to the trust
+otherIndividualsInfo.page.caption= Other individuals
+otherIndividualsInfo.paragraph1 = For other individuals who are involved in the trust, like parents of a young beneficiary and other family members, friends or third parties, tell us their name. If you know more details tell us their:
+otherIndividualsInfo.bulletpoint1 = date of birth
+otherIndividualsInfo.bulletpoint2 = country of nationality
+otherIndividualsInfo.bulletpoint3 = country of residence
+otherIndividualsInfo.paragraph3 = You also need to tell us if any of the other individuals do not have mental capacity at the time they are added to the trust.
+otherIndividualsInfo.paragraph4 = An individual does not have mental capacity if they cannot understand information and make decisions about the trust due to any of the following:
+otherIndividualsInfo.bulletpoint8 = mental illness
+otherIndividualsInfo.bulletpoint9 = learning disability
+otherIndividualsInfo.bulletpoint10 = dementia or a related condition
+otherIndividualsInfo.bulletpoint11 = being unable to communicate
+
+
+otherIndividualsInfo.details = What we mean by country of residence
+otherIndividualsInfo.details.paragraph1 = This is usually the country where the individual lives and works most of the time during the tax year. You can check the status of their residency through the Statutory Residence Test (SRT).

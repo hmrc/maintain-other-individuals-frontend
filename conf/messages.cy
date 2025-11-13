@@ -318,3 +318,21 @@ otherIndividual.interrupt.page.b1=eu rhif Yswiriant Gwladol
 otherIndividual.interrupt.page.b2=eu pasbort a’u cyfeiriad
 otherIndividual.interrupt.page.b3=eu cerdyn adnabod a’u cyfeiriad
 otherIndividual.interrupt.page.b4=eu cyfeiriad
+
+otherIndividualsInfo.page.title = Gwybodaeth y mae angen er mwyn i chi ychwanegu unigolion eraill at yr ymddiriedolaeth
+otherIndividualsInfo.page.heading = Gwybodaeth y mae angen er mwyn i chi ychwanegu unigolion eraill at yr ymddiriedolaeth
+otherIndividualsInfo.page.caption= Unigolion eraill
+otherIndividualsInfo.paragraph1 = Ar gyfer unrhyw unigolion eraill sy’n ymwneud â’r ymddiriedolaeth – megis rhieni buddiolwr ifanc ac aelodau eraill o’r teulu, ffrindiau neu drydydd partïon – rhowch eu henwau i ni. Os ydych yn gwybod rhagor o fanylion, rhowch y canlynol i ni:
+otherIndividualsInfo.bulletpoint1 = eich dyddiad geni
+otherIndividualsInfo.bulletpoint2 = gwlad cenedligrwydd
+otherIndividualsInfo.bulletpoint3 = gwlad breswyl
+otherIndividualsInfo.paragraph3 = Mae angen i chi roi gwybod i ni hefyd os nad oes gan unrhyw un o’r unigolion eraill alluedd meddyliol ar yr adeg y cafodd eu hychwanegu at yr ymddiriedolaeth.
+otherIndividualsInfo.paragraph4 = Nid oes gan unigolyn alluedd meddyliol os nad yw’n gallu deall gwybodaeth na gwneud penderfyniadau am yr ymddiriedolaeth oherwydd unrhyw un o’r canlynol:
+otherIndividualsInfo.bulletpoint8 = salwch meddwl
+otherIndividualsInfo.bulletpoint9 = anabledd dysgu
+otherIndividualsInfo.bulletpoint10 = dementia neu gyflwr cysylltiedig
+otherIndividualsInfo.bulletpoint11 = analluedd i gyfathrebu
+
+
+otherIndividualsInfo.details = Yr hyn a olygwn wrth ddweud gwlad breswyl
+otherIndividualsInfo.details.paragraph1 = Fel arfer, dyma’r wlad lle mae’r unigolyn yn byw ac yn gweithio’r rhan fwyaf o’r amser yn ystod y flwyddyn dreth. Gallwch wirio ei statws preswylio drwy’r Prawf Preswylio Statudol (SRT).
