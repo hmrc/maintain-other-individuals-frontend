@@ -17,13 +17,16 @@
 @import controllers.routes._
 @import models.NormalMode
 @import views.html.components.{HeadingWithCaption, BulletList, SubmitButton}
+@import uk.gov.hmrc.govukfrontend.views.html.components._
 
 @this(
     main_template: MainTemplate,
     formHelper: FormWithCSRF,
     headingWithCaption: HeadingWithCaption,
     bulletList: BulletList,
-    submitButton: SubmitButton
+    submitButton: SubmitButton,
+    govukDetails: GovukDetails
+
 )
 
 @()(implicit request: RequestHeader, messages: Messages)
@@ -59,16 +62,13 @@
                 "bulletpoint11"
                     )
         )
-<details class="govuk-details" data-module="govuk-details">
-    <summary class="govuk-details__summary">
-            <span class="govuk-details__summary-text">
-              @messages("otherIndividualsInfo.details")
-            </span>
-    </summary>
-    <div class="govuk-details__text">
-        @messages("otherIndividualsInfo.details.paragraph1")
-    </div>
-</details>
+
+    @govukDetails(Details(
+                    summary = Text(messages("otherIndividualsInfo.details")),
+                    content = Text(messages("otherIndividualsInfo.details.paragraph1")
+                        )
+                  ))
+
 
     @formHelper(action = InterruptPageController.onSubmit(), Symbol("autoComplete") -> "off") {
         @submitButton(Some(messages("site.continue")))

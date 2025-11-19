@@ -21,14 +21,14 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.InterruptPageView
-import views.html.NonTaxableInformationPageView
+import views.html.NonTaxableInterruptPageView
 
 import javax.inject.Inject
 
 class InterruptPageController @Inject()(
                                         val controllerComponents: MessagesControllerComponents,
                                         view: InterruptPageView,
-                                        nonTaxableView : NonTaxableInformationPageView
+                                        nonTaxableView : NonTaxableInterruptPageView
                                       ) extends FrontendBaseController with I18nSupport {
 
   def taxablePageLoad: Action[AnyContent] = Action { implicit request =>
