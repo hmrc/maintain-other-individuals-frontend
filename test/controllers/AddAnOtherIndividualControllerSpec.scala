@@ -20,7 +20,7 @@ import base.SpecBase
 import connectors.TrustsStoreConnector
 import forms.{AddAnOtherIndividualFormProvider, YesNoFormProvider}
 import models.TaskStatus.Completed
-import models.{AddAnOtherIndividual, Name, NationalInsuranceNumber, NormalMode, OtherIndividual, OtherIndividuals, RemoveOtherIndividual}
+import models.{AddAnOtherIndividual, Name, NationalInsuranceNumber, NormalMode, OtherIndividual, OtherIndividuals, RemoveOtherIndividual, UserAnswers}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{reset, verify, when}
 import org.scalatest.BeforeAndAfterEach
@@ -203,7 +203,32 @@ class AddAnOtherIndividualControllerSpec extends SpecBase with ScalaFutures with
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual controllers.routes.InterruptPageController.onPageLoad().url
+        redirectLocation(result).value mustEqual controllers.routes.InterruptPageController.taxablePageLoad().url
+
+        application.stop()
+      }
+
+      "redirect to non taxable information page when the user answers yes" in {
+
+        val fakeService = new FakeService(OtherIndividuals(Nil))
+
+        val userAns = UserAnswers(userAnswersId, "UTRUTRUTR", "sessionId", s"$userAnswersId-UTRUTRUTR-sessionId", LocalDate.now(),
+          isTaxable = false)
+
+        val application = applicationBuilder(userAnswers = Some(userAns))
+          .overrides(
+            bind(classOf[TrustService]).toInstance(fakeService),
+            bind(classOf[TrustsStoreConnector]).toInstance(mockStoreConnector)
+          ).build()
+
+        val request = FakeRequest(POST, submitOneRoute)
+          .withFormUrlEncodedBody(("value", "true"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustEqual controllers.routes.InterruptPageController.nonTaxablePageLoad().url
 
         application.stop()
       }
