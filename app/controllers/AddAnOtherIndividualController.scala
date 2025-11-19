@@ -104,12 +104,10 @@ class AddAnOtherIndividualController @Inject()(
               updatedAnswers <- Future.fromTry(request.userAnswers.cleanup)
               _ <- repository.set(updatedAnswers)
             } yield
-              if (updatedAnswers.isTaxable)
-                {
+              if (updatedAnswers.isTaxable) {
                   Redirect(controllers.routes.InterruptPageController.taxablePageLoad())
                 }
-              else
-                {
+              else {
                   Redirect(controllers.routes.InterruptPageController.nonTaxablePageLoad())
                 }
           } else {
