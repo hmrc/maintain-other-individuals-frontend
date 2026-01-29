@@ -18,7 +18,7 @@ package views.components
 
 import base.SpecBase
 
-class ButtonSpec extends SpecBase{
+class ButtonSpec extends SpecBase {
 
   "Button component" should {
 
@@ -29,10 +29,8 @@ class ButtonSpec extends SpecBase{
 
       val result = view.apply()(messages)
 
-      result.body must include ("Continue")
+      result.body must include("Continue")
     }
   }
 
 }
-
-

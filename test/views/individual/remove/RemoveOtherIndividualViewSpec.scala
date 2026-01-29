@@ -25,10 +25,10 @@ import views.html.individual.remove.RemoveOtherIndividualView
 
 class RemoveOtherIndividualViewSpec extends YesNoViewBehaviours {
 
-  val messageKeyPrefix = "removeOtherIndividualYesNo"
+  val messageKeyPrefix    = "removeOtherIndividualYesNo"
   val form: Form[Boolean] = (new YesNoFormProvider).withPrefix(messageKeyPrefix)
-  val name = "Name"
-  val index = 0
+  val name                = "Name"
+  val index               = 0
 
   "RemoveOtherIndividual view" must {
 
@@ -41,6 +41,13 @@ class RemoveOtherIndividualViewSpec extends YesNoViewBehaviours {
 
     behave like pageWithBackLink(applyView(form))
 
-    behave like yesNoPage(form, applyView, messageKeyPrefix, Some(name), routes.RemoveOtherIndividualController.onSubmit(index).url)
+    behave like yesNoPage(
+      form,
+      applyView,
+      messageKeyPrefix,
+      Some(name),
+      routes.RemoveOtherIndividualController.onSubmit(index).url
+    )
   }
+
 }

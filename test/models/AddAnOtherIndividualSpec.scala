@@ -39,10 +39,11 @@ class AddAnOtherIndividualSpec extends AnyWordSpec with Matchers with ScalaCheck
 
       val gen = Gen.oneOf(AddAnOtherIndividual.values)
 
-      forAll(gen) {
-        addAnOtherIndividual =>
-
-          JsString(addAnOtherIndividual.toString).validate[AddAnOtherIndividual].asOpt.value mustEqual addAnOtherIndividual
+      forAll(gen) { addAnOtherIndividual =>
+        JsString(addAnOtherIndividual.toString)
+          .validate[AddAnOtherIndividual]
+          .asOpt
+          .value mustEqual addAnOtherIndividual
       }
     }
 
@@ -50,10 +51,8 @@ class AddAnOtherIndividualSpec extends AnyWordSpec with Matchers with ScalaCheck
 
       val gen = arbitrary[String] suchThat (!AddAnOtherIndividual.values.map(_.toString).contains(_))
 
-      forAll(gen) {
-        invalidValue =>
-
-          JsString(invalidValue).validate[AddAnOtherIndividual] mustEqual JsError("error.invalid")
+      forAll(gen) { invalidValue =>
+        JsString(invalidValue).validate[AddAnOtherIndividual] mustEqual JsError("error.invalid")
       }
     }
 
@@ -61,11 +60,10 @@ class AddAnOtherIndividualSpec extends AnyWordSpec with Matchers with ScalaCheck
 
       val gen = Gen.oneOf(AddAnOtherIndividual.values)
 
-      forAll(gen) {
-        addAnOtherIndividual =>
-
-          Json.toJson(addAnOtherIndividual) mustEqual JsString(addAnOtherIndividual.toString)
+      forAll(gen) { addAnOtherIndividual =>
+        Json.toJson(addAnOtherIndividual) mustEqual JsString(addAnOtherIndividual.toString)
       }
     }
   }
+
 }

@@ -37,18 +37,20 @@ class IndexControllerSpec extends SpecBase {
 
     "redirect to AddAnOtherIndividualController and set task to in progress" in {
 
-      val identifier = "1234567890"
-      val startDate = "2019-06-01"
-      val isTaxable = true
+      val identifier           = "1234567890"
+      val startDate            = "2019-06-01"
+      val isTaxable            = true
       val isUnderlyingData5mld = false
 
-      val mockTrustConnector = mock[TrustConnector]
+      val mockTrustConnector     = mock[TrustConnector]
       val mockTrustsStoreService = mock[TrustsStoreService]
 
       when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
 
       when(mockTrustConnector.getTrustDetails(any())(any(), any()))
-        .thenReturn(Future.successful(TrustDetails(startDate = LocalDate.parse(startDate), trustTaxable = Some(isTaxable))))
+        .thenReturn(
+          Future.successful(TrustDetails(startDate = LocalDate.parse(startDate), trustTaxable = Some(isTaxable)))
+        )
 
       when(mockTrustsStoreService.updateTaskStatus(any(), any())(any(), any()))
         .thenReturn(Future.successful(HttpResponse(OK, "")))
@@ -57,17 +59,32 @@ class IndexControllerSpec extends SpecBase {
         .thenReturn(Future.successful(isUnderlyingData5mld))
 
       when(mockTrustConnector.getOtherIndividuals(any())(any(), any()))
-        .thenReturn(Future.successful(
-          OtherIndividuals(
-            List(OtherIndividual(Name("Adam", None, "Test"), None, None, None, None, None, None, LocalDate.now, provisional = false))
+        .thenReturn(
+          Future.successful(
+            OtherIndividuals(
+              List(
+                OtherIndividual(
+                  Name("Adam", None, "Test"),
+                  None,
+                  None,
+                  None,
+                  None,
+                  None,
+                  None,
+                  LocalDate.now,
+                  provisional = false
+                )
+              )
+            )
           )
-        ))
+        )
 
       val application = applicationBuilder(userAnswers = None)
         .overrides(
           bind[TrustConnector].toInstance(mockTrustConnector),
           bind[TrustsStoreService].toInstance(mockTrustsStoreService)
-        ).build()
+        )
+        .build()
 
       val request = FakeRequest(GET, routes.IndexController.onPageLoad(identifier).url)
 
@@ -82,4 +99,5 @@ class IndexControllerSpec extends SpecBase {
       application.stop()
     }
   }
+
 }

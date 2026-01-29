@@ -21,6 +21,7 @@ import models.{DetailsType, YesNoDontKnow}
 import org.scalacheck.{Arbitrary, Gen}
 
 trait ModelGenerators {
+
   implicit lazy val arbitraryDetailsType: Arbitrary[DetailsType] = Arbitrary {
     Gen.oneOf(DetailsType.values.toSeq)
   }
@@ -28,4 +29,5 @@ trait ModelGenerators {
   implicit lazy val arbitraryYesNoDontKnowType: Arbitrary[YesNoDontKnow] = Arbitrary {
     Gen.oneOf[YesNoDontKnow](YesNoDontKnow.values)
   }
+
 }

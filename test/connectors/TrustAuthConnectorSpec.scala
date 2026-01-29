@@ -37,9 +37,8 @@ class TrustAuthConnectorSpec extends AsyncFreeSpec with Matchers with WireMockHe
 
   private def authorisedUrlFor(utr: String): String = s"/trusts-auth/authorised/$utr"
 
-  private def responseFromJson(json: JsValue) = {
+  private def responseFromJson(json: JsValue) =
     aResponse().withStatus(Status.OK).withBody(json.toString())
-  }
 
   private def allowedResponse = responseFromJson(Json.obj("authorised" -> true))
 
@@ -47,15 +46,17 @@ class TrustAuthConnectorSpec extends AsyncFreeSpec with Matchers with WireMockHe
 
   private def redirectResponse(redirectUrl: String) = responseFromJson(Json.obj("redirectUrl" -> redirectUrl))
 
-  private def wiremock(url: String, response: ResponseDefinitionBuilder) = {
+  private def wiremock(url: String, response: ResponseDefinitionBuilder) =
     server.stubFor(get(urlEqualTo(url)).willReturn(response))
-  }
 
   lazy val app: Application = new GuiceApplicationBuilder()
-    .configure(Seq(
-      "microservice.services.trusts-auth.port" -> server.port(),
-      "auditing.enabled" -> false
-    ): _*).build()
+    .configure(
+      Seq(
+        "microservice.services.trusts-auth.port" -> server.port(),
+        "auditing.enabled"                       -> false
+      ): _*
+    )
+    .build()
 
   private lazy val connector = app.injector.instanceOf[TrustAuthConnector]
 
@@ -131,4 +132,5 @@ class TrustAuthConnectorSpec extends AsyncFreeSpec with Matchers with WireMockHe
     }
 
   }
+
 }

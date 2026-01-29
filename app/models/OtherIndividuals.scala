@@ -23,14 +23,13 @@ case class OtherIndividuals(otherIndividuals: List[OtherIndividual]) {
 
   val size: Int = otherIndividuals.size
 
-  def addToHeading()(implicit mp: MessagesProvider): String = {
+  def addToHeading()(implicit mp: MessagesProvider): String =
 
     size match {
       case 0 => Messages("addAnOtherIndividual.heading")
       case 1 => Messages("addAnOtherIndividual.singular.heading")
       case l => Messages("addAnOtherIndividual.count.heading", l)
     }
-  }
 
   val isMaxedOut: Boolean = size >= 25
 
@@ -38,6 +37,10 @@ case class OtherIndividuals(otherIndividuals: List[OtherIndividual]) {
 }
 
 object OtherIndividuals {
+
   implicit val reads: Reads[OtherIndividuals] =
-    (__ \ "naturalPerson").readWithDefault[List[OtherIndividual]](Nil).map(otherIndividuals => OtherIndividuals(otherIndividuals))
+    (__ \ "naturalPerson")
+      .readWithDefault[List[OtherIndividual]](Nil)
+      .map(otherIndividuals => OtherIndividuals(otherIndividuals))
+
 }

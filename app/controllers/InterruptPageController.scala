@@ -25,11 +25,11 @@ import views.html.NonTaxableInterruptPageView
 
 import javax.inject.Inject
 
-class InterruptPageController @Inject()(
-                                        val controllerComponents: MessagesControllerComponents,
-                                        view: InterruptPageView,
-                                        nonTaxableView : NonTaxableInterruptPageView
-                                      ) extends FrontendBaseController with I18nSupport {
+class InterruptPageController @Inject() (
+  val controllerComponents: MessagesControllerComponents,
+  view: InterruptPageView,
+  nonTaxableView: NonTaxableInterruptPageView
+) extends FrontendBaseController with I18nSupport {
 
   def taxablePageLoad: Action[AnyContent] = Action { implicit request =>
     Ok(view())
@@ -42,4 +42,5 @@ class InterruptPageController @Inject()(
   def nonTaxablePageLoad: Action[AnyContent] = Action { implicit request =>
     Ok(nonTaxableView())
   }
+
 }

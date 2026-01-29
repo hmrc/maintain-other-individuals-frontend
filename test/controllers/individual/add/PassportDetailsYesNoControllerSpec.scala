@@ -40,8 +40,11 @@ class PassportDetailsYesNoControllerSpec extends SpecBase with MockitoSugar {
 
   private val name: Name = Name("FirstName", None, "LastName")
 
-  override val emptyUserAnswers: UserAnswers = UserAnswers("id", "UTRUTRUTR", "sessionId", "id-UTRUTRUTR-sessionId", LocalDate.now())
-    .set(NamePage, name).success.value
+  override val emptyUserAnswers: UserAnswers =
+    UserAnswers("id", "UTRUTRUTR", "sessionId", "id-UTRUTRUTR-sessionId", LocalDate.now())
+      .set(NamePage, name)
+      .success
+      .value
 
   private val passportDetailsYesNoRoute: String = routes.PassportDetailsYesNoController.onPageLoad(NormalMode).url
 
@@ -68,8 +71,12 @@ class PassportDetailsYesNoControllerSpec extends SpecBase with MockitoSugar {
     "populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers = emptyUserAnswers
-        .set(NamePage, name).success.value
-        .set(PassportDetailsYesNoPage, true).success.value
+        .set(NamePage, name)
+        .success
+        .value
+        .set(PassportDetailsYesNoPage, true)
+        .success
+        .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -156,4 +163,5 @@ class PassportDetailsYesNoControllerSpec extends SpecBase with MockitoSugar {
       application.stop()
     }
   }
+
 }

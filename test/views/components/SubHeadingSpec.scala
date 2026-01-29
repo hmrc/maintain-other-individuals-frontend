@@ -18,7 +18,7 @@ package views.components
 
 import base.SpecBase
 
-class SubHeadingSpec extends SpecBase{
+class SubHeadingSpec extends SpecBase {
 
   "SubHeading component" should {
 
@@ -29,10 +29,8 @@ class SubHeadingSpec extends SpecBase{
 
       val result = view.apply("otherIndividual.interrupt.page.caption", "en")(messages)
 
-      result.body must include ("This section is")
+      result.body must include("This section is")
     }
   }
 
 }
-
-

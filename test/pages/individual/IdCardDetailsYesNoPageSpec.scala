@@ -21,7 +21,6 @@ import pages.behaviours.PageBehaviours
 
 import java.time.LocalDate
 
-
 class IdCardDetailsYesNoPageSpec extends PageBehaviours {
 
   "IdCardDetailsYesNoPage" must {
@@ -40,4 +39,5 @@ class IdCardDetailsYesNoPageSpec extends PageBehaviours {
       userAnswers.get.get(IdCardDetailsPage) mustNot be(defined)
     }
   }
+
 }

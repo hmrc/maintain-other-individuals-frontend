@@ -27,11 +27,11 @@ import java.time.LocalDate
 
 class WhenIndividualAddedViewSpec extends QuestionViewBehaviours[LocalDate] {
 
-  val messageKeyPrefix = "otherIndividual.whenIndividualAdded"
-  val date: LocalDate = LocalDate.parse("2019-02-03")
-  val form: Form[LocalDate] = new DateAddedToTrustFormProvider().withConfig(messageKeyPrefix, date)
+  val messageKeyPrefix              = "otherIndividual.whenIndividualAdded"
+  val date: LocalDate               = LocalDate.parse("2019-02-03")
+  val form: Form[LocalDate]         = new DateAddedToTrustFormProvider().withConfig(messageKeyPrefix, date)
   val view: WhenIndividualAddedView = viewFor[WhenIndividualAddedView](Some(emptyUserAnswers))
-  val name: Name = Name("First", Some("Middle"), "Last")
+  val name: Name                    = Name("First", Some("Middle"), "Last")
 
   "WhenIndividualAdded view" must {
 

@@ -23,6 +23,7 @@ import play.api.data.Forms.text
 class InputEmailSpec extends SpecBase {
 
   val form: Form[String] = Form("value" -> text())
+
   "Input email component" should {
 
     "render as a Gov.UK input with email as type" in {
@@ -30,14 +31,13 @@ class InputEmailSpec extends SpecBase {
 
       val view = application.injector.instanceOf[views.html.components.InputEmail]
 
-      val result = view.apply(
-        field = form("value"),
-        label = "test label")(messages)
+      val result = view.apply(field = form("value"), label = "test label")(messages)
 
-      result.body must include ("govuk-input")
-      result.body must include ("type=\"email\"")
-      result.body must include ("autocomplete=\"email\"")
+      result.body must include("govuk-input")
+      result.body must include("type=\"email\"")
+      result.body must include("autocomplete=\"email\"")
     }
 
   }
+
 }

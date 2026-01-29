@@ -27,4 +27,5 @@ class AddAnOtherIndividualFormProvider @Inject() extends Mappings {
     Form(
       "value" -> enumerable[AddAnOtherIndividual]("addAnOtherIndividual.error.required")
     )
+
 }

@@ -32,24 +32,24 @@ import java.time.LocalDate
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class WhenIndividualAddedController @Inject()(
-                                               override val messagesApi: MessagesApi,
-                                               sessionRepository: PlaybackRepository,
-                                               navigator: Navigator,
-                                               standardActionSets: StandardActionSets,
-                                               nameAction: NameRequiredAction,
-                                               formProvider: DateAddedToTrustFormProvider,
-                                               val controllerComponents: MessagesControllerComponents,
-                                               view: WhenIndividualAddedView
-                                             )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class WhenIndividualAddedController @Inject() (
+  override val messagesApi: MessagesApi,
+  sessionRepository: PlaybackRepository,
+  navigator: Navigator,
+  standardActionSets: StandardActionSets,
+  nameAction: NameRequiredAction,
+  formProvider: DateAddedToTrustFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: WhenIndividualAddedView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport {
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (standardActionSets.verifiedForUtr andThen nameAction) {
     implicit request =>
-
       val form = formProvider.withConfig("otherIndividual.whenIndividualAdded", minDate)
 
       val preparedForm = request.userAnswers.get(WhenIndividualAddedPage) match {
-        case None => form
+        case None        => form
         case Some(value) => form.fill(value)
       }
 
@@ -58,25 +58,26 @@ class WhenIndividualAddedController @Inject()(
 
   def onSubmit(mode: Mode): Action[AnyContent] = (standardActionSets.verifiedForUtr andThen nameAction).async {
     implicit request =>
-
       val form = formProvider.withConfig("otherIndividual.whenIndividualAdded", minDate)
 
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode, request.otherIndividual))),
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(WhenIndividualAddedPage, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(WhenIndividualAddedPage, mode, updatedAnswers))
-      )
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, request.otherIndividual))),
+          value =>
+            for {
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(WhenIndividualAddedPage, value))
+              _              <- sessionRepository.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(WhenIndividualAddedPage, mode, updatedAnswers))
+        )
   }
 
   private def minDate(implicit request: OtherIndividualNameRequest[AnyContent]): LocalDate = {
     val startDate = request.userAnswers.whenTrustSetup
     request.userAnswers.get(DateOfBirthPage) match {
       case Some(dob) if dob.isAfter(startDate) => dob
-      case _ => startDate
+      case _                                   => startDate
     }
   }
+
 }

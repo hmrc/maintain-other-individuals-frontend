@@ -35,13 +35,16 @@ class AddressYesNoControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute: Call = Call("GET", "/foo")
 
-  val formProvider = new YesNoFormProvider()
+  val formProvider        = new YesNoFormProvider()
   val form: Form[Boolean] = formProvider.withPrefix("otherIndividual.addressYesNo")
-  val individualName = "FirstName LastName"
-  val name: Name = Name("FirstName", None, "LastName")
+  val individualName      = "FirstName LastName"
+  val name: Name          = Name("FirstName", None, "LastName")
 
-  override val emptyUserAnswers: UserAnswers = UserAnswers("id", "UTRUTRUTR", "sessionId", "id-UTRUTRUTR-sessionId", LocalDate.now())
-    .set(NamePage, name).success.value
+  override val emptyUserAnswers: UserAnswers =
+    UserAnswers("id", "UTRUTRUTR", "sessionId", "id-UTRUTRUTR-sessionId", LocalDate.now())
+      .set(NamePage, name)
+      .success
+      .value
 
   lazy val addressYesNoControllerRoute: String = routes.AddressYesNoController.onPageLoad(NormalMode).url
 
@@ -105,7 +108,6 @@ class AddressYesNoControllerSpec extends SpecBase with MockitoSugar {
       application.stop()
     }
 
-
     "return a Bad Request and errors when invalid data is submitted" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
@@ -160,4 +162,5 @@ class AddressYesNoControllerSpec extends SpecBase with MockitoSugar {
       application.stop()
     }
   }
+
 }

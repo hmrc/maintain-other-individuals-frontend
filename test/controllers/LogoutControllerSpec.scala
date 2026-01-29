@@ -59,7 +59,7 @@ class LogoutControllerSpec extends SpecBase {
       .build()
 
     val request = FakeRequest(GET, routes.LogoutController.logout().url)
-    val result = route(application, request).value
+    val result  = route(application, request).value
 
     status(result) mustEqual SEE_OTHER
     redirectLocation(result).value mustBe frontendAppConfig.logoutUrl

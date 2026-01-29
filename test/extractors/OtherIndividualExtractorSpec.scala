@@ -18,7 +18,10 @@ package extractors
 
 import generators.ModelGenerators
 import models.Constant.GB
-import models.{CombinedPassportOrIdCard, IdCard, Name, NationalInsuranceNumber, OtherIndividual, Passport, UkAddress, UserAnswers, YesNoDontKnow}
+import models.{
+  CombinedPassportOrIdCard, IdCard, Name, NationalInsuranceNumber, OtherIndividual, Passport, UkAddress, UserAnswers,
+  YesNoDontKnow
+}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
@@ -27,7 +30,8 @@ import play.api.libs.json.Json
 
 import java.time.LocalDate
 
-class OtherIndividualExtractorSpec extends AnyFreeSpec with ScalaCheckPropertyChecks with ModelGenerators with Matchers {
+class OtherIndividualExtractorSpec
+    extends AnyFreeSpec with ScalaCheckPropertyChecks with ModelGenerators with Matchers {
 
   val answers: UserAnswers = UserAnswers(
     "Id",
@@ -40,8 +44,8 @@ class OtherIndividualExtractorSpec extends AnyFreeSpec with ScalaCheckPropertyCh
 
   val index = 0
 
-  val name: Name = Name("First", None, "Last")
-  val date: LocalDate = LocalDate.parse("1996-02-03")
+  val name: Name         = Name("First", None, "Last")
+  val date: LocalDate    = LocalDate.parse("1996-02-03")
   val address: UkAddress = UkAddress("Line 1", "Line 2", None, None, "postcode")
 
   val extractor = new OtherIndividualExtractor()
@@ -64,15 +68,15 @@ class OtherIndividualExtractorSpec extends AnyFreeSpec with ScalaCheckPropertyCh
 
     val result = extractor(answers, individual, index).get
 
-    result.get(IndexPage).get mustBe index
-    result.get(NamePage).get mustBe name
-    result.get(DateOfBirthYesNoPage).get mustBe true
-    result.get(DateOfBirthPage).get mustBe date
+    result.get(IndexPage).get                        mustBe index
+    result.get(NamePage).get                         mustBe name
+    result.get(DateOfBirthYesNoPage).get             mustBe true
+    result.get(DateOfBirthPage).get                  mustBe date
     result.get(CountryOfNationalityYesNoPage) mustNot be(defined)
     result.get(CountryOfNationalityUkYesNoPage) mustNot be(defined)
     result.get(CountryOfNationalityPage) mustNot be(defined)
     result.get(NationalInsuranceNumberYesNoPage).get mustBe true
-    result.get(NationalInsuranceNumberPage).get mustBe "nino"
+    result.get(NationalInsuranceNumberPage).get      mustBe "nino"
     result.get(CountryOfResidenceYesNoPage) mustNot be(defined)
     result.get(CountryOfResidenceUkYesNoPage) mustNot be(defined)
     result.get(CountryOfResidencePage) mustNot be(defined)
@@ -82,7 +86,7 @@ class OtherIndividualExtractorSpec extends AnyFreeSpec with ScalaCheckPropertyCh
     result.get(NonUkAddressPage) mustNot be(defined)
     result.get(PassportOrIdCardDetailsYesNoPage) mustNot be(defined)
     result.get(PassportOrIdCardDetailsPage) mustNot be(defined)
-    result.get(MentalCapacityYesNoPage) mustBe Some(YesNoDontKnow.Yes)
+    result.get(MentalCapacityYesNoPage)              mustBe Some(YesNoDontKnow.Yes)
   }
 
   "should populate user answers when individual has a passport" in {
@@ -103,10 +107,10 @@ class OtherIndividualExtractorSpec extends AnyFreeSpec with ScalaCheckPropertyCh
 
     val result = extractor(answers, individual, index).get
 
-    result.get(IndexPage).get mustBe index
-    result.get(NamePage).get mustBe name
-    result.get(DateOfBirthYesNoPage).get mustBe true
-    result.get(DateOfBirthPage).get mustBe date
+    result.get(IndexPage).get                        mustBe index
+    result.get(NamePage).get                         mustBe name
+    result.get(DateOfBirthYesNoPage).get             mustBe true
+    result.get(DateOfBirthPage).get                  mustBe date
     result.get(CountryOfNationalityYesNoPage) mustNot be(defined)
     result.get(CountryOfNationalityUkYesNoPage) mustNot be(defined)
     result.get(CountryOfNationalityPage) mustNot be(defined)
@@ -115,17 +119,17 @@ class OtherIndividualExtractorSpec extends AnyFreeSpec with ScalaCheckPropertyCh
     result.get(CountryOfResidenceYesNoPage) mustNot be(defined)
     result.get(CountryOfResidenceUkYesNoPage) mustNot be(defined)
     result.get(CountryOfResidencePage) mustNot be(defined)
-    result.get(AddressYesNoPage).get mustBe true
-    result.get(LiveInTheUkYesNoPage).get mustBe true
-    result.get(UkAddressPage).get mustBe address
+    result.get(AddressYesNoPage).get                 mustBe true
+    result.get(LiveInTheUkYesNoPage).get             mustBe true
+    result.get(UkAddressPage).get                    mustBe address
     result.get(NonUkAddressPage) mustNot be(defined)
-    result.get(PassportDetailsYesNoPage).get mustBe true
-    result.get(PassportDetailsPage).get mustBe passport
+    result.get(PassportDetailsYesNoPage).get         mustBe true
+    result.get(PassportDetailsPage).get              mustBe passport
     result.get(IdCardDetailsYesNoPage) mustNot be(defined)
     result.get(IdCardDetailsPage) mustNot be(defined)
     result.get(PassportOrIdCardDetailsYesNoPage) mustNot be(defined)
     result.get(PassportOrIdCardDetailsPage) mustNot be(defined)
-    result.get(MentalCapacityYesNoPage) mustBe Some(YesNoDontKnow.DontKnow)
+    result.get(MentalCapacityYesNoPage)              mustBe Some(YesNoDontKnow.DontKnow)
   }
 
   "should populate user answers when individual has an ID card" in {
@@ -146,10 +150,10 @@ class OtherIndividualExtractorSpec extends AnyFreeSpec with ScalaCheckPropertyCh
 
     val result = extractor(answers, individual, index).get
 
-    result.get(IndexPage).get mustBe index
-    result.get(NamePage).get mustBe name
-    result.get(DateOfBirthYesNoPage).get mustBe true
-    result.get(DateOfBirthPage).get mustBe date
+    result.get(IndexPage).get                        mustBe index
+    result.get(NamePage).get                         mustBe name
+    result.get(DateOfBirthYesNoPage).get             mustBe true
+    result.get(DateOfBirthPage).get                  mustBe date
     result.get(CountryOfNationalityYesNoPage) mustNot be(defined)
     result.get(CountryOfNationalityUkYesNoPage) mustNot be(defined)
     result.get(CountryOfNationalityPage) mustNot be(defined)
@@ -158,17 +162,17 @@ class OtherIndividualExtractorSpec extends AnyFreeSpec with ScalaCheckPropertyCh
     result.get(CountryOfResidenceYesNoPage) mustNot be(defined)
     result.get(CountryOfResidenceUkYesNoPage) mustNot be(defined)
     result.get(CountryOfResidencePage) mustNot be(defined)
-    result.get(AddressYesNoPage).get mustBe true
-    result.get(LiveInTheUkYesNoPage).get mustBe true
-    result.get(UkAddressPage).get mustBe address
+    result.get(AddressYesNoPage).get                 mustBe true
+    result.get(LiveInTheUkYesNoPage).get             mustBe true
+    result.get(UkAddressPage).get                    mustBe address
     result.get(NonUkAddressPage) mustNot be(defined)
-    result.get(PassportDetailsYesNoPage).get mustBe false
+    result.get(PassportDetailsYesNoPage).get         mustBe false
     result.get(PassportDetailsPage) mustNot be(defined)
-    result.get(IdCardDetailsYesNoPage).get mustBe true
-    result.get(IdCardDetailsPage).get mustBe idCard
+    result.get(IdCardDetailsYesNoPage).get           mustBe true
+    result.get(IdCardDetailsPage).get                mustBe idCard
     result.get(PassportOrIdCardDetailsYesNoPage) mustNot be(defined)
     result.get(PassportOrIdCardDetailsPage) mustNot be(defined)
-    result.get(MentalCapacityYesNoPage) mustBe Some(YesNoDontKnow.DontKnow)
+    result.get(MentalCapacityYesNoPage)              mustBe Some(YesNoDontKnow.DontKnow)
   }
 
   "should populate user answers when individual has a passport/ID card" in {
@@ -189,10 +193,10 @@ class OtherIndividualExtractorSpec extends AnyFreeSpec with ScalaCheckPropertyCh
 
     val result = extractor(answers, individual, index).get
 
-    result.get(IndexPage).get mustBe index
-    result.get(NamePage).get mustBe name
-    result.get(DateOfBirthYesNoPage).get mustBe true
-    result.get(DateOfBirthPage).get mustBe date
+    result.get(IndexPage).get                        mustBe index
+    result.get(NamePage).get                         mustBe name
+    result.get(DateOfBirthYesNoPage).get             mustBe true
+    result.get(DateOfBirthPage).get                  mustBe date
     result.get(CountryOfNationalityYesNoPage) mustNot be(defined)
     result.get(CountryOfNationalityUkYesNoPage) mustNot be(defined)
     result.get(CountryOfNationalityPage) mustNot be(defined)
@@ -201,16 +205,16 @@ class OtherIndividualExtractorSpec extends AnyFreeSpec with ScalaCheckPropertyCh
     result.get(CountryOfResidenceYesNoPage) mustNot be(defined)
     result.get(CountryOfResidenceUkYesNoPage) mustNot be(defined)
     result.get(CountryOfResidencePage) mustNot be(defined)
-    result.get(AddressYesNoPage).get mustBe true
-    result.get(LiveInTheUkYesNoPage).get mustBe true
-    result.get(UkAddressPage).get mustBe address
+    result.get(AddressYesNoPage).get                 mustBe true
+    result.get(LiveInTheUkYesNoPage).get             mustBe true
+    result.get(UkAddressPage).get                    mustBe address
     result.get(NonUkAddressPage) mustNot be(defined)
     result.get(PassportDetailsYesNoPage) mustNot be(defined)
     result.get(PassportDetailsPage) mustNot be(defined)
     result.get(IdCardDetailsYesNoPage) mustNot be(defined)
     result.get(IdCardDetailsPage) mustNot be(defined)
     result.get(PassportOrIdCardDetailsYesNoPage).get mustBe true
-    result.get(PassportOrIdCardDetailsPage).get mustBe combined
+    result.get(PassportOrIdCardDetailsPage).get      mustBe combined
     result.get(MentalCapacityYesNoPage) mustNot be(defined)
   }
 
@@ -230,10 +234,10 @@ class OtherIndividualExtractorSpec extends AnyFreeSpec with ScalaCheckPropertyCh
 
     val result = extractor(answers, individual, index).get
 
-    result.get(IndexPage).get mustBe index
-    result.get(NamePage).get mustBe name
-    result.get(DateOfBirthYesNoPage).get mustBe true
-    result.get(DateOfBirthPage).get mustBe date
+    result.get(IndexPage).get                        mustBe index
+    result.get(NamePage).get                         mustBe name
+    result.get(DateOfBirthYesNoPage).get             mustBe true
+    result.get(DateOfBirthPage).get                  mustBe date
     result.get(CountryOfNationalityYesNoPage) mustNot be(defined)
     result.get(CountryOfNationalityUkYesNoPage) mustNot be(defined)
     result.get(CountryOfNationalityPage) mustNot be(defined)
@@ -242,14 +246,14 @@ class OtherIndividualExtractorSpec extends AnyFreeSpec with ScalaCheckPropertyCh
     result.get(CountryOfResidenceYesNoPage) mustNot be(defined)
     result.get(CountryOfResidenceUkYesNoPage) mustNot be(defined)
     result.get(CountryOfResidencePage) mustNot be(defined)
-    result.get(AddressYesNoPage).get mustBe true
-    result.get(LiveInTheUkYesNoPage).get mustBe true
-    result.get(UkAddressPage).get mustBe address
+    result.get(AddressYesNoPage).get                 mustBe true
+    result.get(LiveInTheUkYesNoPage).get             mustBe true
+    result.get(UkAddressPage).get                    mustBe address
     result.get(NonUkAddressPage) mustNot be(defined)
     result.get(IdCardDetailsPage) mustNot be(defined)
-    result.get(IdCardDetailsYesNoPage).get mustBe false
+    result.get(IdCardDetailsYesNoPage).get           mustBe false
     result.get(PassportDetailsPage) mustNot be(defined)
-    result.get(PassportDetailsYesNoPage).get mustBe false
+    result.get(PassportDetailsYesNoPage).get         mustBe false
     result.get(PassportOrIdCardDetailsYesNoPage) mustNot be(defined)
     result.get(PassportOrIdCardDetailsPage) mustNot be(defined)
     result.get(MentalCapacityYesNoPage) mustNot be(defined)
@@ -271,9 +275,9 @@ class OtherIndividualExtractorSpec extends AnyFreeSpec with ScalaCheckPropertyCh
 
     val result = extractor(answers, individual, index).get
 
-    result.get(IndexPage).get mustBe index
-    result.get(NamePage).get mustBe name
-    result.get(DateOfBirthYesNoPage).get mustBe false
+    result.get(IndexPage).get                        mustBe index
+    result.get(NamePage).get                         mustBe name
+    result.get(DateOfBirthYesNoPage).get             mustBe false
     result.get(DateOfBirthPage) mustNot be(defined)
     result.get(CountryOfNationalityYesNoPage) mustNot be(defined)
     result.get(CountryOfNationalityUkYesNoPage) mustNot be(defined)
@@ -283,7 +287,7 @@ class OtherIndividualExtractorSpec extends AnyFreeSpec with ScalaCheckPropertyCh
     result.get(CountryOfResidenceYesNoPage) mustNot be(defined)
     result.get(CountryOfResidenceUkYesNoPage) mustNot be(defined)
     result.get(CountryOfResidencePage) mustNot be(defined)
-    result.get(AddressYesNoPage).get mustBe false
+    result.get(AddressYesNoPage).get                 mustBe false
     result.get(LiveInTheUkYesNoPage) mustNot be(defined)
     result.get(UkAddressPage) mustNot be(defined)
     result.get(NonUkAddressPage) mustNot be(defined)
@@ -314,25 +318,25 @@ class OtherIndividualExtractorSpec extends AnyFreeSpec with ScalaCheckPropertyCh
 
       val result = extractor(answers5mld, individual, index).get
 
-      result.get(IndexPage).get mustBe index
-      result.get(NamePage).get mustBe name
-      result.get(DateOfBirthYesNoPage).get mustBe true
-      result.get(DateOfBirthPage).get mustBe date
-      result.get(CountryOfNationalityYesNoPage).get mustBe true
-      result.get(CountryOfNationalityUkYesNoPage).get mustBe true
-      result.get(CountryOfNationalityPage).get mustBe GB
+      result.get(IndexPage).get                        mustBe index
+      result.get(NamePage).get                         mustBe name
+      result.get(DateOfBirthYesNoPage).get             mustBe true
+      result.get(DateOfBirthPage).get                  mustBe date
+      result.get(CountryOfNationalityYesNoPage).get    mustBe true
+      result.get(CountryOfNationalityUkYesNoPage).get  mustBe true
+      result.get(CountryOfNationalityPage).get         mustBe GB
       result.get(NationalInsuranceNumberYesNoPage).get mustBe true
-      result.get(NationalInsuranceNumberPage).get mustBe "nino"
-      result.get(CountryOfResidenceYesNoPage).get mustBe true
-      result.get(CountryOfResidenceUkYesNoPage).get mustBe true
-      result.get(CountryOfResidencePage).get mustBe GB
+      result.get(NationalInsuranceNumberPage).get      mustBe "nino"
+      result.get(CountryOfResidenceYesNoPage).get      mustBe true
+      result.get(CountryOfResidenceUkYesNoPage).get    mustBe true
+      result.get(CountryOfResidencePage).get           mustBe GB
       result.get(AddressYesNoPage) mustNot be(defined)
       result.get(LiveInTheUkYesNoPage) mustNot be(defined)
       result.get(UkAddressPage) mustNot be(defined)
       result.get(NonUkAddressPage) mustNot be(defined)
       result.get(PassportOrIdCardDetailsYesNoPage) mustNot be(defined)
       result.get(PassportOrIdCardDetailsPage) mustNot be(defined)
-      result.get(MentalCapacityYesNoPage).get mustBe YesNoDontKnow.Yes
+      result.get(MentalCapacityYesNoPage).get          mustBe YesNoDontKnow.Yes
     }
 
     "with non UK country of Nationality and Residence" in {
@@ -355,25 +359,25 @@ class OtherIndividualExtractorSpec extends AnyFreeSpec with ScalaCheckPropertyCh
 
       val result = extractor(answers5mld, individual, index).get
 
-      result.get(IndexPage).get mustBe index
-      result.get(NamePage).get mustBe name
-      result.get(DateOfBirthYesNoPage).get mustBe true
-      result.get(DateOfBirthPage).get mustBe date
-      result.get(CountryOfNationalityYesNoPage).get mustBe true
-      result.get(CountryOfNationalityUkYesNoPage).get mustBe false
-      result.get(CountryOfNationalityPage).get mustBe "FR"
+      result.get(IndexPage).get                        mustBe index
+      result.get(NamePage).get                         mustBe name
+      result.get(DateOfBirthYesNoPage).get             mustBe true
+      result.get(DateOfBirthPage).get                  mustBe date
+      result.get(CountryOfNationalityYesNoPage).get    mustBe true
+      result.get(CountryOfNationalityUkYesNoPage).get  mustBe false
+      result.get(CountryOfNationalityPage).get         mustBe "FR"
       result.get(NationalInsuranceNumberYesNoPage).get mustBe true
-      result.get(NationalInsuranceNumberPage).get mustBe "nino"
-      result.get(CountryOfResidenceYesNoPage).get mustBe true
-      result.get(CountryOfResidenceUkYesNoPage).get mustBe false
-      result.get(CountryOfResidencePage).get mustBe "FR"
+      result.get(NationalInsuranceNumberPage).get      mustBe "nino"
+      result.get(CountryOfResidenceYesNoPage).get      mustBe true
+      result.get(CountryOfResidenceUkYesNoPage).get    mustBe false
+      result.get(CountryOfResidencePage).get           mustBe "FR"
       result.get(AddressYesNoPage) mustNot be(defined)
       result.get(LiveInTheUkYesNoPage) mustNot be(defined)
       result.get(UkAddressPage) mustNot be(defined)
       result.get(NonUkAddressPage) mustNot be(defined)
       result.get(PassportOrIdCardDetailsYesNoPage) mustNot be(defined)
       result.get(PassportOrIdCardDetailsPage) mustNot be(defined)
-      result.get(MentalCapacityYesNoPage).get mustBe YesNoDontKnow.No
+      result.get(MentalCapacityYesNoPage).get          mustBe YesNoDontKnow.No
     }
 
     "with unknown country of Nationality and Residence" in {
@@ -396,16 +400,16 @@ class OtherIndividualExtractorSpec extends AnyFreeSpec with ScalaCheckPropertyCh
 
       val result = extractor(answers5mld, individual, index).get
 
-      result.get(IndexPage).get mustBe index
-      result.get(NamePage).get mustBe name
-      result.get(DateOfBirthYesNoPage).get mustBe true
-      result.get(DateOfBirthPage).get mustBe date
-      result.get(CountryOfNationalityYesNoPage).get mustBe false
+      result.get(IndexPage).get                        mustBe index
+      result.get(NamePage).get                         mustBe name
+      result.get(DateOfBirthYesNoPage).get             mustBe true
+      result.get(DateOfBirthPage).get                  mustBe date
+      result.get(CountryOfNationalityYesNoPage).get    mustBe false
       result.get(CountryOfNationalityUkYesNoPage) mustNot be(defined)
       result.get(CountryOfNationalityPage) mustNot be(defined)
       result.get(NationalInsuranceNumberYesNoPage).get mustBe true
-      result.get(NationalInsuranceNumberPage).get mustBe "nino"
-      result.get(CountryOfResidenceYesNoPage).get mustBe false
+      result.get(NationalInsuranceNumberPage).get      mustBe "nino"
+      result.get(CountryOfResidenceYesNoPage).get      mustBe false
       result.get(CountryOfResidenceUkYesNoPage) mustNot be(defined)
       result.get(CountryOfResidencePage) mustNot be(defined)
       result.get(AddressYesNoPage) mustNot be(defined)
@@ -414,7 +418,7 @@ class OtherIndividualExtractorSpec extends AnyFreeSpec with ScalaCheckPropertyCh
       result.get(NonUkAddressPage) mustNot be(defined)
       result.get(PassportOrIdCardDetailsYesNoPage) mustNot be(defined)
       result.get(PassportOrIdCardDetailsPage) mustNot be(defined)
-      result.get(MentalCapacityYesNoPage).get mustBe YesNoDontKnow.Yes
+      result.get(MentalCapacityYesNoPage).get          mustBe YesNoDontKnow.Yes
     }
   }
 
@@ -438,25 +442,25 @@ class OtherIndividualExtractorSpec extends AnyFreeSpec with ScalaCheckPropertyCh
 
       val result = extractor(answers5mld, individual, index).get
 
-      result.get(IndexPage).get mustBe index
-      result.get(NamePage).get mustBe name
-      result.get(DateOfBirthYesNoPage).get mustBe true
-      result.get(DateOfBirthPage).get mustBe date
-      result.get(CountryOfNationalityYesNoPage).get mustBe true
+      result.get(IndexPage).get                       mustBe index
+      result.get(NamePage).get                        mustBe name
+      result.get(DateOfBirthYesNoPage).get            mustBe true
+      result.get(DateOfBirthPage).get                 mustBe date
+      result.get(CountryOfNationalityYesNoPage).get   mustBe true
       result.get(CountryOfNationalityUkYesNoPage).get mustBe true
-      result.get(CountryOfNationalityPage).get mustBe GB
+      result.get(CountryOfNationalityPage).get        mustBe GB
       result.get(NationalInsuranceNumberYesNoPage) mustNot be(defined)
       result.get(NationalInsuranceNumberPage) mustNot be(defined)
-      result.get(CountryOfResidenceYesNoPage).get mustBe true
-      result.get(CountryOfResidenceUkYesNoPage).get mustBe true
-      result.get(CountryOfResidencePage).get mustBe GB
+      result.get(CountryOfResidenceYesNoPage).get     mustBe true
+      result.get(CountryOfResidenceUkYesNoPage).get   mustBe true
+      result.get(CountryOfResidencePage).get          mustBe GB
       result.get(AddressYesNoPage) mustNot be(defined)
       result.get(LiveInTheUkYesNoPage) mustNot be(defined)
       result.get(UkAddressPage) mustNot be(defined)
       result.get(NonUkAddressPage) mustNot be(defined)
       result.get(PassportOrIdCardDetailsYesNoPage) mustNot be(defined)
       result.get(PassportOrIdCardDetailsPage) mustNot be(defined)
-      result.get(MentalCapacityYesNoPage).get mustBe YesNoDontKnow.Yes
+      result.get(MentalCapacityYesNoPage).get         mustBe YesNoDontKnow.Yes
     }
 
     "with non UK country of Nationality and Residence" in {
@@ -477,25 +481,25 @@ class OtherIndividualExtractorSpec extends AnyFreeSpec with ScalaCheckPropertyCh
 
       val result = extractor(answers5mld, individual, index).get
 
-      result.get(IndexPage).get mustBe index
-      result.get(NamePage).get mustBe name
-      result.get(DateOfBirthYesNoPage).get mustBe true
-      result.get(DateOfBirthPage).get mustBe date
-      result.get(CountryOfNationalityYesNoPage).get mustBe true
+      result.get(IndexPage).get                       mustBe index
+      result.get(NamePage).get                        mustBe name
+      result.get(DateOfBirthYesNoPage).get            mustBe true
+      result.get(DateOfBirthPage).get                 mustBe date
+      result.get(CountryOfNationalityYesNoPage).get   mustBe true
       result.get(CountryOfNationalityUkYesNoPage).get mustBe false
-      result.get(CountryOfNationalityPage).get mustBe "FR"
+      result.get(CountryOfNationalityPage).get        mustBe "FR"
       result.get(NationalInsuranceNumberYesNoPage) mustNot be(defined)
       result.get(NationalInsuranceNumberPage) mustNot be(defined)
-      result.get(CountryOfResidenceYesNoPage).get mustBe true
-      result.get(CountryOfResidenceUkYesNoPage).get mustBe false
-      result.get(CountryOfResidencePage).get mustBe "FR"
+      result.get(CountryOfResidenceYesNoPage).get     mustBe true
+      result.get(CountryOfResidenceUkYesNoPage).get   mustBe false
+      result.get(CountryOfResidencePage).get          mustBe "FR"
       result.get(AddressYesNoPage) mustNot be(defined)
       result.get(LiveInTheUkYesNoPage) mustNot be(defined)
       result.get(UkAddressPage) mustNot be(defined)
       result.get(NonUkAddressPage) mustNot be(defined)
       result.get(PassportOrIdCardDetailsYesNoPage) mustNot be(defined)
       result.get(PassportOrIdCardDetailsPage) mustNot be(defined)
-      result.get(MentalCapacityYesNoPage).get mustBe YesNoDontKnow.No
+      result.get(MentalCapacityYesNoPage).get         mustBe YesNoDontKnow.No
     }
 
     "with unknown country of Nationality and Residence" in {
@@ -516,16 +520,16 @@ class OtherIndividualExtractorSpec extends AnyFreeSpec with ScalaCheckPropertyCh
 
       val result = extractor(answers5mld, individual, index).get
 
-      result.get(IndexPage).get mustBe index
-      result.get(NamePage).get mustBe name
-      result.get(DateOfBirthYesNoPage).get mustBe true
-      result.get(DateOfBirthPage).get mustBe date
+      result.get(IndexPage).get                     mustBe index
+      result.get(NamePage).get                      mustBe name
+      result.get(DateOfBirthYesNoPage).get          mustBe true
+      result.get(DateOfBirthPage).get               mustBe date
       result.get(CountryOfNationalityYesNoPage).get mustBe false
       result.get(CountryOfNationalityUkYesNoPage) mustNot be(defined)
       result.get(CountryOfNationalityPage) mustNot be(defined)
       result.get(NationalInsuranceNumberYesNoPage) mustNot be(defined)
       result.get(NationalInsuranceNumberPage) mustNot be(defined)
-      result.get(CountryOfResidenceYesNoPage).get mustBe false
+      result.get(CountryOfResidenceYesNoPage).get   mustBe false
       result.get(CountryOfResidenceUkYesNoPage) mustNot be(defined)
       result.get(CountryOfResidencePage) mustNot be(defined)
       result.get(AddressYesNoPage) mustNot be(defined)
@@ -534,7 +538,8 @@ class OtherIndividualExtractorSpec extends AnyFreeSpec with ScalaCheckPropertyCh
       result.get(NonUkAddressPage) mustNot be(defined)
       result.get(PassportOrIdCardDetailsYesNoPage) mustNot be(defined)
       result.get(PassportOrIdCardDetailsPage) mustNot be(defined)
-      result.get(MentalCapacityYesNoPage).get mustBe YesNoDontKnow.Yes
+      result.get(MentalCapacityYesNoPage).get       mustBe YesNoDontKnow.Yes
     }
   }
+
 }

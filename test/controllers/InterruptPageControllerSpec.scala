@@ -43,7 +43,7 @@ class InterruptPageControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = None).build()
 
       val request = FakeRequest(POST, routes.InterruptPageController.onSubmit.url)
-      val result = route(application, request).value
+      val result  = route(application, request).value
 
       status(result) mustEqual SEE_OTHER
 
@@ -67,4 +67,5 @@ class InterruptPageControllerSpec extends SpecBase {
     }
 
   }
+
 }

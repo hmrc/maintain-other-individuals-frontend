@@ -32,38 +32,38 @@ import views.html.individual.add.CheckDetailsView
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
-class CheckDetailsController @Inject()(
-                                        override val messagesApi: MessagesApi,
-                                        standardActionSets: StandardActionSets,
-                                        val controllerComponents: MessagesControllerComponents,
-                                        view: CheckDetailsView,
-                                        connector: TrustConnector,
-                                        val appConfig: FrontendAppConfig,
-                                        printHelper: OtherIndividualPrintHelper,
-                                        mapper: OtherIndividualMapper,
-                                        nameAction: NameRequiredAction,
-                                        errorHandler: ErrorHandler
-                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
+class CheckDetailsController @Inject() (
+  override val messagesApi: MessagesApi,
+  standardActionSets: StandardActionSets,
+  val controllerComponents: MessagesControllerComponents,
+  view: CheckDetailsView,
+  connector: TrustConnector,
+  val appConfig: FrontendAppConfig,
+  printHelper: OtherIndividualPrintHelper,
+  mapper: OtherIndividualMapper,
+  nameAction: NameRequiredAction,
+  errorHandler: ErrorHandler
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport with Logging {
 
-  def onPageLoad(): Action[AnyContent] = standardActionSets.verifiedForUtr.andThen(nameAction) {
-    implicit request =>
-
-      val section: AnswerSection = printHelper(request.userAnswers, adding = true, request.otherIndividual)
-      Ok(view(Seq(section)))
+  def onPageLoad(): Action[AnyContent] = standardActionSets.verifiedForUtr.andThen(nameAction) { implicit request =>
+    val section: AnswerSection = printHelper(request.userAnswers, adding = true, request.otherIndividual)
+    Ok(view(Seq(section)))
   }
 
-  def onSubmit(): Action[AnyContent] = standardActionSets.verifiedForUtr.async {
-    implicit request =>
-
-      mapper(request.userAnswers) match {
-        case None =>
-          logger.error(s"[Check Details Individual][UTR: ${request.userAnswers.identifier}][Session ID: ${utils.Session.id(hc)}]" +
-            s" unable to map user answers to OtherIndividual due to errors")
-          errorHandler.internalServerErrorTemplate(request.request).map(html => InternalServerError(html))
-        case Some(otherIndividual) =>
-          connector.addOtherIndividual(request.userAnswers.identifier, otherIndividual).map(_ =>
-            Redirect(controllers.routes.AddAnOtherIndividualController.onPageLoad())
-          )
-      }
+  def onSubmit(): Action[AnyContent] = standardActionSets.verifiedForUtr.async { implicit request =>
+    mapper(request.userAnswers) match {
+      case None                  =>
+        logger.error(
+          s"[Check Details Individual][UTR: ${request.userAnswers.identifier}][Session ID: ${utils.Session.id(hc)}]" +
+            s" unable to map user answers to OtherIndividual due to errors"
+        )
+        errorHandler.internalServerErrorTemplate(request.request).map(html => InternalServerError(html))
+      case Some(otherIndividual) =>
+        connector
+          .addOtherIndividual(request.userAnswers.identifier, otherIndividual)
+          .map(_ => Redirect(controllers.routes.AddAnOtherIndividualController.onPageLoad()))
+    }
   }
+
 }

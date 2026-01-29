@@ -35,9 +35,8 @@ class TrustsStoreServiceSpec extends SpecBase with BeforeAndAfterEach {
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
 
-  override def beforeEach(): Unit = {
+  override def beforeEach(): Unit =
     reset(mockConnector)
-  }
 
   ".updateTaskStatus" must {
     "call trusts store connector" in {
@@ -53,4 +52,5 @@ class TrustsStoreServiceSpec extends SpecBase with BeforeAndAfterEach {
       }
     }
   }
+
 }

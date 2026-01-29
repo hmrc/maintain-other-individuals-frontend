@@ -19,7 +19,6 @@ package pages.individual
 import models.{NonUkAddress, UkAddress}
 import pages.behaviours.PageBehaviours
 
-
 class LiveInTheUkYesNoPageSpec extends PageBehaviours {
 
   "LiveInTheUkYesNoPage" must {
@@ -29,7 +28,6 @@ class LiveInTheUkYesNoPageSpec extends PageBehaviours {
     beSettable[Boolean](LiveInTheUkYesNoPage)
 
     beRemovable[Boolean](LiveInTheUkYesNoPage)
-
 
     "implement cleanup logic when NO selected" in {
       val userAnswers = emptyUserAnswers
@@ -47,4 +45,5 @@ class LiveInTheUkYesNoPageSpec extends PageBehaviours {
       userAnswers.get.get(NonUkAddressPage) mustNot be(defined)
     }
   }
+
 }

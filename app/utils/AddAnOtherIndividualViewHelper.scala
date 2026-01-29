@@ -22,16 +22,15 @@ import viewmodels.addAnother.{AddRow, AddToRows}
 
 class AddAnOtherIndividualViewHelper(otherIndividuals: List[OtherIndividual])(implicit messages: Messages) {
 
-  private def otherIndividualRow(otherIndividual: OtherIndividual, index: Int): AddRow = {
+  private def otherIndividualRow(otherIndividual: OtherIndividual, index: Int): AddRow =
     AddRow(
       name = otherIndividual.name.displayName,
       typeLabel = messages("entities.otherIndividual"),
       changeLabel = messages("site.change.details"),
       changeUrl = Some(controllers.individual.amend.routes.CheckDetailsController.extractAndRender(index).url),
-      removeLabel =  messages("site.delete"),
+      removeLabel = messages("site.delete"),
       removeUrl = Some(controllers.individual.remove.routes.RemoveOtherIndividualController.onPageLoad(index).url)
     )
-  }
 
   def rows: AddToRows = {
     val complete =

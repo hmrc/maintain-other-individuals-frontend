@@ -41,8 +41,11 @@ class NonUkAddressControllerSpec extends SpecBase with MockitoSugar {
 
   val name: Name = Name("FirstName", None, "LastName")
 
-  override val emptyUserAnswers: UserAnswers = UserAnswers("id", "UTRUTRUTR", "sessionId", "id-UTRUTRUTR-sessionId", LocalDate.now())
-    .set(NamePage, name).success.value
+  override val emptyUserAnswers: UserAnswers =
+    UserAnswers("id", "UTRUTRUTR", "sessionId", "id-UTRUTRUTR-sessionId", LocalDate.now())
+      .set(NamePage, name)
+      .success
+      .value
 
   val nonUkAddressRoute: String = routes.NonUkAddressController.onPageLoad(NormalMode).url
 
@@ -73,8 +76,12 @@ class NonUkAddressControllerSpec extends SpecBase with MockitoSugar {
     "populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers = emptyUserAnswers
-        .set(NonUkAddressPage, validData).success.value
-        .set(NamePage, name).success.value
+        .set(NonUkAddressPage, validData)
+        .success
+        .value
+        .set(NamePage, name)
+        .success
+        .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -89,7 +96,6 @@ class NonUkAddressControllerSpec extends SpecBase with MockitoSugar {
 
       application.stop()
     }
-
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
@@ -162,4 +168,5 @@ class NonUkAddressControllerSpec extends SpecBase with MockitoSugar {
       application.stop()
     }
   }
+
 }

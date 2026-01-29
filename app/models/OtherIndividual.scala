@@ -21,15 +21,17 @@ import java.time.LocalDate
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-final case class OtherIndividual(name: Name,
-                                 dateOfBirth: Option[LocalDate],
-                                 countryOfNationality: Option[String],
-                                 countryOfResidence: Option[String],
-                                 identification: Option[IndividualIdentification],
-                                 address : Option[Address],
-                                 mentalCapacityYesNo: Option[YesNoDontKnow],
-                                 entityStart: LocalDate,
-                                 provisional : Boolean)
+final case class OtherIndividual(
+  name: Name,
+  dateOfBirth: Option[LocalDate],
+  countryOfNationality: Option[String],
+  countryOfResidence: Option[String],
+  identification: Option[IndividualIdentification],
+  address: Option[Address],
+  mentalCapacityYesNo: Option[YesNoDontKnow],
+  entityStart: LocalDate,
+  provisional: Boolean
+)
 
 object OtherIndividual {
 
@@ -42,10 +44,30 @@ object OtherIndividual {
       __.lazyRead(readNullableAtSubPath[Address](__ \ Symbol("identification") \ Symbol("address"))) and
       readMentalCapacity and
       (__ \ "entityStart").read[LocalDate] and
-      (__ \ "provisional").readWithDefault(false)).tupled.map{
+      (__ \ "provisional").readWithDefault(false)).tupled.map {
 
-      case (name, dob, countryOfNationality, countryOfResidence, nino, identification, mentalCapacity, entityStart, provisional) =>
-        OtherIndividual(name, dob, countryOfNationality, countryOfResidence, nino, identification, mentalCapacity, entityStart, provisional)
+      case (
+            name,
+            dob,
+            countryOfNationality,
+            countryOfResidence,
+            nino,
+            identification,
+            mentalCapacity,
+            entityStart,
+            provisional
+          ) =>
+        OtherIndividual(
+          name,
+          dob,
+          countryOfNationality,
+          countryOfResidence,
+          nino,
+          identification,
+          mentalCapacity,
+          entityStart,
+          provisional
+        )
 
     }
 
@@ -58,10 +80,9 @@ object OtherIndividual {
       (__ \ Symbol("identification") \ Symbol("address")).writeNullable[Address] and
       (__ \ Symbol("legallyIncapable")).writeNullable[YesNoDontKnow](writeMentalCapacity) and
       (__ \ "entityStart").write[LocalDate] and
-      (__ \ "provisional").write[Boolean]
-      ).apply(unlift(OtherIndividual.unapply))
+      (__ \ "provisional").write[Boolean]).apply(unlift(OtherIndividual.unapply))
 
-  private def readNullableAtSubPath[T:Reads](subPath : JsPath) : Reads[Option[T]] = Reads (
+  private def readNullableAtSubPath[T: Reads](subPath: JsPath): Reads[Option[T]] = Reads(
     _.transform(subPath.json.pick)
       .flatMap(_.validate[T])
       .map(Some(_))
@@ -75,7 +96,8 @@ object OtherIndividual {
 
   private def writeMentalCapacity: Writes[YesNoDontKnow] = {
     case YesNoDontKnow.Yes => JsBoolean(false)
-    case YesNoDontKnow.No => JsBoolean(true)
-    case _ => JsNull
+    case YesNoDontKnow.No  => JsBoolean(true)
+    case _                 => JsNull
   }
+
 }
