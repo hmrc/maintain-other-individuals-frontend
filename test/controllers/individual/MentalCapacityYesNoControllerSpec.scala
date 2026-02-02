@@ -33,9 +33,9 @@ class MentalCapacityYesNoControllerSpec extends SpecBase {
   private val form: Form[YesNoDontKnow] =
     new YesNoDontKnowFormProvider().withPrefix("otherIndividual.mentalCapacityYesNo")
 
-  private val onPageLoadRoute: String   = routes.MentalCapacityYesNoController.onPageLoad(NormalMode).url
-  private val name: Name                = Name("FirstName", None, "LastName")
-  private val onwardRoute               = Call("GET", "/foo")
+  private val onPageLoadRoute: String = routes.MentalCapacityYesNoController.onPageLoad(NormalMode).url
+  private val name: Name              = Name("FirstName", None, "LastName")
+  private val onwardRoute             = Call("GET", "/foo")
 
   val baseAnswers: UserAnswers = emptyUserAnswers.set(NamePage, name).success.value
 
