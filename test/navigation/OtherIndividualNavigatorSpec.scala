@@ -28,9 +28,8 @@ import java.time.LocalDate
 
 class OtherIndividualNavigatorSpec extends SpecBase with ScalaCheckPropertyChecks {
 
-  val navigator = new OtherIndividualNavigator
+  val navigator            = new OtherIndividualNavigator
   private val passportOrId = CombinedPassportOrIdCard("FR", "num", LocalDate.parse("2020-01-01"))
-
 
   "Other individual navigator" when {
 
@@ -40,531 +39,737 @@ class OtherIndividualNavigatorSpec extends SpecBase with ScalaCheckPropertyCheck
 
       val baseAnswers = emptyUserAnswers
 
-      "Name page -> Do you know date of birth page" in {
-        navigator.nextPage(NamePage, mode, baseAnswers)
+      "Name page -> Do you know date of birth page" in
+        navigator
+          .nextPage(NamePage, mode, baseAnswers)
           .mustBe(rts.DateOfBirthYesNoController.onPageLoad(mode))
-      }
 
       "Do you know date of birth page -> Yes -> Date of birth page" in {
         val answers = baseAnswers
-          .set(DateOfBirthYesNoPage, true).success.value
+          .set(DateOfBirthYesNoPage, true)
+          .success
+          .value
 
-        navigator.nextPage(DateOfBirthYesNoPage, mode, answers)
+        navigator
+          .nextPage(DateOfBirthYesNoPage, mode, answers)
           .mustBe(rts.DateOfBirthController.onPageLoad(mode))
       }
 
-      "Date of birth page -> Do you know country of nationality page" in {
-        navigator.nextPage(DateOfBirthPage, mode, baseAnswers)
+      "Date of birth page -> Do you know country of nationality page" in
+        navigator
+          .nextPage(DateOfBirthPage, mode, baseAnswers)
           .mustBe(rts.CountryOfNationalityYesNoController.onPageLoad(mode))
-      }
 
       "Do you know date of birth page -> No -> Do you know country of nationality page" in {
         val answers = baseAnswers
-          .set(DateOfBirthYesNoPage, false).success.value
+          .set(DateOfBirthYesNoPage, false)
+          .success
+          .value
 
-        navigator.nextPage(DateOfBirthYesNoPage, mode, answers)
+        navigator
+          .nextPage(DateOfBirthYesNoPage, mode, answers)
           .mustBe(rts.CountryOfNationalityYesNoController.onPageLoad(mode))
       }
 
       "Do you know country of nationality page -> No -> Do you know NINO page" in {
         val answers = baseAnswers
-          .set(CountryOfNationalityYesNoPage, false).success.value
+          .set(CountryOfNationalityYesNoPage, false)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfNationalityYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfNationalityYesNoPage, mode, answers)
           .mustBe(rts.NationalInsuranceNumberYesNoController.onPageLoad(mode))
       }
 
       "Do you know country of nationality page -> Yes -> Is country of nationality in UK page" in {
         val answers = baseAnswers
-          .set(CountryOfNationalityYesNoPage, true).success.value
+          .set(CountryOfNationalityYesNoPage, true)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfNationalityYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfNationalityYesNoPage, mode, answers)
           .mustBe(rts.CountryOfNationalityUkYesNoController.onPageLoad(mode))
       }
 
       "Is country of nationality in UK page -> Yes -> Do you know NINO page" in {
         val answers = baseAnswers
-          .set(CountryOfNationalityUkYesNoPage, true).success.value
+          .set(CountryOfNationalityUkYesNoPage, true)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfNationalityUkYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfNationalityUkYesNoPage, mode, answers)
           .mustBe(rts.NationalInsuranceNumberYesNoController.onPageLoad(mode))
       }
 
       "Is country of nationality in UK page -> No -> Country of nationality page" in {
         val answers = baseAnswers
-          .set(CountryOfNationalityUkYesNoPage, false).success.value
+          .set(CountryOfNationalityUkYesNoPage, false)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfNationalityUkYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfNationalityUkYesNoPage, mode, answers)
           .mustBe(rts.CountryOfNationalityController.onPageLoad(mode))
       }
 
       "Country of nationality page -> Do you know NINO page" in {
         val answers = baseAnswers
-          .set(CountryOfNationalityPage, "DE").success.value
+          .set(CountryOfNationalityPage, "DE")
+          .success
+          .value
 
-        navigator.nextPage(CountryOfNationalityPage, mode, answers)
+        navigator
+          .nextPage(CountryOfNationalityPage, mode, answers)
           .mustBe(rts.NationalInsuranceNumberYesNoController.onPageLoad(mode))
       }
 
       "Do you know NINO page -> Yes -> NINO page" in {
         val answers = baseAnswers
-          .set(NationalInsuranceNumberYesNoPage, true).success.value
+          .set(NationalInsuranceNumberYesNoPage, true)
+          .success
+          .value
 
-        navigator.nextPage(NationalInsuranceNumberYesNoPage, mode, answers)
+        navigator
+          .nextPage(NationalInsuranceNumberYesNoPage, mode, answers)
           .mustBe(rts.NationalInsuranceNumberController.onPageLoad(mode))
       }
 
       "NINO page -> Do you know country of residence page" in {
         val answers = baseAnswers
-          .set(NationalInsuranceNumberYesNoPage, true).success.value
+          .set(NationalInsuranceNumberYesNoPage, true)
+          .success
+          .value
 
-        navigator.nextPage(NationalInsuranceNumberPage, mode, answers)
+        navigator
+          .nextPage(NationalInsuranceNumberPage, mode, answers)
           .mustBe(rts.CountryOfResidenceYesNoController.onPageLoad(mode))
       }
 
       "Do you know country of residence page (with Nino) -> No -> Mental Capacity Yes/No Page" in {
         val answers = baseAnswers
-          .set(NationalInsuranceNumberYesNoPage, true).success.value
-          .set(CountryOfResidenceYesNoPage, false).success.value
+          .set(NationalInsuranceNumberYesNoPage, true)
+          .success
+          .value
+          .set(CountryOfResidenceYesNoPage, false)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfResidenceYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfResidenceYesNoPage, mode, answers)
           .mustBe(rts.MentalCapacityYesNoController.onPageLoad(mode))
       }
 
       "Do you know country of residence page (with Nino) -> Yes -> Is country of residence in the UK page" in {
         val answers = baseAnswers
-          .set(NationalInsuranceNumberYesNoPage, true).success.value
-          .set(CountryOfResidenceYesNoPage, true).success.value
+          .set(NationalInsuranceNumberYesNoPage, true)
+          .success
+          .value
+          .set(CountryOfResidenceYesNoPage, true)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfResidenceYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfResidenceYesNoPage, mode, answers)
           .mustBe(rts.CountryOfResidenceUkYesNoController.onPageLoad(mode))
       }
 
       "Is country of residence in UK page (with Nino) -> Yes -> Mental Capacity Yes/No page" in {
         val answers = baseAnswers
-          .set(NationalInsuranceNumberYesNoPage, true).success.value
-          .set(CountryOfResidenceUkYesNoPage, true).success.value
+          .set(NationalInsuranceNumberYesNoPage, true)
+          .success
+          .value
+          .set(CountryOfResidenceUkYesNoPage, true)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfResidenceUkYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfResidenceUkYesNoPage, mode, answers)
           .mustBe(rts.MentalCapacityYesNoController.onPageLoad(mode))
       }
 
       "Is country of residence in UK page (with Nino) -> No -> Country of residence page" in {
         val answers = baseAnswers
-          .set(NationalInsuranceNumberYesNoPage, true).success.value
-          .set(CountryOfResidenceUkYesNoPage, false).success.value
+          .set(NationalInsuranceNumberYesNoPage, true)
+          .success
+          .value
+          .set(CountryOfResidenceUkYesNoPage, false)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfResidenceUkYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfResidenceUkYesNoPage, mode, answers)
           .mustBe(rts.CountryOfResidenceController.onPageLoad(mode))
       }
 
       "Country of residence page (with Nino) -> Mental Capacity Yes/No page" in {
         val answers = baseAnswers
-          .set(NationalInsuranceNumberYesNoPage, true).success.value
-          .set(CountryOfResidencePage, "DE").success.value
+          .set(NationalInsuranceNumberYesNoPage, true)
+          .success
+          .value
+          .set(CountryOfResidencePage, "DE")
+          .success
+          .value
 
-        navigator.nextPage(CountryOfResidencePage, mode, answers)
+        navigator
+          .nextPage(CountryOfResidencePage, mode, answers)
           .mustBe(rts.MentalCapacityYesNoController.onPageLoad(mode))
       }
 
       "Mental Capacity Yes/No page -> Yes -> Start Date page" in {
         val answers = baseAnswers
-          .set(MentalCapacityYesNoPage, YesNoDontKnow.Yes).success.value
+          .set(MentalCapacityYesNoPage, YesNoDontKnow.Yes)
+          .success
+          .value
 
-        navigator.nextPage(MentalCapacityYesNoPage, mode, answers)
+        navigator
+          .nextPage(MentalCapacityYesNoPage, mode, answers)
           .mustBe(addRts.WhenIndividualAddedController.onPageLoad(mode))
       }
 
       "Mental Capacity Yes/No page -> No -> Start Date page" in {
         val answers = baseAnswers
-          .set(MentalCapacityYesNoPage, YesNoDontKnow.No).success.value
+          .set(MentalCapacityYesNoPage, YesNoDontKnow.No)
+          .success
+          .value
 
-        navigator.nextPage(MentalCapacityYesNoPage, mode, answers)
+        navigator
+          .nextPage(MentalCapacityYesNoPage, mode, answers)
           .mustBe(addRts.WhenIndividualAddedController.onPageLoad(mode))
       }
 
       "Do you know NINO page -> No -> Do you know country of residence page" in {
         val answers = baseAnswers
-          .set(NationalInsuranceNumberYesNoPage, false).success.value
+          .set(NationalInsuranceNumberYesNoPage, false)
+          .success
+          .value
 
-        navigator.nextPage(NationalInsuranceNumberYesNoPage, mode, answers)
+        navigator
+          .nextPage(NationalInsuranceNumberYesNoPage, mode, answers)
           .mustBe(rts.CountryOfResidenceYesNoController.onPageLoad(mode))
       }
 
       "Do you know country of residence page (without Nino) -> No -> Do you know address page" in {
         val answers = baseAnswers
-          .set(NationalInsuranceNumberYesNoPage, false).success.value
-          .set(CountryOfResidenceYesNoPage, false).success.value
+          .set(NationalInsuranceNumberYesNoPage, false)
+          .success
+          .value
+          .set(CountryOfResidenceYesNoPage, false)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfResidenceYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfResidenceYesNoPage, mode, answers)
           .mustBe(rts.AddressYesNoController.onPageLoad(mode))
       }
 
       "Do you know country of residence page (without Nino) -> Yes -> Is country of residence in the UK page" in {
         val answers = baseAnswers
-          .set(NationalInsuranceNumberYesNoPage, false).success.value
-          .set(CountryOfResidenceYesNoPage, true).success.value
+          .set(NationalInsuranceNumberYesNoPage, false)
+          .success
+          .value
+          .set(CountryOfResidenceYesNoPage, true)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfResidenceYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfResidenceYesNoPage, mode, answers)
           .mustBe(rts.CountryOfResidenceUkYesNoController.onPageLoad(mode))
       }
 
       "Is country of residence in UK page (without Nino) -> Yes -> Do you know address page" in {
         val answers = baseAnswers
-          .set(NationalInsuranceNumberYesNoPage, false).success.value
-          .set(CountryOfResidenceUkYesNoPage, true).success.value
+          .set(NationalInsuranceNumberYesNoPage, false)
+          .success
+          .value
+          .set(CountryOfResidenceUkYesNoPage, true)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfResidenceUkYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfResidenceUkYesNoPage, mode, answers)
           .mustBe(rts.AddressYesNoController.onPageLoad(mode))
       }
 
       "Is country of residence in UK page (without Nino) -> No -> Country of residence page" in {
         val answers = baseAnswers
-          .set(NationalInsuranceNumberYesNoPage, false).success.value
-          .set(CountryOfResidenceUkYesNoPage, false).success.value
+          .set(NationalInsuranceNumberYesNoPage, false)
+          .success
+          .value
+          .set(CountryOfResidenceUkYesNoPage, false)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfResidenceUkYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfResidenceUkYesNoPage, mode, answers)
           .mustBe(rts.CountryOfResidenceController.onPageLoad(mode))
       }
 
       "Country of residence page (without Nino) -> Do you know address page" in {
         val answers = baseAnswers
-          .set(NationalInsuranceNumberYesNoPage, false).success.value
-          .set(CountryOfResidencePage, "DE").success.value
+          .set(NationalInsuranceNumberYesNoPage, false)
+          .success
+          .value
+          .set(CountryOfResidencePage, "DE")
+          .success
+          .value
 
-        navigator.nextPage(CountryOfResidencePage, mode, answers)
+        navigator
+          .nextPage(CountryOfResidencePage, mode, answers)
           .mustBe(rts.AddressYesNoController.onPageLoad(mode))
       }
 
       "Do you know address page -> Yes -> Is address in UK page" in {
         val answers = baseAnswers
-          .set(AddressYesNoPage, true).success.value
+          .set(AddressYesNoPage, true)
+          .success
+          .value
 
-        navigator.nextPage(AddressYesNoPage, mode, answers)
+        navigator
+          .nextPage(AddressYesNoPage, mode, answers)
           .mustBe(rts.LiveInTheUkYesNoController.onPageLoad(mode))
       }
 
       "Do you know address page -> No -> Mental Capacity Yes/No page" in {
         val answers = baseAnswers
-          .set(AddressYesNoPage, false).success.value
+          .set(AddressYesNoPage, false)
+          .success
+          .value
 
-        navigator.nextPage(AddressYesNoPage, mode, answers)
+        navigator
+          .nextPage(AddressYesNoPage, mode, answers)
           .mustBe(rts.MentalCapacityYesNoController.onPageLoad(mode))
       }
 
       "Is address in UK page -> Yes -> UK address page" in {
         val answers = baseAnswers
-          .set(LiveInTheUkYesNoPage, true).success.value
+          .set(LiveInTheUkYesNoPage, true)
+          .success
+          .value
 
-        navigator.nextPage(LiveInTheUkYesNoPage, mode, answers)
+        navigator
+          .nextPage(LiveInTheUkYesNoPage, mode, answers)
           .mustBe(rts.UkAddressController.onPageLoad(mode))
       }
 
-      "UK address page -> Do you know passport details page" in {
-        navigator.nextPage(UkAddressPage, mode, baseAnswers)
+      "UK address page -> Do you know passport details page" in
+        navigator
+          .nextPage(UkAddressPage, mode, baseAnswers)
           .mustBe(addRts.PassportDetailsYesNoController.onPageLoad(mode))
-      }
 
       "Is address in UK page -> No -> Non-UK address page" in {
         val answers = baseAnswers
-          .set(LiveInTheUkYesNoPage, false).success.value
+          .set(LiveInTheUkYesNoPage, false)
+          .success
+          .value
 
-        navigator.nextPage(LiveInTheUkYesNoPage, mode, answers)
+        navigator
+          .nextPage(LiveInTheUkYesNoPage, mode, answers)
           .mustBe(rts.NonUkAddressController.onPageLoad(mode))
       }
 
-      "Non-UK address page -> Do you know passport details page" in {
-        navigator.nextPage(NonUkAddressPage, mode, baseAnswers)
+      "Non-UK address page -> Do you know passport details page" in
+        navigator
+          .nextPage(NonUkAddressPage, mode, baseAnswers)
           .mustBe(addRts.PassportDetailsYesNoController.onPageLoad(mode))
-      }
 
       "Do you know passport details page -> Yes -> Passport details page" in {
         val answers = baseAnswers
-          .set(PassportDetailsYesNoPage, true).success.value
+          .set(PassportDetailsYesNoPage, true)
+          .success
+          .value
 
-        navigator.nextPage(PassportDetailsYesNoPage, mode, answers)
+        navigator
+          .nextPage(PassportDetailsYesNoPage, mode, answers)
           .mustBe(addRts.PassportDetailsController.onPageLoad(mode))
       }
 
-      "Passport details page -> Mental Capacity Yes/No page" in {
-        navigator.nextPage(PassportDetailsPage, mode, baseAnswers)
+      "Passport details page -> Mental Capacity Yes/No page" in
+        navigator
+          .nextPage(PassportDetailsPage, mode, baseAnswers)
           .mustBe(rts.MentalCapacityYesNoController.onPageLoad(mode))
-      }
 
       "Do you know passport details page -> No -> Do you know ID card details page" in {
         val answers = baseAnswers
-          .set(PassportDetailsYesNoPage, false).success.value
+          .set(PassportDetailsYesNoPage, false)
+          .success
+          .value
 
-        navigator.nextPage(PassportDetailsYesNoPage, mode, answers)
+        navigator
+          .nextPage(PassportDetailsYesNoPage, mode, answers)
           .mustBe(addRts.IdCardDetailsYesNoController.onPageLoad(mode))
       }
 
       "Do you know ID card details page -> Yes -> ID card details page" in {
         val answers = baseAnswers
-          .set(IdCardDetailsYesNoPage, true).success.value
+          .set(IdCardDetailsYesNoPage, true)
+          .success
+          .value
 
-        navigator.nextPage(IdCardDetailsYesNoPage, mode, answers)
+        navigator
+          .nextPage(IdCardDetailsYesNoPage, mode, answers)
           .mustBe(addRts.IdCardDetailsController.onPageLoad(mode))
       }
 
-      "ID card details page -> Mental Capacity Yes/No page" in {
-        navigator.nextPage(IdCardDetailsPage, mode, baseAnswers)
+      "ID card details page -> Mental Capacity Yes/No page" in
+        navigator
+          .nextPage(IdCardDetailsPage, mode, baseAnswers)
           .mustBe(rts.MentalCapacityYesNoController.onPageLoad(mode))
-      }
 
       "Do you know ID card details page -> No -> Mental Capacity Yes/No page" in {
         val answers = baseAnswers
-          .set(IdCardDetailsYesNoPage, false).success.value
+          .set(IdCardDetailsYesNoPage, false)
+          .success
+          .value
 
-        navigator.nextPage(IdCardDetailsYesNoPage, mode, answers)
+        navigator
+          .nextPage(IdCardDetailsYesNoPage, mode, answers)
           .mustBe(rts.MentalCapacityYesNoController.onPageLoad(mode))
       }
 
-      "Start Date page -> Check details" in {
-        navigator.nextPage(WhenIndividualAddedPage, mode, baseAnswers)
+      "Start Date page -> Check details" in
+        navigator
+          .nextPage(WhenIndividualAddedPage, mode, baseAnswers)
           .mustBe(addRts.CheckDetailsController.onPageLoad())
-      }
     }
 
     "amending for a taxable trust" must {
 
-      val mode: Mode = CheckMode
-      val index: Int = 0
+      val mode: Mode               = CheckMode
+      val index: Int               = 0
       val baseAnswers: UserAnswers = emptyUserAnswers.set(IndexPage, index).success.value
 
-      "Name page -> Do you know date of birth page" in {
-        navigator.nextPage(NamePage, mode, baseAnswers)
+      "Name page -> Do you know date of birth page" in
+        navigator
+          .nextPage(NamePage, mode, baseAnswers)
           .mustBe(rts.DateOfBirthYesNoController.onPageLoad(mode))
-      }
 
       "Do you know date of birth page -> Yes -> Date of birth page" in {
         val answers = baseAnswers
-          .set(DateOfBirthYesNoPage, true).success.value
+          .set(DateOfBirthYesNoPage, true)
+          .success
+          .value
 
-        navigator.nextPage(DateOfBirthYesNoPage, mode, answers)
+        navigator
+          .nextPage(DateOfBirthYesNoPage, mode, answers)
           .mustBe(rts.DateOfBirthController.onPageLoad(mode))
       }
 
-      "Date of birth page -> Do you know country of nationality page" in {
-        navigator.nextPage(DateOfBirthPage, mode, baseAnswers)
+      "Date of birth page -> Do you know country of nationality page" in
+        navigator
+          .nextPage(DateOfBirthPage, mode, baseAnswers)
           .mustBe(rts.CountryOfNationalityYesNoController.onPageLoad(mode))
-      }
 
       "Do you know date of birth page -> No -> Do you know country of nationality page" in {
         val answers = baseAnswers
-          .set(DateOfBirthYesNoPage, false).success.value
+          .set(DateOfBirthYesNoPage, false)
+          .success
+          .value
 
-        navigator.nextPage(DateOfBirthYesNoPage, mode, answers)
+        navigator
+          .nextPage(DateOfBirthYesNoPage, mode, answers)
           .mustBe(rts.CountryOfNationalityYesNoController.onPageLoad(mode))
       }
 
       "Do you know country of nationality page -> No -> Do you know NINO page" in {
         val answers = baseAnswers
-          .set(CountryOfNationalityYesNoPage, false).success.value
+          .set(CountryOfNationalityYesNoPage, false)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfNationalityYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfNationalityYesNoPage, mode, answers)
           .mustBe(rts.NationalInsuranceNumberYesNoController.onPageLoad(mode))
       }
 
       "Do you know country of nationality page -> Yes -> Is country of nationality in UK page" in {
         val answers = baseAnswers
-          .set(CountryOfNationalityYesNoPage, true).success.value
+          .set(CountryOfNationalityYesNoPage, true)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfNationalityYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfNationalityYesNoPage, mode, answers)
           .mustBe(rts.CountryOfNationalityUkYesNoController.onPageLoad(mode))
       }
 
       "Is country of nationality in UK page -> Yes -> Do you know NINO page" in {
         val answers = baseAnswers
-          .set(CountryOfNationalityUkYesNoPage, true).success.value
+          .set(CountryOfNationalityUkYesNoPage, true)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfNationalityUkYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfNationalityUkYesNoPage, mode, answers)
           .mustBe(rts.NationalInsuranceNumberYesNoController.onPageLoad(mode))
       }
 
       "Is country of nationality in UK page -> No -> Country of nationality page" in {
         val answers = baseAnswers
-          .set(CountryOfNationalityUkYesNoPage, false).success.value
+          .set(CountryOfNationalityUkYesNoPage, false)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfNationalityUkYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfNationalityUkYesNoPage, mode, answers)
           .mustBe(rts.CountryOfNationalityController.onPageLoad(mode))
       }
 
       "Country of nationality page -> Do you know NINO page" in {
         val answers = baseAnswers
-          .set(CountryOfNationalityPage, "DE").success.value
+          .set(CountryOfNationalityPage, "DE")
+          .success
+          .value
 
-        navigator.nextPage(CountryOfNationalityPage, mode, answers)
+        navigator
+          .nextPage(CountryOfNationalityPage, mode, answers)
           .mustBe(rts.NationalInsuranceNumberYesNoController.onPageLoad(mode))
       }
 
       "Do you know NINO page -> Yes -> NINO page" in {
         val answers = baseAnswers
-          .set(NationalInsuranceNumberYesNoPage, true).success.value
+          .set(NationalInsuranceNumberYesNoPage, true)
+          .success
+          .value
 
-        navigator.nextPage(NationalInsuranceNumberYesNoPage, mode, answers)
+        navigator
+          .nextPage(NationalInsuranceNumberYesNoPage, mode, answers)
           .mustBe(rts.NationalInsuranceNumberController.onPageLoad(mode))
       }
 
       "NINO page -> Do you know country of residence page" in {
         val answers = baseAnswers
-          .set(NationalInsuranceNumberYesNoPage, true).success.value
+          .set(NationalInsuranceNumberYesNoPage, true)
+          .success
+          .value
 
-        navigator.nextPage(NationalInsuranceNumberPage, mode, answers)
+        navigator
+          .nextPage(NationalInsuranceNumberPage, mode, answers)
           .mustBe(rts.CountryOfResidenceYesNoController.onPageLoad(mode))
       }
 
       "Do you know country of residence page (with Nino) -> No -> Mental Capacity Yes/No Page" in {
         val answers = baseAnswers
-          .set(NationalInsuranceNumberYesNoPage, true).success.value
-          .set(CountryOfResidenceYesNoPage, false).success.value
+          .set(NationalInsuranceNumberYesNoPage, true)
+          .success
+          .value
+          .set(CountryOfResidenceYesNoPage, false)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfResidenceYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfResidenceYesNoPage, mode, answers)
           .mustBe(rts.MentalCapacityYesNoController.onPageLoad(mode))
       }
 
       "Do you know country of residence page (with Nino) -> Yes -> Is country of residence in the UK page" in {
         val answers = baseAnswers
-          .set(NationalInsuranceNumberYesNoPage, true).success.value
-          .set(CountryOfResidenceYesNoPage, true).success.value
+          .set(NationalInsuranceNumberYesNoPage, true)
+          .success
+          .value
+          .set(CountryOfResidenceYesNoPage, true)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfResidenceYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfResidenceYesNoPage, mode, answers)
           .mustBe(rts.CountryOfResidenceUkYesNoController.onPageLoad(mode))
       }
 
       "Is country of residence in UK page (with Nino) -> Yes -> Mental Capacity Yes/No page" in {
         val answers = baseAnswers
-          .set(NationalInsuranceNumberYesNoPage, true).success.value
-          .set(CountryOfResidenceUkYesNoPage, true).success.value
+          .set(NationalInsuranceNumberYesNoPage, true)
+          .success
+          .value
+          .set(CountryOfResidenceUkYesNoPage, true)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfResidenceUkYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfResidenceUkYesNoPage, mode, answers)
           .mustBe(rts.MentalCapacityYesNoController.onPageLoad(mode))
       }
 
       "Is country of residence in UK page (with Nino) -> No -> Country of residence page" in {
         val answers = baseAnswers
-          .set(NationalInsuranceNumberYesNoPage, true).success.value
-          .set(CountryOfResidenceUkYesNoPage, false).success.value
+          .set(NationalInsuranceNumberYesNoPage, true)
+          .success
+          .value
+          .set(CountryOfResidenceUkYesNoPage, false)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfResidenceUkYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfResidenceUkYesNoPage, mode, answers)
           .mustBe(rts.CountryOfResidenceController.onPageLoad(mode))
       }
 
       "Country of residence page (with Nino) -> Mental Capacity Yes/No page" in {
         val answers = baseAnswers
-          .set(NationalInsuranceNumberYesNoPage, true).success.value
-          .set(CountryOfResidencePage, "DE").success.value
+          .set(NationalInsuranceNumberYesNoPage, true)
+          .success
+          .value
+          .set(CountryOfResidencePage, "DE")
+          .success
+          .value
 
-        navigator.nextPage(CountryOfResidencePage, mode, answers)
+        navigator
+          .nextPage(CountryOfResidencePage, mode, answers)
           .mustBe(rts.MentalCapacityYesNoController.onPageLoad(mode))
       }
 
       "Mental Capacity Yes/No page -> Yes -> Check details" in {
         val answers = baseAnswers
-          .set(MentalCapacityYesNoPage, YesNoDontKnow.Yes).success.value
+          .set(MentalCapacityYesNoPage, YesNoDontKnow.Yes)
+          .success
+          .value
 
-        navigator.nextPage(MentalCapacityYesNoPage, mode, answers)
+        navigator
+          .nextPage(MentalCapacityYesNoPage, mode, answers)
           .mustBe(amendRts.CheckDetailsController.renderFromUserAnswers(index))
       }
 
       "Mental Capacity Yes/No page -> No -> Check details" in {
         val answers = baseAnswers
-          .set(MentalCapacityYesNoPage, YesNoDontKnow.No).success.value
+          .set(MentalCapacityYesNoPage, YesNoDontKnow.No)
+          .success
+          .value
 
-        navigator.nextPage(MentalCapacityYesNoPage, mode, answers)
+        navigator
+          .nextPage(MentalCapacityYesNoPage, mode, answers)
           .mustBe(amendRts.CheckDetailsController.renderFromUserAnswers(index))
       }
 
       "Do you know NINO page -> No -> Do you know country of residence page" in {
         val answers = baseAnswers
-          .set(NationalInsuranceNumberYesNoPage, false).success.value
+          .set(NationalInsuranceNumberYesNoPage, false)
+          .success
+          .value
 
-        navigator.nextPage(NationalInsuranceNumberYesNoPage, mode, answers)
+        navigator
+          .nextPage(NationalInsuranceNumberYesNoPage, mode, answers)
           .mustBe(rts.CountryOfResidenceYesNoController.onPageLoad(mode))
       }
 
       "Do you know country of residence page (without Nino) -> No -> Do you know Address page" in {
         val answers = baseAnswers
-          .set(NationalInsuranceNumberYesNoPage, false).success.value
-          .set(CountryOfResidenceYesNoPage, false).success.value
+          .set(NationalInsuranceNumberYesNoPage, false)
+          .success
+          .value
+          .set(CountryOfResidenceYesNoPage, false)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfResidenceYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfResidenceYesNoPage, mode, answers)
           .mustBe(rts.AddressYesNoController.onPageLoad(mode))
       }
 
       "Do you know country of residence page (without Nino) -> Yes -> Is country of residence in the UK page" in {
         val answers = baseAnswers
-          .set(NationalInsuranceNumberYesNoPage, false).success.value
-          .set(CountryOfResidenceYesNoPage, true).success.value
+          .set(NationalInsuranceNumberYesNoPage, false)
+          .success
+          .value
+          .set(CountryOfResidenceYesNoPage, true)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfResidenceYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfResidenceYesNoPage, mode, answers)
           .mustBe(rts.CountryOfResidenceUkYesNoController.onPageLoad(mode))
       }
 
       "Is country of residence in UK page (without Nino) -> Yes -> Do you know address page" in {
         val answers = baseAnswers
-          .set(NationalInsuranceNumberYesNoPage, false).success.value
-          .set(CountryOfResidenceUkYesNoPage, true).success.value
+          .set(NationalInsuranceNumberYesNoPage, false)
+          .success
+          .value
+          .set(CountryOfResidenceUkYesNoPage, true)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfResidenceUkYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfResidenceUkYesNoPage, mode, answers)
           .mustBe(rts.AddressYesNoController.onPageLoad(mode))
       }
 
       "Is country of residence in UK page (without Nino) -> No -> Country of residence page" in {
         val answers = baseAnswers
-          .set(NationalInsuranceNumberYesNoPage, false).success.value
-          .set(CountryOfResidenceUkYesNoPage, false).success.value
+          .set(NationalInsuranceNumberYesNoPage, false)
+          .success
+          .value
+          .set(CountryOfResidenceUkYesNoPage, false)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfResidenceUkYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfResidenceUkYesNoPage, mode, answers)
           .mustBe(rts.CountryOfResidenceController.onPageLoad(mode))
       }
 
       "Country of residence page (without Nino) -> Do you know address page" in {
         val answers = baseAnswers
-          .set(NationalInsuranceNumberYesNoPage, false).success.value
-          .set(CountryOfResidencePage, "DE").success.value
+          .set(NationalInsuranceNumberYesNoPage, false)
+          .success
+          .value
+          .set(CountryOfResidencePage, "DE")
+          .success
+          .value
 
-        navigator.nextPage(CountryOfResidencePage, mode, answers)
+        navigator
+          .nextPage(CountryOfResidencePage, mode, answers)
           .mustBe(rts.AddressYesNoController.onPageLoad(mode))
       }
 
       "Do you know address page -> Yes -> Is address in UK page" in {
         val answers = baseAnswers
-          .set(AddressYesNoPage, true).success.value
+          .set(AddressYesNoPage, true)
+          .success
+          .value
 
-        navigator.nextPage(AddressYesNoPage, mode, answers)
+        navigator
+          .nextPage(AddressYesNoPage, mode, answers)
           .mustBe(rts.LiveInTheUkYesNoController.onPageLoad(mode))
       }
 
       "Do you know address page -> No -> Mental Capacity Yes/No page" in {
         val answers = baseAnswers
-          .set(AddressYesNoPage, false).success.value
+          .set(AddressYesNoPage, false)
+          .success
+          .value
 
-        navigator.nextPage(AddressYesNoPage, mode, answers)
+        navigator
+          .nextPage(AddressYesNoPage, mode, answers)
           .mustBe(rts.MentalCapacityYesNoController.onPageLoad(mode))
       }
 
       "Is address in UK page -> Yes -> UK address page" in {
         val answers = baseAnswers
-          .set(LiveInTheUkYesNoPage, true).success.value
+          .set(LiveInTheUkYesNoPage, true)
+          .success
+          .value
 
-        navigator.nextPage(LiveInTheUkYesNoPage, mode, answers)
+        navigator
+          .nextPage(LiveInTheUkYesNoPage, mode, answers)
           .mustBe(rts.UkAddressController.onPageLoad(mode))
       }
 
       "UK address page" when {
         "combined passport/id card details not present" must {
-          "-> Mental capacity" in {
-            navigator.nextPage(UkAddressPage, mode, baseAnswers)
+          "-> Mental capacity" in
+            navigator
+              .nextPage(UkAddressPage, mode, baseAnswers)
               .mustBe(addRts.PassportDetailsYesNoController.onPageLoad(mode))
-          }
         }
 
         "combined passport/id card details yes/no present" must {
           "-> Mental capacity" in {
             val answers = baseAnswers.set(PassportOrIdCardDetailsYesNoPage, false).success.value
 
-            navigator.nextPage(UkAddressPage, mode, answers)
+            navigator
+              .nextPage(UkAddressPage, mode, answers)
               .mustBe(rts.MentalCapacityYesNoController.onPageLoad(mode))
           }
         }
@@ -573,7 +778,8 @@ class OtherIndividualNavigatorSpec extends SpecBase with ScalaCheckPropertyCheck
           "-> Mental capacity" in {
             val answers = baseAnswers.set(PassportOrIdCardDetailsPage, passportOrId).success.value
 
-            navigator.nextPage(UkAddressPage, mode, answers)
+            navigator
+              .nextPage(UkAddressPage, mode, answers)
               .mustBe(rts.MentalCapacityYesNoController.onPageLoad(mode))
           }
         }
@@ -581,25 +787,29 @@ class OtherIndividualNavigatorSpec extends SpecBase with ScalaCheckPropertyCheck
 
       "Is address in UK page -> No -> Non-UK address page" in {
         val answers = baseAnswers
-          .set(LiveInTheUkYesNoPage, false).success.value
+          .set(LiveInTheUkYesNoPage, false)
+          .success
+          .value
 
-        navigator.nextPage(LiveInTheUkYesNoPage, mode, answers)
+        navigator
+          .nextPage(LiveInTheUkYesNoPage, mode, answers)
           .mustBe(rts.NonUkAddressController.onPageLoad(mode))
       }
 
       "Non-UK address page" when {
         "combined passport/id card details not present" must {
-          "-> Mental capacity" in {
-            navigator.nextPage(NonUkAddressPage, mode, baseAnswers)
+          "-> Mental capacity" in
+            navigator
+              .nextPage(NonUkAddressPage, mode, baseAnswers)
               .mustBe(addRts.PassportDetailsYesNoController.onPageLoad(mode))
-          }
         }
 
         "combined passport/id card details yes/no present" must {
           "-> Mental capacity" in {
             val answers = baseAnswers.set(PassportOrIdCardDetailsYesNoPage, false).success.value
 
-            navigator.nextPage(NonUkAddressPage, mode, answers)
+            navigator
+              .nextPage(NonUkAddressPage, mode, answers)
               .mustBe(rts.MentalCapacityYesNoController.onPageLoad(mode))
           }
         }
@@ -608,7 +818,8 @@ class OtherIndividualNavigatorSpec extends SpecBase with ScalaCheckPropertyCheck
           "-> Mental capacity" in {
             val answers = baseAnswers.set(PassportOrIdCardDetailsPage, passportOrId).success.value
 
-            navigator.nextPage(NonUkAddressPage, mode, answers)
+            navigator
+              .nextPage(NonUkAddressPage, mode, answers)
               .mustBe(rts.MentalCapacityYesNoController.onPageLoad(mode))
           }
         }
@@ -616,22 +827,28 @@ class OtherIndividualNavigatorSpec extends SpecBase with ScalaCheckPropertyCheck
 
       "Do you know passport or ID card details page -> Yes -> Mental capacity" in {
         val answers = baseAnswers
-          .set(PassportOrIdCardDetailsYesNoPage, true).success.value
+          .set(PassportOrIdCardDetailsYesNoPage, true)
+          .success
+          .value
 
-        navigator.nextPage(PassportOrIdCardDetailsYesNoPage, mode, answers)
+        navigator
+          .nextPage(PassportOrIdCardDetailsYesNoPage, mode, answers)
           .mustBe(rts.MentalCapacityYesNoController.onPageLoad(mode))
       }
 
-      "Passport or ID card details page -> Mental Capacity Yes/No page" in {
-        navigator.nextPage(PassportOrIdCardDetailsPage, mode, baseAnswers)
+      "Passport or ID card details page -> Mental Capacity Yes/No page" in
+        navigator
+          .nextPage(PassportOrIdCardDetailsPage, mode, baseAnswers)
           .mustBe(rts.MentalCapacityYesNoController.onPageLoad(mode))
-      }
 
       "Do you know passport or ID card details page -> No -> Mental Capacity Yes/No page" in {
         val answers = baseAnswers
-          .set(PassportOrIdCardDetailsYesNoPage, false).success.value
+          .set(PassportOrIdCardDetailsYesNoPage, false)
+          .success
+          .value
 
-        navigator.nextPage(PassportOrIdCardDetailsYesNoPage, mode, answers)
+        navigator
+          .nextPage(PassportOrIdCardDetailsYesNoPage, mode, answers)
           .mustBe(rts.MentalCapacityYesNoController.onPageLoad(mode))
       }
     }
@@ -642,262 +859,350 @@ class OtherIndividualNavigatorSpec extends SpecBase with ScalaCheckPropertyCheck
 
       val baseAnswers = emptyUserAnswers.copy(isTaxable = false)
 
-      "Name page -> Do you know date of birth page" in {
-        navigator.nextPage(NamePage, mode, baseAnswers)
+      "Name page -> Do you know date of birth page" in
+        navigator
+          .nextPage(NamePage, mode, baseAnswers)
           .mustBe(rts.DateOfBirthYesNoController.onPageLoad(mode))
-      }
 
       "Do you know date of birth page -> Yes -> Date of birth page" in {
         val answers = baseAnswers
-          .set(DateOfBirthYesNoPage, true).success.value
+          .set(DateOfBirthYesNoPage, true)
+          .success
+          .value
 
-        navigator.nextPage(DateOfBirthYesNoPage, mode, answers)
+        navigator
+          .nextPage(DateOfBirthYesNoPage, mode, answers)
           .mustBe(rts.DateOfBirthController.onPageLoad(mode))
       }
 
-      "Date of birth page -> Do you know country of nationality page" in {
-        navigator.nextPage(DateOfBirthPage, mode, baseAnswers)
+      "Date of birth page -> Do you know country of nationality page" in
+        navigator
+          .nextPage(DateOfBirthPage, mode, baseAnswers)
           .mustBe(rts.CountryOfNationalityYesNoController.onPageLoad(mode))
-      }
 
       "Do you know date of birth page -> No -> Do you know country of nationality page" in {
         val answers = baseAnswers
-          .set(DateOfBirthYesNoPage, false).success.value
+          .set(DateOfBirthYesNoPage, false)
+          .success
+          .value
 
-        navigator.nextPage(DateOfBirthYesNoPage, mode, answers)
+        navigator
+          .nextPage(DateOfBirthYesNoPage, mode, answers)
           .mustBe(rts.CountryOfNationalityYesNoController.onPageLoad(mode))
       }
 
       "Do you know country of nationality page -> No -> Do you know country of residence page" in {
         val answers = baseAnswers
-          .set(CountryOfNationalityYesNoPage, false).success.value
+          .set(CountryOfNationalityYesNoPage, false)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfNationalityYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfNationalityYesNoPage, mode, answers)
           .mustBe(rts.CountryOfResidenceYesNoController.onPageLoad(mode))
       }
 
       "Do you know country of nationality page -> Yes -> Is country of nationality in UK page" in {
         val answers = baseAnswers
-          .set(CountryOfNationalityYesNoPage, true).success.value
+          .set(CountryOfNationalityYesNoPage, true)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfNationalityYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfNationalityYesNoPage, mode, answers)
           .mustBe(rts.CountryOfNationalityUkYesNoController.onPageLoad(mode))
       }
 
       "Is country of nationality in UK page -> Yes -> Do you know country of residence page" in {
         val answers = baseAnswers
-          .set(CountryOfNationalityUkYesNoPage, true).success.value
+          .set(CountryOfNationalityUkYesNoPage, true)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfNationalityUkYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfNationalityUkYesNoPage, mode, answers)
           .mustBe(rts.CountryOfResidenceYesNoController.onPageLoad(mode))
       }
 
       "Is country of nationality in UK page -> No -> Country of nationality page" in {
         val answers = baseAnswers
-          .set(CountryOfNationalityUkYesNoPage, false).success.value
+          .set(CountryOfNationalityUkYesNoPage, false)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfNationalityUkYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfNationalityUkYesNoPage, mode, answers)
           .mustBe(rts.CountryOfNationalityController.onPageLoad(mode))
       }
 
       "Country of nationality page -> Do you know country of residence page" in {
         val answers = baseAnswers
-          .set(CountryOfNationalityPage, "DE").success.value
+          .set(CountryOfNationalityPage, "DE")
+          .success
+          .value
 
-        navigator.nextPage(CountryOfNationalityPage, mode, answers)
+        navigator
+          .nextPage(CountryOfNationalityPage, mode, answers)
           .mustBe(rts.CountryOfResidenceYesNoController.onPageLoad(mode))
       }
 
       "Do you know country of residence page -> No -> Mental Capacity Yes/No Page" in {
         val answers = baseAnswers
-          .set(CountryOfResidenceYesNoPage, false).success.value
+          .set(CountryOfResidenceYesNoPage, false)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfResidenceYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfResidenceYesNoPage, mode, answers)
           .mustBe(rts.MentalCapacityYesNoController.onPageLoad(mode))
       }
 
       "Do you know country of residence page -> Yes -> Is country of residence in the UK page" in {
         val answers = baseAnswers
-          .set(CountryOfResidenceYesNoPage, true).success.value
+          .set(CountryOfResidenceYesNoPage, true)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfResidenceYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfResidenceYesNoPage, mode, answers)
           .mustBe(rts.CountryOfResidenceUkYesNoController.onPageLoad(mode))
       }
 
       "Is country of residence in UK page -> Yes -> Mental Capacity Yes/No page" in {
         val answers = baseAnswers
-          .set(CountryOfResidenceUkYesNoPage, true).success.value
+          .set(CountryOfResidenceUkYesNoPage, true)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfResidenceUkYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfResidenceUkYesNoPage, mode, answers)
           .mustBe(rts.MentalCapacityYesNoController.onPageLoad(mode))
       }
 
       "Is country of residence in UK page -> No -> Country of residence page" in {
         val answers = baseAnswers
-          .set(CountryOfResidenceUkYesNoPage, false).success.value
+          .set(CountryOfResidenceUkYesNoPage, false)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfResidenceUkYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfResidenceUkYesNoPage, mode, answers)
           .mustBe(rts.CountryOfResidenceController.onPageLoad(mode))
       }
 
       "Country of residence page -> Mental Capacity Yes/No page" in {
         val answers = baseAnswers
-          .set(CountryOfResidencePage, "DE").success.value
+          .set(CountryOfResidencePage, "DE")
+          .success
+          .value
 
-        navigator.nextPage(CountryOfResidencePage, mode, answers)
+        navigator
+          .nextPage(CountryOfResidencePage, mode, answers)
           .mustBe(rts.MentalCapacityYesNoController.onPageLoad(mode))
       }
 
       "Mental Capacity Yes/No page -> Yes -> Start Date page" in {
         val answers = baseAnswers
-          .set(MentalCapacityYesNoPage, YesNoDontKnow.Yes).success.value
+          .set(MentalCapacityYesNoPage, YesNoDontKnow.Yes)
+          .success
+          .value
 
-        navigator.nextPage(MentalCapacityYesNoPage, mode, answers)
+        navigator
+          .nextPage(MentalCapacityYesNoPage, mode, answers)
           .mustBe(addRts.WhenIndividualAddedController.onPageLoad(mode))
       }
 
       "Mental Capacity Yes/No page -> No -> Start Date page" in {
         val answers = baseAnswers
-          .set(MentalCapacityYesNoPage, YesNoDontKnow.No).success.value
+          .set(MentalCapacityYesNoPage, YesNoDontKnow.No)
+          .success
+          .value
 
-        navigator.nextPage(MentalCapacityYesNoPage, mode, answers)
+        navigator
+          .nextPage(MentalCapacityYesNoPage, mode, answers)
           .mustBe(addRts.WhenIndividualAddedController.onPageLoad(mode))
       }
 
-      "Start Date page -> Check details" in {
-        navigator.nextPage(WhenIndividualAddedPage, mode, baseAnswers)
+      "Start Date page -> Check details" in
+        navigator
+          .nextPage(WhenIndividualAddedPage, mode, baseAnswers)
           .mustBe(addRts.CheckDetailsController.onPageLoad())
-      }
     }
 
     "amending for a non taxable trust" must {
 
-      val mode: Mode = CheckMode
-      val index: Int = 0
-      val baseAnswers: UserAnswers = emptyUserAnswers.copy(isTaxable = false)
-        .set(IndexPage, index).success.value
+      val mode: Mode               = CheckMode
+      val index: Int               = 0
+      val baseAnswers: UserAnswers = emptyUserAnswers
+        .copy(isTaxable = false)
+        .set(IndexPage, index)
+        .success
+        .value
 
-      "Name page -> Do you know date of birth page" in {
-        navigator.nextPage(NamePage, mode, baseAnswers)
+      "Name page -> Do you know date of birth page" in
+        navigator
+          .nextPage(NamePage, mode, baseAnswers)
           .mustBe(rts.DateOfBirthYesNoController.onPageLoad(mode))
-      }
 
       "Do you know date of birth page -> Yes -> Date of birth page" in {
         val answers = baseAnswers
-          .set(DateOfBirthYesNoPage, true).success.value
+          .set(DateOfBirthYesNoPage, true)
+          .success
+          .value
 
-        navigator.nextPage(DateOfBirthYesNoPage, mode, answers)
+        navigator
+          .nextPage(DateOfBirthYesNoPage, mode, answers)
           .mustBe(rts.DateOfBirthController.onPageLoad(mode))
       }
 
-      "Date of birth page -> Do you know country of nationality page" in {
-        navigator.nextPage(DateOfBirthPage, mode, baseAnswers)
+      "Date of birth page -> Do you know country of nationality page" in
+        navigator
+          .nextPage(DateOfBirthPage, mode, baseAnswers)
           .mustBe(rts.CountryOfNationalityYesNoController.onPageLoad(mode))
-      }
 
       "Do you know date of birth page -> No -> Do you know country of nationality page" in {
         val answers = baseAnswers
-          .set(DateOfBirthYesNoPage, false).success.value
+          .set(DateOfBirthYesNoPage, false)
+          .success
+          .value
 
-        navigator.nextPage(DateOfBirthYesNoPage, mode, answers)
+        navigator
+          .nextPage(DateOfBirthYesNoPage, mode, answers)
           .mustBe(rts.CountryOfNationalityYesNoController.onPageLoad(mode))
       }
 
       "Do you know country of nationality page -> No -> Do you know country of residence page" in {
         val answers = baseAnswers
-          .set(CountryOfNationalityYesNoPage, false).success.value
+          .set(CountryOfNationalityYesNoPage, false)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfNationalityYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfNationalityYesNoPage, mode, answers)
           .mustBe(rts.CountryOfResidenceYesNoController.onPageLoad(mode))
       }
 
       "Do you know country of nationality page -> Yes -> Is country of nationality in UK page" in {
         val answers = baseAnswers
-          .set(CountryOfNationalityYesNoPage, true).success.value
+          .set(CountryOfNationalityYesNoPage, true)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfNationalityYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfNationalityYesNoPage, mode, answers)
           .mustBe(rts.CountryOfNationalityUkYesNoController.onPageLoad(mode))
       }
 
       "Is country of nationality in UK page -> Yes -> Do you know country of residence page" in {
         val answers = baseAnswers
-          .set(CountryOfNationalityUkYesNoPage, true).success.value
+          .set(CountryOfNationalityUkYesNoPage, true)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfNationalityUkYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfNationalityUkYesNoPage, mode, answers)
           .mustBe(rts.CountryOfResidenceYesNoController.onPageLoad(mode))
       }
 
       "Is country of nationality in UK page -> No -> Country of nationality page" in {
         val answers = baseAnswers
-          .set(CountryOfNationalityUkYesNoPage, false).success.value
+          .set(CountryOfNationalityUkYesNoPage, false)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfNationalityUkYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfNationalityUkYesNoPage, mode, answers)
           .mustBe(rts.CountryOfNationalityController.onPageLoad(mode))
       }
 
       "Country of nationality page -> Do you know country of residence page" in {
         val answers = baseAnswers
-          .set(CountryOfNationalityPage, "DE").success.value
+          .set(CountryOfNationalityPage, "DE")
+          .success
+          .value
 
-        navigator.nextPage(CountryOfNationalityPage, mode, answers)
+        navigator
+          .nextPage(CountryOfNationalityPage, mode, answers)
           .mustBe(rts.CountryOfResidenceYesNoController.onPageLoad(mode))
       }
 
       "Do you know country of residence page -> No -> Mental Capacity Yes/No Page" in {
         val answers = baseAnswers
-          .set(CountryOfResidenceYesNoPage, false).success.value
+          .set(CountryOfResidenceYesNoPage, false)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfResidenceYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfResidenceYesNoPage, mode, answers)
           .mustBe(rts.MentalCapacityYesNoController.onPageLoad(mode))
       }
 
       "Do you know country of residence page -> Yes -> Is country of residence in the UK page" in {
         val answers = baseAnswers
-          .set(CountryOfResidenceYesNoPage, true).success.value
+          .set(CountryOfResidenceYesNoPage, true)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfResidenceYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfResidenceYesNoPage, mode, answers)
           .mustBe(rts.CountryOfResidenceUkYesNoController.onPageLoad(mode))
       }
 
       "Is country of residence in UK page -> Yes -> Mental Capacity Yes/No page" in {
         val answers = baseAnswers
-          .set(CountryOfResidenceUkYesNoPage, true).success.value
+          .set(CountryOfResidenceUkYesNoPage, true)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfResidenceUkYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfResidenceUkYesNoPage, mode, answers)
           .mustBe(rts.MentalCapacityYesNoController.onPageLoad(mode))
       }
 
       "Is country of residence in UK page -> No -> Country of residence page" in {
         val answers = baseAnswers
-          .set(CountryOfResidenceUkYesNoPage, false).success.value
+          .set(CountryOfResidenceUkYesNoPage, false)
+          .success
+          .value
 
-        navigator.nextPage(CountryOfResidenceUkYesNoPage, mode, answers)
+        navigator
+          .nextPage(CountryOfResidenceUkYesNoPage, mode, answers)
           .mustBe(rts.CountryOfResidenceController.onPageLoad(mode))
       }
 
       "Country of residence page -> Mental Capacity Yes/No page" in {
         val answers = baseAnswers
-          .set(CountryOfResidencePage, "DE").success.value
+          .set(CountryOfResidencePage, "DE")
+          .success
+          .value
 
-        navigator.nextPage(CountryOfResidencePage, mode, answers)
+        navigator
+          .nextPage(CountryOfResidencePage, mode, answers)
           .mustBe(rts.MentalCapacityYesNoController.onPageLoad(mode))
       }
 
       "Mental Capacity Yes/No page -> Yes -> Check details" in {
         val answers = baseAnswers
-          .set(MentalCapacityYesNoPage, YesNoDontKnow.Yes).success.value
+          .set(MentalCapacityYesNoPage, YesNoDontKnow.Yes)
+          .success
+          .value
 
-        navigator.nextPage(MentalCapacityYesNoPage, mode, answers)
+        navigator
+          .nextPage(MentalCapacityYesNoPage, mode, answers)
           .mustBe(amendRts.CheckDetailsController.renderFromUserAnswers(index))
       }
 
       "Mental Capacity Yes/No page -> No -> Check details" in {
         val answers = baseAnswers
-          .set(MentalCapacityYesNoPage, YesNoDontKnow.No).success.value
+          .set(MentalCapacityYesNoPage, YesNoDontKnow.No)
+          .success
+          .value
 
-        navigator.nextPage(MentalCapacityYesNoPage, mode, answers)
+        navigator
+          .nextPage(MentalCapacityYesNoPage, mode, answers)
           .mustBe(amendRts.CheckDetailsController.renderFromUserAnswers(index))
       }
     }
   }
+
 }

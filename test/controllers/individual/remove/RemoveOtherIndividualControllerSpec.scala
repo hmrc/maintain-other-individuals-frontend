@@ -39,7 +39,7 @@ class RemoveOtherIndividualControllerSpec extends SpecBase with ScalaCheckProper
 
   val messagesPrefix = "removeOtherIndividualYesNo"
 
-  lazy val formProvider = new YesNoFormProvider()
+  lazy val formProvider        = new YesNoFormProvider()
   lazy val form: Form[Boolean] = formProvider.withPrefix(messagesPrefix)
 
   lazy val name: String = "Name 1"
@@ -95,12 +95,16 @@ class RemoveOtherIndividualControllerSpec extends SpecBase with ScalaCheckProper
     "populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers = emptyUserAnswers
-        .set(RemoveYesNoPage, true).success.value
+        .set(RemoveYesNoPage, true)
+        .success
+        .value
 
       when(mockConnector.getOtherIndividuals(any())(any(), any()))
         .thenReturn(Future.successful(OtherIndividuals(otherIndividuals)))
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).overrides(bind[TrustConnector].toInstance(mockConnector)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(bind[TrustConnector].toInstance(mockConnector))
+        .build()
 
       val request = FakeRequest(GET, routes.RemoveOtherIndividualController.onPageLoad(0).url)
 
@@ -161,14 +165,15 @@ class RemoveOtherIndividualControllerSpec extends SpecBase with ScalaCheckProper
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual controllers.individual.remove.routes.WhenRemovedController.onPageLoad(0).url
+        redirectLocation(result).value mustEqual controllers.individual.remove.routes.WhenRemovedController
+          .onPageLoad(0)
+          .url
 
         application.stop()
       }
     }
 
     "removing a new otherIndividual" must {
-
 
       "redirect to the add to page, when IndexOutOfBoundsException" in {
 
@@ -222,7 +227,9 @@ class RemoveOtherIndividualControllerSpec extends SpecBase with ScalaCheckProper
 
       val index = 0
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).overrides(bind[TrustConnector].toInstance(mockConnector)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(bind[TrustConnector].toInstance(mockConnector))
+        .build()
 
       val request =
         FakeRequest(POST, routes.RemoveOtherIndividualController.onSubmit(index).url)
@@ -284,7 +291,9 @@ class RemoveOtherIndividualControllerSpec extends SpecBase with ScalaCheckProper
       when(mockConnector.getOtherIndividuals(any())(any(), any()))
         .thenReturn(Future.failed(new IndexOutOfBoundsException("")))
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).overrides(bind[TrustConnector].toInstance(mockConnector)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(bind[TrustConnector].toInstance(mockConnector))
+        .build()
 
       val request = FakeRequest(GET, routes.RemoveOtherIndividualController.onPageLoad(index).url)
 
@@ -297,4 +306,5 @@ class RemoveOtherIndividualControllerSpec extends SpecBase with ScalaCheckProper
       application.stop()
     }
   }
+
 }

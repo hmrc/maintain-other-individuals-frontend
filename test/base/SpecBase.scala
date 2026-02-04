@@ -35,11 +35,17 @@ import uk.gov.hmrc.auth.core.{AffinityGroup, Enrolment, Enrolments}
 import java.time.LocalDate
 import scala.concurrent.Future
 
-trait SpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with ScalaFutures with IntegrationPatience with MockitoSugar with FakeTrustsApp {
+trait SpecBaseHelpers
+    extends GuiceOneAppPerSuite
+    with TryValues
+    with ScalaFutures
+    with IntegrationPatience
+    with MockitoSugar
+    with FakeTrustsApp {
   this: TestSuite =>
 
   final val ENGLISH = "en"
-  final val WELSH = "cy"
+  final val WELSH   = "cy"
 
   val userAnswersId = "id"
 
@@ -56,10 +62,11 @@ trait SpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with ScalaFutur
 
   val mockSessionRepository: ActiveSessionRepository = mock[ActiveSessionRepository]
 
-  protected def applicationBuilder(userAnswers: Option[models.UserAnswers] = None,
-                                   affinityGroup: AffinityGroup = AffinityGroup.Organisation,
-                                   enrolments: Enrolments = Enrolments(Set.empty[Enrolment])
-                                  ): GuiceApplicationBuilder =
+  protected def applicationBuilder(
+    userAnswers: Option[models.UserAnswers] = None,
+    affinityGroup: AffinityGroup = AffinityGroup.Organisation,
+    enrolments: Enrolments = Enrolments(Set.empty[Enrolment])
+  ): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .overrides(
         bind[IdentifierAction].toInstance(new FakeIdentifierAction(bodyParsers, affinityGroup)),
@@ -68,9 +75,11 @@ trait SpecBaseHelpers extends GuiceOneAppPerSuite with TryValues with ScalaFutur
         bind[DataRequiredAction].to[DataRequiredActionImpl],
         bind[PlaybackRepository].toInstance(playbackRepository),
         bind[ActiveSessionRepository].toInstance(mockSessionRepository)
-      ).configure(
+      )
+      .configure(
         "play.filters.disabled" -> List("play.filters.csrf.CSRFFilter", "play.filters.csp.CSPFilter")
       )
+
 }
 
 trait SpecBase extends PlaySpec with SpecBaseHelpers

@@ -28,41 +28,38 @@ import views.html.individual.remove.WhenRemovedView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class WhenRemovedController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       standardActionSets: StandardActionSets,
-                                       formProvider: DateRemovedFromTrustFormProvider,
-                                       trust: TrustService,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: WhenRemovedView,
-                                       trustService: TrustService
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class WhenRemovedController @Inject() (
+  override val messagesApi: MessagesApi,
+  standardActionSets: StandardActionSets,
+  formProvider: DateRemovedFromTrustFormProvider,
+  trust: TrustService,
+  val controllerComponents: MessagesControllerComponents,
+  view: WhenRemovedView,
+  trustService: TrustService
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(index: Int): Action[AnyContent] = standardActionSets.verifiedForUtr.async {
-    implicit request =>
-
-      trust.getOtherIndividual(request.userAnswers.identifier, index).map {
-        otherIndividual =>
-          val form = formProvider.withPrefixAndEntityStartDate("otherIndividual.whenRemoved", otherIndividual.entityStart)
-          Ok(view(form, index, otherIndividual.name.displayName))
-      }
+  def onPageLoad(index: Int): Action[AnyContent] = standardActionSets.verifiedForUtr.async { implicit request =>
+    trust.getOtherIndividual(request.userAnswers.identifier, index).map { otherIndividual =>
+      val form = formProvider.withPrefixAndEntityStartDate("otherIndividual.whenRemoved", otherIndividual.entityStart)
+      Ok(view(form, index, otherIndividual.name.displayName))
+    }
   }
 
-  def onSubmit(index: Int): Action[AnyContent] = standardActionSets.verifiedForUtr.async {
-    implicit request =>
-
-      trust.getOtherIndividual(request.userAnswers.identifier, index).flatMap {
-        otherIndividual =>
-          val form = formProvider.withPrefixAndEntityStartDate("otherIndividual.whenRemoved", otherIndividual.entityStart)
-          form.bindFromRequest().fold(
-            formWithErrors => {
-              Future.successful(BadRequest(view(formWithErrors, index, otherIndividual.name.displayName)))
-            },
-            value =>
-              trustService.removeOtherIndividual(request.userAnswers.identifier, RemoveOtherIndividual(index, value)).map(_ =>
-                Redirect(controllers.routes.AddAnOtherIndividualController.onPageLoad())
-              )
-          )
-      }
+  def onSubmit(index: Int): Action[AnyContent] = standardActionSets.verifiedForUtr.async { implicit request =>
+    trust.getOtherIndividual(request.userAnswers.identifier, index).flatMap { otherIndividual =>
+      val form = formProvider.withPrefixAndEntityStartDate("otherIndividual.whenRemoved", otherIndividual.entityStart)
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors =>
+            Future.successful(BadRequest(view(formWithErrors, index, otherIndividual.name.displayName))),
+          value =>
+            trustService
+              .removeOtherIndividual(request.userAnswers.identifier, RemoveOtherIndividual(index, value))
+              .map(_ => Redirect(controllers.routes.AddAnOtherIndividualController.onPageLoad()))
+        )
+    }
   }
+
 }

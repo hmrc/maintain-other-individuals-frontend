@@ -32,4 +32,5 @@ class WarningSpec extends SpecBase {
     }
 
   }
+
 }

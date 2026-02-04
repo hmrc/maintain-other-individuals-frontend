@@ -34,7 +34,7 @@ class UkAddressControllerSpec extends SpecBase with MockitoSugar {
 
   val form = new UkAddressFormProvider()()
 
-  val individualName: Name = Name("FirstName", None, "LastName")
+  val individualName: Name   = Name("FirstName", None, "LastName")
   val validAnswer: UkAddress = UkAddress("value 1", "value 2", None, None, "AB1 1AB")
 
   lazy val ukAddressControllerRoute: String = routes.UkAddressController.onPageLoad(NormalMode).url
@@ -64,8 +64,12 @@ class UkAddressControllerSpec extends SpecBase with MockitoSugar {
     "populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers = emptyUserAnswers
-        .set(NamePage, individualName).success.value
-        .set(UkAddressPage, validAnswer).success.value
+        .set(NamePage, individualName)
+        .success
+        .value
+        .set(UkAddressPage, validAnswer)
+        .success
+        .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -86,7 +90,9 @@ class UkAddressControllerSpec extends SpecBase with MockitoSugar {
     "redirect to the next page when valid data is submitted  is submitted" in {
 
       val userAnswers = emptyUserAnswers
-        .set(NamePage, individualName).success.value
+        .set(NamePage, individualName)
+        .success
+        .value
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
@@ -162,4 +168,5 @@ class UkAddressControllerSpec extends SpecBase with MockitoSugar {
       application.stop()
     }
   }
+
 }

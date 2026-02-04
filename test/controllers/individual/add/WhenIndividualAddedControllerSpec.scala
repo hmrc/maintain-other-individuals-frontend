@@ -33,7 +33,7 @@ import java.time.{LocalDate, ZoneOffset}
 
 class WhenIndividualAddedControllerSpec extends SpecBase with MockitoSugar {
 
-  private val formProvider = new DateAddedToTrustFormProvider()
+  private val formProvider    = new DateAddedToTrustFormProvider()
   private val date: LocalDate = LocalDate.parse("2019-02-03")
 
   private def form: Form[LocalDate] = formProvider.withConfig("otherIndividual.whenIndividualAdded", date)
@@ -47,7 +47,8 @@ class WhenIndividualAddedControllerSpec extends SpecBase with MockitoSugar {
   override val emptyUserAnswers: UserAnswers =
     UserAnswers("id", "UTRUTRUTR", "sessionId", "id-UTRUTRUTR-sessionId", date)
       .set(NamePage, name)
-      .success.value
+      .success
+      .value
 
   private def getRequest(): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(GET, addedDateRoute)
@@ -55,9 +56,9 @@ class WhenIndividualAddedControllerSpec extends SpecBase with MockitoSugar {
   private def postRequest(): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest(POST, addedDateRoute)
       .withFormUrlEncodedBody(
-        "value.day" -> validAnswer.getDayOfMonth.toString,
+        "value.day"   -> validAnswer.getDayOfMonth.toString,
         "value.month" -> validAnswer.getMonthValue.toString,
-        "value.year" -> validAnswer.getYear.toString
+        "value.year"  -> validAnswer.getYear.toString
       )
 
   "Other Individual added Date Controller" must {
@@ -81,8 +82,12 @@ class WhenIndividualAddedControllerSpec extends SpecBase with MockitoSugar {
     "populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers = emptyUserAnswers
-        .set(WhenIndividualAddedPage, validAnswer).success.value
-        .set(NamePage, name).success.value
+        .set(WhenIndividualAddedPage, validAnswer)
+        .success
+        .value
+        .set(NamePage, name)
+        .success
+        .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -124,27 +129,33 @@ class WhenIndividualAddedControllerSpec extends SpecBase with MockitoSugar {
 
       def userAnswers(trustStartDate: LocalDate, dateOfBirth: LocalDate) =
         UserAnswers("id", "UTRUTRUTR", "sessionId", "id-UTRUTRUTR-sessionId", trustStartDate)
-          .set(NamePage, name).success.value
-          .set(DateOfBirthPage, dateOfBirth).success.value
+          .set(NamePage, name)
+          .success
+          .value
+          .set(DateOfBirthPage, dateOfBirth)
+          .success
+          .value
 
       def request(submittedDate: LocalDate) = FakeRequest(POST, addedDateRoute)
         .withFormUrlEncodedBody(
-          "value.day" -> submittedDate.getDayOfMonth.toString,
+          "value.day"   -> submittedDate.getDayOfMonth.toString,
           "value.month" -> submittedDate.getMonthValue.toString,
-          "value.year" -> submittedDate.getYear.toString
+          "value.year"  -> submittedDate.getYear.toString
         )
 
-      def boundForm(submittedDate: LocalDate) = form.bind(Map(
-        "value.day" -> submittedDate.getDayOfMonth.toString,
-        "value.month" -> submittedDate.getMonthValue.toString,
-        "value.year" -> submittedDate.getYear.toString
-      ))
+      def boundForm(submittedDate: LocalDate) = form.bind(
+        Map(
+          "value.day"   -> submittedDate.getDayOfMonth.toString,
+          "value.month" -> submittedDate.getMonthValue.toString,
+          "value.year"  -> submittedDate.getYear.toString
+        )
+      )
 
       "submitted date is before date of birth but after trust start date" in {
 
         val trustStartDate = LocalDate.parse("2017-02-03")
-        val dateOfBirth = LocalDate.parse("2019-02-03")
-        val submittedDate = LocalDate.parse("2018-02-03")
+        val dateOfBirth    = LocalDate.parse("2019-02-03")
+        val submittedDate  = LocalDate.parse("2018-02-03")
 
         val application = applicationBuilder(userAnswers = Some(userAnswers(trustStartDate, dateOfBirth))).build()
 
@@ -163,8 +174,8 @@ class WhenIndividualAddedControllerSpec extends SpecBase with MockitoSugar {
       "submitted date is after date of birth but before trust start date" in {
 
         val trustStartDate = LocalDate.parse("2019-02-03")
-        val dateOfBirth = LocalDate.parse("2017-02-03")
-        val submittedDate = LocalDate.parse("2018-02-03")
+        val dateOfBirth    = LocalDate.parse("2017-02-03")
+        val submittedDate  = LocalDate.parse("2018-02-03")
 
         val application = applicationBuilder(userAnswers = Some(userAnswers(trustStartDate, dateOfBirth))).build()
 
@@ -183,8 +194,8 @@ class WhenIndividualAddedControllerSpec extends SpecBase with MockitoSugar {
       "submitted date is before date of birth and before trust start date" in {
 
         val trustStartDate = LocalDate.parse("2019-02-03")
-        val dateOfBirth = LocalDate.parse("2018-02-03")
-        val submittedDate = LocalDate.parse("2017-02-03")
+        val dateOfBirth    = LocalDate.parse("2018-02-03")
+        val submittedDate  = LocalDate.parse("2017-02-03")
 
         val application = applicationBuilder(userAnswers = Some(userAnswers(trustStartDate, dateOfBirth))).build()
 
@@ -217,8 +228,12 @@ class WhenIndividualAddedControllerSpec extends SpecBase with MockitoSugar {
     "redirect to the next page when valid data is submitted" in {
 
       val userAnswers = emptyUserAnswers
-        .set(WhenIndividualAddedPage, validAnswer).success.value
-        .set(NamePage, name).success.value
+        .set(WhenIndividualAddedPage, validAnswer)
+        .success
+        .value
+        .set(NamePage, name)
+        .success
+        .value
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
@@ -228,9 +243,9 @@ class WhenIndividualAddedControllerSpec extends SpecBase with MockitoSugar {
       val request =
         FakeRequest(POST, addedDateRoute)
           .withFormUrlEncodedBody(
-            "value.day" -> validAnswer.getDayOfMonth.toString,
+            "value.day"   -> validAnswer.getDayOfMonth.toString,
             "value.month" -> validAnswer.getMonthValue.toString,
-            "value.year" -> validAnswer.getYear.toString
+            "value.year"  -> validAnswer.getYear.toString
           )
 
       val result = route(application, request).value
@@ -255,4 +270,5 @@ class WhenIndividualAddedControllerSpec extends SpecBase with MockitoSugar {
       application.stop()
     }
   }
+
 }

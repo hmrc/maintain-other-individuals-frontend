@@ -32,10 +32,10 @@ import views.html.individual.CountryOfResidenceView
 
 class CountryOfResidenceControllerSpec extends SpecBase {
 
-  private val form: Form[String] = new CountryFormProvider().withPrefix("otherIndividual.countryOfResidence")
+  private val form: Form[String]      = new CountryFormProvider().withPrefix("otherIndividual.countryOfResidence")
   private val onPageLoadRoute: String = routes.CountryOfResidenceController.onPageLoad(NormalMode).url
-  private val name: Name = Name("FirstName", None, "LastName")
-  private val onwardRoute = Call("GET", "/foo")
+  private val name: Name              = Name("FirstName", None, "LastName")
+  private val onwardRoute             = Call("GET", "/foo")
 
   val validAnswer: String = "France"
 
@@ -89,7 +89,8 @@ class CountryOfResidenceControllerSpec extends SpecBase {
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
-          ).build()
+          )
+          .build()
 
       val request =
         FakeRequest(POST, onPageLoadRoute)
@@ -155,4 +156,5 @@ class CountryOfResidenceControllerSpec extends SpecBase {
       application.stop()
     }
   }
+
 }

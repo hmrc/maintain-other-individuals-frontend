@@ -36,110 +36,112 @@ import views.html.{AddAnOtherIndividualView, AddAnOtherIndividualYesNoView, Maxe
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class AddAnOtherIndividualController @Inject()(
-                                                override val messagesApi: MessagesApi,
-                                                standardActionSets: StandardActionSets,
-                                                val controllerComponents: MessagesControllerComponents,
-                                                val appConfig: FrontendAppConfig,
-                                                trustStoreConnector: TrustsStoreConnector,
-                                                trustService: TrustService,
-                                                addAnotherFormProvider: AddAnOtherIndividualFormProvider,
-                                                yesNoFormProvider: YesNoFormProvider,
-                                                repository: PlaybackRepository,
-                                                addAnotherView: AddAnOtherIndividualView,
-                                                yesNoView: AddAnOtherIndividualYesNoView,
-                                                completeView: MaxedOutOtherIndividualsView,
-                                                errorHandler: ErrorHandler
-                                              )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
+class AddAnOtherIndividualController @Inject() (
+  override val messagesApi: MessagesApi,
+  standardActionSets: StandardActionSets,
+  val controllerComponents: MessagesControllerComponents,
+  val appConfig: FrontendAppConfig,
+  trustStoreConnector: TrustsStoreConnector,
+  trustService: TrustService,
+  addAnotherFormProvider: AddAnOtherIndividualFormProvider,
+  yesNoFormProvider: YesNoFormProvider,
+  repository: PlaybackRepository,
+  addAnotherView: AddAnOtherIndividualView,
+  yesNoView: AddAnOtherIndividualYesNoView,
+  completeView: MaxedOutOtherIndividualsView,
+  errorHandler: ErrorHandler
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport with Logging {
 
   val addAnotherForm: Form[AddAnOtherIndividual] = addAnotherFormProvider()
 
   val yesNoForm: Form[Boolean] = yesNoFormProvider.withPrefix("addAnOtherIndividualYesNo")
 
-  def onPageLoad(): Action[AnyContent] = standardActionSets.verifiedForUtr.async {
-    implicit request =>
+  def onPageLoad(): Action[AnyContent] = standardActionSets.verifiedForUtr.async { implicit request =>
+    (for {
+      otherIndividuals <- trustService.getOtherIndividuals(request.userAnswers.identifier)
+      updatedAnswers   <- Future.fromTry(request.userAnswers.cleanup)
+      _                <- repository.set(updatedAnswers)
+    } yield {
+      val otherIndividualRows = new AddAnOtherIndividualViewHelper(otherIndividuals.otherIndividuals).rows
 
-      (for {
-        otherIndividuals <- trustService.getOtherIndividuals(request.userAnswers.identifier)
-        updatedAnswers <- Future.fromTry(request.userAnswers.cleanup)
-        _ <- repository.set(updatedAnswers)
-      } yield {
-        val otherIndividualRows = new AddAnOtherIndividualViewHelper(otherIndividuals.otherIndividuals).rows
-
-        otherIndividuals.size match {
-          case 0 =>
-            Ok(yesNoView(yesNoForm))
-          case _ if otherIndividuals.isNotMaxedOut =>
-            Ok(addAnotherView(
+      otherIndividuals.size match {
+        case 0                                   =>
+          Ok(yesNoView(yesNoForm))
+        case _ if otherIndividuals.isNotMaxedOut =>
+          Ok(
+            addAnotherView(
               form = addAnotherForm,
               inProgressOtherIndividuals = otherIndividualRows.inProgress,
               completeOtherIndividuals = otherIndividualRows.complete,
               heading = otherIndividuals.addToHeading()
-            ))
-          case _ if otherIndividuals.isMaxedOut =>
-            Ok(completeView(
+            )
+          )
+        case _ if otherIndividuals.isMaxedOut    =>
+          Ok(
+            completeView(
               inProgressOtherIndividuals = otherIndividualRows.inProgress,
               completeOtherIndividuals = otherIndividualRows.complete,
               heading = otherIndividuals.addToHeading()
-            ))
-        }
-      }) recoverWith {
-        case _ =>
-          logger.error(s"[Add an Individual][UTR: ${request.userAnswers.identifier}][Session ID: ${utils.Session.id(hc)}]" +
-            s" error in getting other individuals from trusts to show user on add to page")
-          errorHandler.internalServerErrorTemplate.map(res => InternalServerError(res))
+            )
+          )
       }
+    }) recoverWith { case _ =>
+      logger.error(
+        s"[Add an Individual][UTR: ${request.userAnswers.identifier}][Session ID: ${utils.Session.id(hc)}]" +
+          s" error in getting other individuals from trusts to show user on add to page"
+      )
+      errorHandler.internalServerErrorTemplate.map(res => InternalServerError(res))
+    }
   }
 
-  def submitOne(): Action[AnyContent] = standardActionSets.verifiedForUtr.async {
-    implicit request =>
-
-      yesNoForm.bindFromRequest().fold(
-        (formWithErrors: Form[_]) => {
-          Future.successful(BadRequest(yesNoView(formWithErrors)))
-        },
-        addNow => {
+  def submitOne(): Action[AnyContent] = standardActionSets.verifiedForUtr.async { implicit request =>
+    yesNoForm
+      .bindFromRequest()
+      .fold(
+        (formWithErrors: Form[_]) => Future.successful(BadRequest(yesNoView(formWithErrors))),
+        addNow =>
           if (addNow) {
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.cleanup)
-              _ <- repository.set(updatedAnswers)
+              _              <- repository.set(updatedAnswers)
             } yield
               if (updatedAnswers.isTaxable) {
-                  Redirect(controllers.routes.InterruptPageController.taxablePageLoad())
-                }
-              else {
-                  Redirect(controllers.routes.InterruptPageController.nonTaxablePageLoad())
-                }
+                Redirect(controllers.routes.InterruptPageController.taxablePageLoad())
+              } else {
+                Redirect(controllers.routes.InterruptPageController.nonTaxablePageLoad())
+              }
           } else {
             submitComplete()(request)
           }
-        }
       )
   }
 
-  def submitAnother(): Action[AnyContent] = standardActionSets.verifiedForUtr.async {
-    implicit request =>
-
-      trustService.getOtherIndividuals(request.userAnswers.identifier).flatMap { otherIndividuals =>
-        addAnotherForm.bindFromRequest().fold(
+  def submitAnother(): Action[AnyContent] = standardActionSets.verifiedForUtr.async { implicit request =>
+    trustService.getOtherIndividuals(request.userAnswers.identifier).flatMap { otherIndividuals =>
+      addAnotherForm
+        .bindFromRequest()
+        .fold(
           (formWithErrors: Form[_]) => {
 
             val rows = new AddAnOtherIndividualViewHelper(otherIndividuals.otherIndividuals).rows
 
-            Future.successful(BadRequest(
-              addAnotherView(
-                formWithErrors,
-                rows.inProgress,
-                rows.complete,
-                otherIndividuals.addToHeading()
+            Future.successful(
+              BadRequest(
+                addAnotherView(
+                  formWithErrors,
+                  rows.inProgress,
+                  rows.complete,
+                  otherIndividuals.addToHeading()
+                )
               )
-            ))
+            )
           },
           {
             case AddAnOtherIndividual.YesNow =>
               for {
                 updatedAnswers <- Future.fromTry(request.userAnswers.cleanup)
-                _ <- repository.set(updatedAnswers)
+                _              <- repository.set(updatedAnswers)
               } yield Redirect(controllers.individual.routes.NameController.onPageLoad(NormalMode))
 
             case AddAnOtherIndividual.YesLater =>
@@ -149,21 +151,19 @@ class AddAnOtherIndividualController @Inject()(
               submitComplete()(request)
           }
         )
-      } recoverWith {
-        case _ =>
-          logger.error(s"[Add an Individual][UTR: ${request.userAnswers.identifier}][Session ID: ${utils.Session.id(hc)}]" +
-            s" error in getting other individuals from trusts, cannot add another")
-          errorHandler.internalServerErrorTemplate.map(res => InternalServerError(res))
-      }
+    } recoverWith { case _ =>
+      logger.error(
+        s"[Add an Individual][UTR: ${request.userAnswers.identifier}][Session ID: ${utils.Session.id(hc)}]" +
+          s" error in getting other individuals from trusts, cannot add another"
+      )
+      errorHandler.internalServerErrorTemplate.map(res => InternalServerError(res))
+    }
   }
 
-  def submitComplete(): Action[AnyContent] = standardActionSets.verifiedForUtr.async {
-    implicit request =>
-
-      for {
-        _ <- trustStoreConnector.updateTaskStatus(request.userAnswers.identifier, Completed)
-      } yield {
-        Redirect(appConfig.maintainATrustOverview)
-      }
+  def submitComplete(): Action[AnyContent] = standardActionSets.verifiedForUtr.async { implicit request =>
+    for {
+      _ <- trustStoreConnector.updateTaskStatus(request.userAnswers.identifier, Completed)
+    } yield Redirect(appConfig.maintainATrustOverview)
   }
+
 }

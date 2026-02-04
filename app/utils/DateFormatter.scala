@@ -22,7 +22,7 @@ import java.time.format.DateTimeFormatter
 import com.google.inject.Inject
 import config.FrontendAppConfig
 
-class DateFormatter @Inject()(config: FrontendAppConfig) {
+class DateFormatter @Inject() (config: FrontendAppConfig) {
 
   private val format = "d MMMM yyyy"
 

@@ -25,7 +25,8 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.checkboxes.CheckboxItem
 class InputCheckboxesSpec extends SpecBase {
 
   val form: Form[String] = Form("value" -> text())
-  val items = Seq(CheckboxItem(content = Text("option 1"), value = "option1"))
+  val items              = Seq(CheckboxItem(content = Text("option 1"), value = "option1"))
+
   "Input check boxes component" should {
 
     "render checkboxes with legend and items" in {
@@ -38,7 +39,8 @@ class InputCheckboxesSpec extends SpecBase {
         legend = "choose your options",
         legendClass = Some("govuk-fieldset__legend--l"),
         hint = Some("select all the options"),
-        inputs = items)(messages)
+        inputs = items
+      )(messages)
 
       result.body must include("option 1")
       result.body must include("govuk-hint")
@@ -46,4 +48,5 @@ class InputCheckboxesSpec extends SpecBase {
     }
 
   }
+
 }

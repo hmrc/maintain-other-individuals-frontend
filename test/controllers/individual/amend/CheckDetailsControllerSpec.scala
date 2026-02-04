@@ -43,15 +43,15 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
 
   private val index = 0
 
-  private lazy val checkDetailsRoute = routes.CheckDetailsController.extractAndRender(index).url
-  private lazy val submitDetailsRoute = routes.CheckDetailsController.onSubmit(index).url
-  private lazy val onwardRoute = controllers.routes.AddAnOtherIndividualController.onPageLoad().url
+  private lazy val checkDetailsRoute     = routes.CheckDetailsController.extractAndRender(index).url
+  private lazy val submitDetailsRoute    = routes.CheckDetailsController.onSubmit(index).url
+  private lazy val onwardRoute           = controllers.routes.AddAnOtherIndividualController.onPageLoad().url
   private lazy val extractAndRenderRoute = routes.CheckDetailsController.extractAndRender(index).url
-  private lazy val renderFromUaRoute = routes.CheckDetailsController.renderFromUserAnswers(index).url
+  private lazy val renderFromUaRoute     = routes.CheckDetailsController.renderFromUserAnswers(index).url
 
-  private val name = Name("John", None, "Doe")
+  private val name      = Name("John", None, "Doe")
   private val startDate = LocalDate.parse("2019-03-09")
-  private val address = UkAddress("Line 1", "Line 2", None, None, "NE98 1ZZ")
+  private val address   = UkAddress("Line 1", "Line 2", None, None, "NE98 1ZZ")
 
   private val otherIndividual = OtherIndividual(
     name = name,
@@ -66,16 +66,36 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
   )
 
   private val userAnswers = emptyUserAnswers
-    .set(NamePage, name).success.value
-    .set(DateOfBirthYesNoPage, true).success.value
-    .set(DateOfBirthPage, LocalDate.parse("1990-03-09")).success.value
-    .set(NationalInsuranceNumberYesNoPage, false).success.value
-    .set(AddressYesNoPage, true).success.value
-    .set(LiveInTheUkYesNoPage, true).success.value
-    .set(UkAddressPage, address).success.value
-    .set(PassportDetailsYesNoPage, false).success.value
-    .set(IdCardDetailsYesNoPage, false).success.value
-    .set(WhenIndividualAddedPage, startDate).success.value
+    .set(NamePage, name)
+    .success
+    .value
+    .set(DateOfBirthYesNoPage, true)
+    .success
+    .value
+    .set(DateOfBirthPage, LocalDate.parse("1990-03-09"))
+    .success
+    .value
+    .set(NationalInsuranceNumberYesNoPage, false)
+    .success
+    .value
+    .set(AddressYesNoPage, true)
+    .success
+    .value
+    .set(LiveInTheUkYesNoPage, true)
+    .success
+    .value
+    .set(UkAddressPage, address)
+    .success
+    .value
+    .set(PassportDetailsYesNoPage, false)
+    .success
+    .value
+    .set(IdCardDetailsYesNoPage, false)
+    .success
+    .value
+    .set(WhenIndividualAddedPage, startDate)
+    .success
+    .value
 
   "CheckDetails Controller" must {
 
@@ -96,8 +116,8 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
 
       val result = route(application, request).value
 
-      val view = application.injector.instanceOf[CheckDetailsView]
-      val printHelper = application.injector.instanceOf[OtherIndividualPrintHelper]
+      val view          = application.injector.instanceOf[CheckDetailsView]
+      val printHelper   = application.injector.instanceOf[OtherIndividualPrintHelper]
       val answerSection = printHelper(userAnswers, adding = false, name.displayName)
 
       status(result) mustEqual OK
@@ -130,13 +150,14 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
     }
 
     "extractAndRender  should return Internal server error via ErrorHandler when service fails" in {
-      val mockService = mock[TrustService]
+      val mockService    = mock[TrustService]
       val mockErrHandler = mock[ErrorHandler]
 
       when(mockService.getOtherIndividual(any(), any())(any(), any()))
         .thenReturn(Future.failed(new RuntimeException("failed")))
 
-      when(mockErrHandler.internalServerErrorTemplate(any[RequestHeader])).thenReturn(Future.successful(Html("server error")))
+      when(mockErrHandler.internalServerErrorTemplate(any[RequestHeader]))
+        .thenReturn(Future.successful(Html("server error")))
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
@@ -146,7 +167,7 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
         .build()
 
       val request = FakeRequest(GET, extractAndRenderRoute)
-      val result = route(application, request).value
+      val result  = route(application, request).value
 
       status(result) mustEqual INTERNAL_SERVER_ERROR
       contentAsString(result) must include("server error")
@@ -155,12 +176,13 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
     }
 
     "onSubmit should return Internal server error via ErrorHandler when mapper returns None" in {
-      val mockMapper = mock[OtherIndividualMapper]
+      val mockMapper     = mock[OtherIndividualMapper]
       val mockErrHandler = mock[ErrorHandler]
 
       when(mockMapper.apply(any())).thenReturn(None)
 
-      when(mockErrHandler.internalServerErrorTemplate(any[RequestHeader])).thenReturn(Future.successful(Html("server error")))
+      when(mockErrHandler.internalServerErrorTemplate(any[RequestHeader]))
+        .thenReturn(Future.successful(Html("server error")))
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))
         .overrides(
@@ -170,7 +192,7 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
         .build()
 
       val request = FakeRequest(POST, submitDetailsRoute)
-      val result = route(application, request).value
+      val result  = route(application, request).value
 
       status(result) mustEqual INTERNAL_SERVER_ERROR
       contentAsString(result) must include("server error")
@@ -178,4 +200,5 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
       application.stop()
     }
   }
+
 }

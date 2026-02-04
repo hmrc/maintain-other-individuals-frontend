@@ -23,15 +23,18 @@ import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 
 trait MongoSuite extends ScalaFutures {
-  implicit val defaultPatience: PatienceConfig = PatienceConfig(timeout = Span(30, Seconds), interval = Span(500, Millis))
+
+  implicit val defaultPatience: PatienceConfig =
+    PatienceConfig(timeout = Span(30, Seconds), interval = Span(500, Millis))
 
   val application: Application = new GuiceApplicationBuilder()
-    .configure(Seq(
-      "metrics.enabled" -> false,
-      "auditing.enabled" -> false,
-      "mongo-async-driver.akka.log-dead-letters" -> 0
-    ): _*)
-
+    .configure(
+      Seq(
+        "metrics.enabled"                          -> false,
+        "auditing.enabled"                         -> false,
+        "mongo-async-driver.akka.log-dead-letters" -> 0
+      ): _*
+    )
     .build()
 
   val config: FrontendAppConfig = application.injector.instanceOf[FrontendAppConfig]

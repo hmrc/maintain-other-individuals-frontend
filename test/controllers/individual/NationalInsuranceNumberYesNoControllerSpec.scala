@@ -32,15 +32,19 @@ import java.time.LocalDate
 
 class NationalInsuranceNumberYesNoControllerSpec extends SpecBase with MockitoSugar {
 
-  val formProvider = new YesNoFormProvider()
+  val formProvider        = new YesNoFormProvider()
   val form: Form[Boolean] = formProvider.withPrefix("otherIndividual.nationalInsuranceNumberYesNo")
-  val individualName = "FirstName LastName"
-  val name: Name = Name("FirstName", None, "LastName")
+  val individualName      = "FirstName LastName"
+  val name: Name          = Name("FirstName", None, "LastName")
 
-  override val emptyUserAnswers: UserAnswers = UserAnswers("id", "UTRUTRUTR", "sessionId", "id-UTRUTRUTR-sessionId", LocalDate.now())
-    .set(NamePage, name).success.value
+  override val emptyUserAnswers: UserAnswers =
+    UserAnswers("id", "UTRUTRUTR", "sessionId", "id-UTRUTRUTR-sessionId", LocalDate.now())
+      .set(NamePage, name)
+      .success
+      .value
 
-  lazy val nationalInsuranceNumberYesNoRoute: String = routes.NationalInsuranceNumberYesNoController.onPageLoad(NormalMode).url
+  lazy val nationalInsuranceNumberYesNoRoute: String =
+    routes.NationalInsuranceNumberYesNoController.onPageLoad(NormalMode).url
 
   "NationalInsuranceNumberYesNo Controller" must {
 
@@ -81,7 +85,6 @@ class NationalInsuranceNumberYesNoControllerSpec extends SpecBase with MockitoSu
 
       application.stop()
     }
-
 
     "return a Bad Request and errors when invalid data is submitted" in {
 
@@ -157,4 +160,5 @@ class NationalInsuranceNumberYesNoControllerSpec extends SpecBase with MockitoSu
       application.stop()
     }
   }
+
 }

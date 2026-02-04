@@ -30,8 +30,12 @@ class PassportOrIdCardDetailsYesNoControllerSpec extends SpecBase with MockitoSu
   private val index = 0
 
   override val emptyUserAnswers: UserAnswers = super.emptyUserAnswers
-    .set(NamePage, name).success.value
-    .set(IndexPage, index).success.value
+    .set(NamePage, name)
+    .success
+    .value
+    .set(IndexPage, index)
+    .success
+    .value
 
   private val mode = NormalMode
 
@@ -125,4 +129,5 @@ class PassportOrIdCardDetailsYesNoControllerSpec extends SpecBase with MockitoSu
       application.stop()
     }
   }
+
 }

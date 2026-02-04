@@ -24,30 +24,37 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
+class TrustServiceImpl @Inject() (connector: TrustConnector) extends TrustService {
 
-class TrustServiceImpl @Inject()(connector: TrustConnector) extends TrustService {
-
-  override def getOtherIndividuals(utr: String)(implicit hc:HeaderCarrier, ec:ExecutionContext): Future[OtherIndividuals] =
+  override def getOtherIndividuals(
+    utr: String
+  )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[OtherIndividuals] =
     connector.getOtherIndividuals(utr)
 
-  override def getOtherIndividual(utr: String, index: Int)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[OtherIndividual] =
+  override def getOtherIndividual(utr: String, index: Int)(implicit
+    hc: HeaderCarrier,
+    ex: ExecutionContext
+  ): Future[OtherIndividual] =
     getOtherIndividuals(utr).map(_.otherIndividuals(index))
 
-  override def removeOtherIndividual(utr: String, otherIndividual: RemoveOtherIndividual)
-                                    (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] =
+  override def removeOtherIndividual(utr: String, otherIndividual: RemoveOtherIndividual)(implicit
+    hc: HeaderCarrier,
+    ec: ExecutionContext
+  ): Future[HttpResponse] =
     connector.removeOtherIndividual(utr, otherIndividual)
 
-  override def getIndividualNinos(identifier: String, index: Option[Int])
-                                 (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[String]] = {
-    getOtherIndividuals(identifier).map(_.otherIndividuals
-      .zipWithIndex
-      .filterNot(x => index.contains(x._2))
-      .flatMap(_._1.identification)
-      .collect {
-        case NationalInsuranceNumber(nino) => nino
-      }
+  override def getIndividualNinos(identifier: String, index: Option[Int])(implicit
+    hc: HeaderCarrier,
+    ec: ExecutionContext
+  ): Future[List[String]] =
+    getOtherIndividuals(identifier).map(
+      _.otherIndividuals.zipWithIndex
+        .filterNot(x => index.contains(x._2))
+        .flatMap(_._1.identification)
+        .collect { case NationalInsuranceNumber(nino) =>
+          nino
+        }
     )
-  }
 
 }
 
@@ -56,9 +63,19 @@ trait TrustService {
 
   def getOtherIndividuals(utr: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[OtherIndividuals]
 
-  def getOtherIndividual(utr: String, index: Int)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[OtherIndividual]
+  def getOtherIndividual(utr: String, index: Int)(implicit
+    hc: HeaderCarrier,
+    ex: ExecutionContext
+  ): Future[OtherIndividual]
 
-  def removeOtherIndividual(utr: String, otherIndividual: RemoveOtherIndividual)(implicit hc:HeaderCarrier, ec:ExecutionContext): Future[HttpResponse]
+  def removeOtherIndividual(utr: String, otherIndividual: RemoveOtherIndividual)(implicit
+    hc: HeaderCarrier,
+    ec: ExecutionContext
+  ): Future[HttpResponse]
 
-  def getIndividualNinos(identifier: String, index: Option[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[String]]
+  def getIndividualNinos(identifier: String, index: Option[Int])(implicit
+    hc: HeaderCarrier,
+    ec: ExecutionContext
+  ): Future[List[String]]
+
 }

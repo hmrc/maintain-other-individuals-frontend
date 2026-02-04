@@ -26,7 +26,7 @@ import java.time.LocalDate
 
 class PassportOrIdCardDetailsYesNoPageSpec extends PageBehaviours with ScalaCheckPropertyChecks with Generators {
 
-  private val date: LocalDate = LocalDate.parse("1996-02-03")
+  private val date: LocalDate                            = LocalDate.parse("1996-02-03")
   private val passportOrIdCard: CombinedPassportOrIdCard = CombinedPassportOrIdCard("country", "number", date)
 
   "PassportOrIdCardDetailsYesNo Page" must {
@@ -37,17 +37,17 @@ class PassportOrIdCardDetailsYesNoPageSpec extends PageBehaviours with ScalaChec
 
     beRemovable[Boolean](PassportOrIdCardDetailsYesNoPage)
 
-    "implement cleanup logic when NO selected" in {
+    "implement cleanup logic when NO selected" in
+      forAll(arbitrary[UserAnswers]) { arbitraryAnswers =>
+        val userAnswers: UserAnswers = arbitraryAnswers
+          .set(PassportOrIdCardDetailsPage, passportOrIdCard)
+          .success
+          .value
 
-      forAll(arbitrary[UserAnswers]) {
-        arbitraryAnswers =>
-          val userAnswers: UserAnswers = arbitraryAnswers
-            .set(PassportOrIdCardDetailsPage, passportOrIdCard).success.value
+        val result: UserAnswers = userAnswers.set(PassportOrIdCardDetailsYesNoPage, false).success.value
 
-          val result: UserAnswers = userAnswers.set(PassportOrIdCardDetailsYesNoPage, false).success.value
-
-          result.get(PassportOrIdCardDetailsPage) mustNot be(defined)
+        result.get(PassportOrIdCardDetailsPage) mustNot be(defined)
       }
-    }
   }
+
 }

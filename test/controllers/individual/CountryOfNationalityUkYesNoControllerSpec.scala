@@ -30,10 +30,10 @@ import views.html.individual.CountryOfNationalityUkYesNoView
 
 class CountryOfNationalityUkYesNoControllerSpec extends SpecBase {
 
-  private val form: Form[Boolean] = new YesNoFormProvider().withPrefix("otherIndividual.countryOfNationalityUkYesNo")
+  private val form: Form[Boolean]     = new YesNoFormProvider().withPrefix("otherIndividual.countryOfNationalityUkYesNo")
   private val onPageLoadRoute: String = routes.CountryOfNationalityUkYesNoController.onPageLoad(NormalMode).url
-  private val name: Name = Name("FirstName", None, "LastName")
-  private val onwardRoute = Call("GET", "/foo")
+  private val name: Name              = Name("FirstName", None, "LastName")
+  private val onwardRoute             = Call("GET", "/foo")
 
   val baseAnswers: UserAnswers = emptyUserAnswers.set(NamePage, name).success.value
 
@@ -83,7 +83,8 @@ class CountryOfNationalityUkYesNoControllerSpec extends SpecBase {
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute))
-          ).build()
+          )
+          .build()
 
       val request =
         FakeRequest(POST, onPageLoadRoute)
@@ -149,4 +150,5 @@ class CountryOfNationalityUkYesNoControllerSpec extends SpecBase {
       application.stop()
     }
   }
+
 }

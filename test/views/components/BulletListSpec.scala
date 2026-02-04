@@ -23,14 +23,15 @@ class BulletListSpec extends SpecBase {
   "BulletList Component" should {
 
     "render a list of items" in {
-     val application = applicationBuilder().build()
+      val application = applicationBuilder().build()
 
       val view = application.injector.instanceOf[views.html.components.BulletList]
 
-      val result = view.apply("otherIndividual.mentalCapacityYesNo", Seq("bulletpoint1", "bulletpoint2"))( messages)
+      val result = view.apply("otherIndividual.mentalCapacityYesNo", Seq("bulletpoint1", "bulletpoint2"))(messages)
 
-      result.body must include ("govuk-list--bullet")
-      result.body must include ("<li>" + messages("otherIndividual.mentalCapacityYesNo.bulletpoint1"))
+      result.body must include("govuk-list--bullet")
+      result.body must include("<li>" + messages("otherIndividual.mentalCapacityYesNo.bulletpoint1"))
+    }
   }
-}
+
 }

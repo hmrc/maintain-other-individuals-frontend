@@ -31,42 +31,42 @@ import views.html.individual.NationalInsuranceNumberYesNoView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class NationalInsuranceNumberYesNoController @Inject()(
-                                                        override val messagesApi: MessagesApi,
-                                                        sessionRepository: PlaybackRepository,
-                                                        navigator: Navigator,
-                                                        standardActionSets: StandardActionSets,
-                                                        nameAction: NameRequiredAction,
-                                                        formProvider: YesNoFormProvider,
-                                                        val controllerComponents: MessagesControllerComponents,
-                                                        view: NationalInsuranceNumberYesNoView
-                                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class NationalInsuranceNumberYesNoController @Inject() (
+  override val messagesApi: MessagesApi,
+  sessionRepository: PlaybackRepository,
+  navigator: Navigator,
+  standardActionSets: StandardActionSets,
+  nameAction: NameRequiredAction,
+  formProvider: YesNoFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: NationalInsuranceNumberYesNoView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport {
 
   private val form: Form[Boolean] = formProvider.withPrefix("otherIndividual.nationalInsuranceNumberYesNo")
 
   def onPageLoad(mode: Mode): Action[AnyContent] = standardActionSets.verifiedForUtr.andThen(nameAction) {
     implicit request =>
-
       val preparedForm = request.userAnswers.get(NationalInsuranceNumberYesNoPage) match {
-        case None => form
+        case None        => form
         case Some(value) => form.fill(value)
       }
 
       Ok(view(preparedForm, request.otherIndividual, mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = standardActionSets.verifiedForUtr.andThen(nameAction).async {
-    implicit request =>
+  def onSubmit(mode: Mode): Action[AnyContent] =
+    standardActionSets.verifiedForUtr.andThen(nameAction).async { implicit request =>
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, request.otherIndividual, mode))),
+          value =>
+            for {
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(NationalInsuranceNumberYesNoPage, value))
+              _              <- sessionRepository.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(NationalInsuranceNumberYesNoPage, mode, updatedAnswers))
+        )
+    }
 
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, request.otherIndividual, mode))),
-
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(NationalInsuranceNumberYesNoPage, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(NationalInsuranceNumberYesNoPage, mode, updatedAnswers))
-      )
-  }
 }

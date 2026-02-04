@@ -20,7 +20,10 @@ import base.SpecBase
 import connectors.TrustsStoreConnector
 import forms.{AddAnOtherIndividualFormProvider, YesNoFormProvider}
 import models.TaskStatus.Completed
-import models.{AddAnOtherIndividual, Name, NationalInsuranceNumber, NormalMode, OtherIndividual, OtherIndividuals, RemoveOtherIndividual, UserAnswers}
+import models.{
+  AddAnOtherIndividual, Name, NationalInsuranceNumber, NormalMode, OtherIndividual, OtherIndividuals,
+  RemoveOtherIndividual, UserAnswers
+}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{reset, verify, when}
 import org.scalatest.BeforeAndAfterEach
@@ -41,15 +44,15 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class AddAnOtherIndividualControllerSpec extends SpecBase with ScalaFutures with BeforeAndAfterEach {
 
-  lazy val getRoute: String = controllers.routes.AddAnOtherIndividualController.onPageLoad().url
-  lazy val submitOneRoute: String = controllers.routes.AddAnOtherIndividualController.submitOne().url
-  lazy val submitAnotherRoute: String = controllers.routes.AddAnOtherIndividualController.submitAnother().url
+  lazy val getRoute: String            = controllers.routes.AddAnOtherIndividualController.onPageLoad().url
+  lazy val submitOneRoute: String      = controllers.routes.AddAnOtherIndividualController.submitOne().url
+  lazy val submitAnotherRoute: String  = controllers.routes.AddAnOtherIndividualController.submitAnother().url
   lazy val submitCompleteRoute: String = controllers.routes.AddAnOtherIndividualController.submitComplete().url
 
   val mockStoreConnector: TrustsStoreConnector = mock[TrustsStoreConnector]
 
   val addOtherIndividualForm: Form[AddAnOtherIndividual] = new AddAnOtherIndividualFormProvider()()
-  val addOtherIndividualYesNoForm: Form[Boolean] = new YesNoFormProvider().withPrefix("addAnOtherIndividualYesNo")
+  val addOtherIndividualYesNoForm: Form[Boolean]         = new YesNoFormProvider().withPrefix("addAnOtherIndividualYesNo")
 
   private val otherIndividual = OtherIndividual(
     name = Name(firstName = "First", middleName = None, lastName = "Last"),
@@ -73,24 +76,34 @@ class AddAnOtherIndividualControllerSpec extends SpecBase with ScalaFutures with
       Some(controllers.individual.amend.routes.CheckDetailsController.extractAndRender(0).url),
       "Remove",
       Some(controllers.individual.remove.routes.RemoveOtherIndividualController.onPageLoad(0).url)
-    ))
+    )
+  )
 
   class FakeService(data: OtherIndividuals) extends TrustService {
-    override def getOtherIndividuals(utr: String)
-                                    (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[OtherIndividuals] =
+
+    override def getOtherIndividuals(
+      utr: String
+    )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[OtherIndividuals] =
       Future.successful(data)
 
-    override def getOtherIndividual(utr: String, index: Int)
-                                   (implicit hc: HeaderCarrier, ex: ExecutionContext): Future[OtherIndividual] =
+    override def getOtherIndividual(utr: String, index: Int)(implicit
+      hc: HeaderCarrier,
+      ex: ExecutionContext
+    ): Future[OtherIndividual] =
       Future.successful(otherIndividual)
 
-    override def removeOtherIndividual(utr: String, otherIndividual: RemoveOtherIndividual)
-                                      (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] =
+    override def removeOtherIndividual(utr: String, otherIndividual: RemoveOtherIndividual)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext
+    ): Future[HttpResponse] =
       Future.successful(HttpResponse(OK, ""))
 
-    override def getIndividualNinos(identifier: String, index: Option[Int])
-                                   (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[String]] =
+    override def getIndividualNinos(identifier: String, index: Option[Int])(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext
+    ): Future[List[String]] =
       ???
+
   }
 
   override def beforeEach(): Unit = {
@@ -170,7 +183,8 @@ class AddAnOtherIndividualControllerSpec extends SpecBase with ScalaFutures with
           .overrides(
             bind(classOf[TrustService]).toInstance(fakeService),
             bind(classOf[TrustsStoreConnector]).toInstance(mockStoreConnector)
-          ).build()
+          )
+          .build()
 
         val request = FakeRequest(POST, submitOneRoute)
           .withFormUrlEncodedBody(("value", "false"))
@@ -194,7 +208,8 @@ class AddAnOtherIndividualControllerSpec extends SpecBase with ScalaFutures with
           .overrides(
             bind(classOf[TrustService]).toInstance(fakeService),
             bind(classOf[TrustsStoreConnector]).toInstance(mockStoreConnector)
-          ).build()
+          )
+          .build()
 
         val request = FakeRequest(POST, submitOneRoute)
           .withFormUrlEncodedBody(("value", "true"))
@@ -212,14 +227,21 @@ class AddAnOtherIndividualControllerSpec extends SpecBase with ScalaFutures with
 
         val fakeService = new FakeService(OtherIndividuals(Nil))
 
-        val userAns = UserAnswers(userAnswersId, "UTRUTRUTR", "sessionId", s"$userAnswersId-UTRUTRUTR-sessionId", LocalDate.now(),
-          isTaxable = false)
+        val userAns = UserAnswers(
+          userAnswersId,
+          "UTRUTRUTR",
+          "sessionId",
+          s"$userAnswersId-UTRUTRUTR-sessionId",
+          LocalDate.now(),
+          isTaxable = false
+        )
 
         val application = applicationBuilder(userAnswers = Some(userAns))
           .overrides(
             bind(classOf[TrustService]).toInstance(fakeService),
             bind(classOf[TrustsStoreConnector]).toInstance(mockStoreConnector)
-          ).build()
+          )
+          .build()
 
         val request = FakeRequest(POST, submitOneRoute)
           .withFormUrlEncodedBody(("value", "true"))
@@ -272,7 +294,8 @@ class AddAnOtherIndividualControllerSpec extends SpecBase with ScalaFutures with
           .overrides(
             bind(classOf[TrustService]).toInstance(fakeService),
             bind(classOf[TrustsStoreConnector]).toInstance(mockStoreConnector)
-          ).build()
+          )
+          .build()
 
         val request = FakeRequest(POST, submitAnotherRoute)
           .withFormUrlEncodedBody(("value", AddAnOtherIndividual.NoComplete.toString))
@@ -296,7 +319,8 @@ class AddAnOtherIndividualControllerSpec extends SpecBase with ScalaFutures with
           .overrides(
             bind(classOf[TrustService]).toInstance(fakeService),
             bind(classOf[TrustsStoreConnector]).toInstance(mockStoreConnector)
-          ).build()
+          )
+          .build()
 
         val request = FakeRequest(POST, submitAnotherRoute)
           .withFormUrlEncodedBody(("value", AddAnOtherIndividual.YesNow.toString))
@@ -312,8 +336,8 @@ class AddAnOtherIndividualControllerSpec extends SpecBase with ScalaFutures with
 
       "return a Bad Request and errors when invalid data is submitted" in {
 
-        val otherIndividuals = OtherIndividuals(List.fill(2)(otherIndividual))
-        val fakeService = new FakeService(otherIndividuals)
+        val otherIndividuals    = OtherIndividuals(List.fill(2)(otherIndividual))
+        val fakeService         = new FakeService(otherIndividuals)
         val otherIndividualRows = new AddAnOtherIndividualViewHelper(otherIndividuals.otherIndividuals).rows
 
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -388,7 +412,8 @@ class AddAnOtherIndividualControllerSpec extends SpecBase with ScalaFutures with
           .overrides(
             bind(classOf[TrustService]).toInstance(fakeService),
             bind(classOf[TrustsStoreConnector]).toInstance(mockStoreConnector)
-          ).build()
+          )
+          .build()
 
         val request = FakeRequest(POST, submitCompleteRoute)
 
@@ -418,22 +443,23 @@ class AddAnOtherIndividualControllerSpec extends SpecBase with ScalaFutures with
           .build()
 
         val submitEmptyFormRequest = FakeRequest(POST, submitRoute).withFormUrlEncodedBody(("value", ""))
-        val submitEmptyFormResult = route(application, submitEmptyFormRequest).value
+        val submitEmptyFormResult  = route(application, submitEmptyFormRequest).value
         status(submitEmptyFormResult) mustEqual BAD_REQUEST
 
         val toggleLanguageRoute: String = routes.LanguageSwitchController.switchToLanguage("cymraeg").url
-        val headers: Headers = new Headers(Seq(("Referer", submitRoute)))
-        val toggleLanguageRequest = FakeRequest(GET, toggleLanguageRoute).withHeaders(headers)
-        val toggleLanguageResult = route(application, toggleLanguageRequest).value
+        val headers: Headers            = new Headers(Seq(("Referer", submitRoute)))
+        val toggleLanguageRequest       = FakeRequest(GET, toggleLanguageRoute).withHeaders(headers)
+        val toggleLanguageResult        = route(application, toggleLanguageRequest).value
         status(toggleLanguageResult) mustEqual SEE_OTHER
 
-        val referrerRoute = redirectLocation(toggleLanguageResult).value
+        val referrerRoute   = redirectLocation(toggleLanguageResult).value
         val referrerRequest = FakeRequest(GET, referrerRoute)
-        val referrerResult = route(application, referrerRequest).value
+        val referrerResult  = route(application, referrerRequest).value
         status(referrerResult) mustEqual OK
 
         application.stop()
       }
     }
   }
+
 }

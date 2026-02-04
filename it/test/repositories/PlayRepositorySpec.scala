@@ -31,8 +31,14 @@ import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 
-class PlayRepositorySpec extends AnyWordSpec with Matchers
-  with ScalaFutures with OptionValues with MongoSupport with MongoSuite with BeforeAndAfterEach {
+class PlayRepositorySpec
+    extends AnyWordSpec
+    with Matchers
+    with ScalaFutures
+    with OptionValues
+    with MongoSupport
+    with MongoSuite
+    with BeforeAndAfterEach {
 
   override def beforeEach(): Unit =
     Await.result(repository.collection.deleteMany(BsonDocument()).toFuture(), Duration.Inf)
@@ -44,16 +50,16 @@ class PlayRepositorySpec extends AnyWordSpec with Matchers
     "must return None when no answer exists" in {
       val internalId = "Int-328969d0-557e-4559-sdba-074d0597107e"
       val identifier = "Testing"
-      val sessionId = "Test"
+      val sessionId  = "Test"
 
       repository.get(internalId, identifier, sessionId).futureValue mustBe None
     }
 
     "must return the userAnswers after insert" in {
-      val internalId = "Int-328969d0-557e-4559-sdba-074d0597107e"
-      val identifier = "Testing"
-      val sessionId = "Test"
-      val newId = s"$internalId-$identifier-$sessionId"
+      val internalId               = "Int-328969d0-557e-4559-sdba-074d0597107e"
+      val identifier               = "Testing"
+      val sessionId                = "Test"
+      val newId                    = s"$internalId-$identifier-$sessionId"
       val userAnswers: UserAnswers = UserAnswers(internalId, identifier, sessionId, newId, LocalDate.now())
 
       repository.get(internalId, identifier, sessionId).futureValue mustBe None
@@ -66,12 +72,13 @@ class PlayRepositorySpec extends AnyWordSpec with Matchers
     }
 
     "must return the userAnswers after update" in {
-      val internalId = "Int-328969d0-557e-4559-sdba-074d0597107e"
-      val identifier = "Testing"
-      val sessionId = "Test"
-      val newId = s"$internalId-$identifier-$sessionId"
+      val internalId               = "Int-328969d0-557e-4559-sdba-074d0597107e"
+      val identifier               = "Testing"
+      val sessionId                = "Test"
+      val newId                    = s"$internalId-$identifier-$sessionId"
       val userAnswers: UserAnswers = UserAnswers(internalId, identifier, sessionId, newId, LocalDate.now())
-      val userAnswers2 = userAnswers.copy(data = Json.obj("key" -> "123"), isUnderlyingData5mld = true, isTaxable = false)
+      val userAnswers2             =
+        userAnswers.copy(data = Json.obj("key" -> "123"), isUnderlyingData5mld = true, isTaxable = false)
 
       repository.get(internalId, identifier, sessionId).futureValue mustBe None
 
@@ -80,7 +87,7 @@ class PlayRepositorySpec extends AnyWordSpec with Matchers
       val userAnswerstest = repository.get(internalId, identifier, sessionId).futureValue
       userAnswerstest.map(_.copy(updatedAt = userAnswers.updatedAt)) mustBe Some(userAnswers)
 
-      //update
+      // update
 
       repository.set(userAnswers2).futureValue mustBe true
 

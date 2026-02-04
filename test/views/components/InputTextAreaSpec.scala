@@ -23,6 +23,7 @@ import play.api.data.Forms.text
 class InputTextAreaSpec extends SpecBase {
 
   val form: Form[String] = Form("value" -> text())
+
   "Input text area" should {
 
     "render a text area with correct label and id" in {
@@ -30,12 +31,11 @@ class InputTextAreaSpec extends SpecBase {
 
       val view = application.injector.instanceOf[views.html.components.InputTextArea]
 
-      val result = view.apply(
-        field = form("value"),
-        label = "test label")(messages)
+      val result = view.apply(field = form("value"), label = "test label")(messages)
       result.body must include("govuk-textarea")
       result.body must include("id=\"value\"")
     }
 
   }
+
 }

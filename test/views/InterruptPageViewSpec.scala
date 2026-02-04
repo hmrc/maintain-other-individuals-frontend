@@ -32,11 +32,16 @@ class InterruptPageViewSpec extends ViewBehaviours {
       messageKeyPrefix = "otherIndividual.interrupt.page",
       messageKeyParam = "",
       captionParam = "",
-      expectedGuidanceKeys = "p1", "b1", "b2", "b3", "b4"
+      expectedGuidanceKeys = "p1",
+      "b1",
+      "b2",
+      "b3",
+      "b4"
     )
 
     behave like pageWithBackLink(applyView)
 
     behave like pageWithASubmitButton(applyView)
   }
+
 }

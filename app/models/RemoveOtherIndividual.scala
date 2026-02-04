@@ -21,16 +21,16 @@ import java.time.LocalDate
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Writes}
 
-case class RemoveOtherIndividual(index : Int, endDate: LocalDate)
+case class RemoveOtherIndividual(index: Int, endDate: LocalDate)
 
 object RemoveOtherIndividual {
 
-  implicit val writes : Writes[RemoveOtherIndividual] =
+  implicit val writes: Writes[RemoveOtherIndividual] =
     (
-        (JsPath \ "index").write[Int] and
+      (JsPath \ "index").write[Int] and
         (JsPath \ "endDate").write[LocalDate]
-      ).apply(unlift(RemoveOtherIndividual.unapply))
+    ).apply(unlift(RemoveOtherIndividual.unapply))
 
-  def apply(index: Int): RemoveOtherIndividual =  RemoveOtherIndividual(index, LocalDate.now)
+  def apply(index: Int): RemoveOtherIndividual = RemoveOtherIndividual(index, LocalDate.now)
 
 }

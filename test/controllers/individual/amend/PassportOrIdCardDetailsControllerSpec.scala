@@ -33,15 +33,20 @@ class PassportOrIdCardDetailsControllerSpec extends SpecBase with MockitoSugar {
   private val index = 0
 
   override val emptyUserAnswers: UserAnswers = super.emptyUserAnswers
-    .set(NamePage, name).success.value
-    .set(IndexPage, index).success.value
+    .set(NamePage, name)
+    .success
+    .value
+    .set(IndexPage, index)
+    .success
+    .value
 
   private lazy val passportOrIdCardDetailsRoute: String = routes.PassportOrIdCardDetailsController.onPageLoad(mode).url
 
   private lazy val checkDetailsRoute =
     controllers.individual.amend.routes.CheckDetailsController.renderFromUserAnswers(index).url
 
-  private val validData: CombinedPassportOrIdCard = CombinedPassportOrIdCard("country", "number", LocalDate.parse("2020-02-03"))
+  private val validData: CombinedPassportOrIdCard =
+    CombinedPassportOrIdCard("country", "number", LocalDate.parse("2020-02-03"))
 
   "PassportOrIdCardDetails Controller" must {
 
@@ -85,12 +90,12 @@ class PassportOrIdCardDetailsControllerSpec extends SpecBase with MockitoSugar {
       val request =
         FakeRequest(POST, passportOrIdCardDetailsRoute)
           .withFormUrlEncodedBody(
-            "country" -> "country",
-            "number" -> "123456",
-            "expiryDate.day" -> validData.expirationDate.getDayOfMonth.toString,
+            "country"          -> "country",
+            "number"           -> "123456",
+            "expiryDate.day"   -> validData.expirationDate.getDayOfMonth.toString,
             "expiryDate.month" -> validData.expirationDate.getMonthValue.toString,
-            "expiryDate.year" -> validData.expirationDate.getYear.toString,
-            "detailsType" -> DetailsType.Combined.toString
+            "expiryDate.year"  -> validData.expirationDate.getYear.toString,
+            "detailsType"      -> DetailsType.Combined.toString
           )
 
       val result = route(application, request).value
@@ -134,4 +139,5 @@ class PassportOrIdCardDetailsControllerSpec extends SpecBase with MockitoSugar {
       application.stop()
     }
   }
+
 }

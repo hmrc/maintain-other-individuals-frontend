@@ -26,9 +26,9 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class SaveActiveSessionImpl @Inject()(utr: String,
-                                      activeSessionRepository: ActiveSessionRepository
-                                     )(override implicit val executionContext: ExecutionContext) extends SaveSessionAction with Logging {
+class SaveActiveSessionImpl @Inject() (utr: String, activeSessionRepository: ActiveSessionRepository)(implicit
+  override val executionContext: ExecutionContext
+) extends SaveSessionAction with Logging {
 
   override protected def filter[A](request: IdentifierRequest[A]): Future[Option[Result]] = {
 
@@ -37,17 +37,21 @@ class SaveActiveSessionImpl @Inject()(utr: String,
     val session = UtrSession(request.user.internalId, utr)
 
     activeSessionRepository.set(session) map { _ =>
-      logger.info(s"[Session][UTR: $utr][Session ID: ${utils.Session.id(hc)}] user is starting to maintain other individuals")
+      logger.info(
+        s"[Session][UTR: $utr][Session ID: ${utils.Session.id(hc)}] user is starting to maintain other individuals"
+      )
       None
     }
   }
+
 }
 
 @ImplementedBy(classOf[SaveActiveSessionImpl])
 trait SaveSessionAction extends ActionFilter[IdentifierRequest]
 
-class SaveActiveSessionProvider @Inject()(activeSessionRepository: ActiveSessionRepository)
-                                         (implicit ec: ExecutionContext) {
+class SaveActiveSessionProvider @Inject() (activeSessionRepository: ActiveSessionRepository)(implicit
+  ec: ExecutionContext
+) {
 
   def apply(utr: String) = new SaveActiveSessionImpl(utr, activeSessionRepository)
 }
