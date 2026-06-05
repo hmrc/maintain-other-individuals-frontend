@@ -21,7 +21,6 @@ import connectors.TrustConnector
 import controllers.actions._
 import extractors.OtherIndividualExtractor
 import handlers.ErrorHandler
-import javax.inject.Inject
 import models.UserAnswers
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -32,8 +31,10 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.mappers.OtherIndividualMapper
 import utils.print.OtherIndividualPrintHelper
 import viewmodels.AnswerSection
+import views.html.OutOfBoundsPageNotFoundView
 import views.html.individual.amend.CheckDetailsView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class CheckDetailsController @Inject() (
@@ -41,6 +42,7 @@ class CheckDetailsController @Inject() (
   standardActionSets: StandardActionSets,
   val controllerComponents: MessagesControllerComponents,
   view: CheckDetailsView,
+  val outOfBoundsView: OutOfBoundsPageNotFoundView,
   service: TrustService,
   connector: TrustConnector,
   val appConfig: FrontendAppConfig,
@@ -49,9 +51,9 @@ class CheckDetailsController @Inject() (
   mapper: OtherIndividualMapper,
   nameAction: NameRequiredAction,
   extractor: OtherIndividualExtractor,
-  errorHandler: ErrorHandler
+  val errorHandler: ErrorHandler
 )(implicit ec: ExecutionContext)
-    extends FrontendBaseController with I18nSupport with Logging {
+    extends FrontendBaseController with I18nSupport with Logging with IndexAndGenericExceptionRecovery {
 
   private def render(userAnswers: UserAnswers, index: Int, name: String)(implicit
     request: Request[AnyContent]
@@ -61,25 +63,21 @@ class CheckDetailsController @Inject() (
   }
 
   def extractAndRender(index: Int): Action[AnyContent] = standardActionSets.verifiedForUtr.async { implicit request =>
-    service.getOtherIndividual(request.userAnswers.identifier, index) flatMap { individual =>
-      val extractedAnswers = extractor(request.userAnswers, individual, index)
-      for {
-        extractedF <- Future.fromTry(extractedAnswers)
-        _          <- playbackRepository.set(extractedF)
-      } yield render(extractedF, index, individual.name.displayName)
-    } recoverWith { case _ =>
-      logger.error(
-        s"[Amend Individual][UTR: ${request.userAnswers.identifier}][Session ID: ${utils.Session.id(hc)}]" +
-          s" no other individual found in trusts service to maintain"
-      )
-      errorHandler.internalServerErrorTemplate.map(res => InternalServerError(res))
-    }
+    (for {
+      individual      <- service.getOtherIndividual(request.userAnswers.identifier, index)
+      extractedAnswers = extractor(request.userAnswers, individual, index)
+      extractedF      <- Future.fromTry(extractedAnswers)
+      _               <- playbackRepository.set(extractedF)
+    } yield render(extractedF, index, individual.name.displayName))
+      .recoverWith {
+        recoverIndexAndGenericException(index, request.userAnswers.identifier, "extractAndRender")
+      }
   }
 
-  def renderFromUserAnswers(index: Int): Action[AnyContent] = standardActionSets.verifiedForUtr.andThen(nameAction) {
-    implicit request =>
+  def renderFromUserAnswers(index: Int): Action[AnyContent] =
+    standardActionSets.verifiedForUtr.andThen(nameAction) { implicit request =>
       render(request.userAnswers, index, request.otherIndividual)
-  }
+    }
 
   def onSubmit(index: Int): Action[AnyContent] = standardActionSets.verifiedForUtr.async { implicit request =>
     mapper(request.userAnswers).map { individual =>

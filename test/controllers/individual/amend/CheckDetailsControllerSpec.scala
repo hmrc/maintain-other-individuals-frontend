@@ -18,6 +18,7 @@ package controllers.individual.amend
 
 import base.SpecBase
 import connectors.TrustConnector
+import handlers.ErrorHandler
 import models.{Name, OtherIndividual, UkAddress}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -25,19 +26,20 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import pages.individual._
 import play.api.inject.bind
+import play.api.mvc.RequestHeader
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import play.twirl.api.Html
 import services.TrustService
 import uk.gov.hmrc.auth.core.AffinityGroup.Agent
 import uk.gov.hmrc.http.HttpResponse
+import utils.mappers.OtherIndividualMapper
 import utils.print.OtherIndividualPrintHelper
+import views.html.OutOfBoundsPageNotFoundView
 import views.html.individual.amend.CheckDetailsView
+
 import java.time.LocalDate
 import scala.concurrent.Future
-import handlers.ErrorHandler
-import play.api.mvc.RequestHeader
-import play.twirl.api.Html
-import utils.mappers.OtherIndividualMapper
 
 class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFutures {
 
@@ -116,24 +118,23 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
 
       val result = route(application, request).value
 
-      val view          = application.injector.instanceOf[CheckDetailsView]
-      val printHelper   = application.injector.instanceOf[OtherIndividualPrintHelper]
+      val view        = application.injector.instanceOf[CheckDetailsView]
+      val printHelper = application.injector.instanceOf[OtherIndividualPrintHelper]
+
       val answerSection = printHelper(userAnswers, adding = false, name.displayName)
 
       status(result) mustEqual OK
 
-      contentAsString(result) mustEqual
-        view(Seq(answerSection), index)(request, messages).toString
+      contentAsString(result) mustEqual view(Seq(answerSection), index)(request, messages).toString
     }
 
     "redirect to the 'add a beneficiary' page when submitted" in {
 
       val mockTrustConnector = mock[TrustConnector]
 
-      val application =
-        applicationBuilder(userAnswers = Some(userAnswers), affinityGroup = Agent)
-          .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
-          .build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers), affinityGroup = Agent)
+        .overrides(bind[TrustConnector].toInstance(mockTrustConnector))
+        .build()
 
       when(mockTrustConnector.amendOtherIndividual(any(), any(), any())(any(), any()))
         .thenReturn(Future.successful(HttpResponse(OK, "")))
@@ -149,7 +150,8 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
       application.stop()
     }
 
-    "extractAndRender  should return Internal server error via ErrorHandler when service fails" in {
+    "extractAndRender should return Internal server error via ErrorHandler when service fails" in {
+
       val mockService    = mock[TrustService]
       val mockErrHandler = mock[ErrorHandler]
 
@@ -167,7 +169,8 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
         .build()
 
       val request = FakeRequest(GET, extractAndRenderRoute)
-      val result  = route(application, request).value
+
+      val result = route(application, request).value
 
       status(result) mustEqual INTERNAL_SERVER_ERROR
       contentAsString(result) must include("server error")
@@ -175,7 +178,35 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
       application.stop()
     }
 
+    "extractAndRender should return Not Found and the out of bounds page when getOtherIndividual throws IndexOutOfBoundsException" in {
+
+      val mockService = mock[TrustService]
+
+      when(mockService.getOtherIndividual(any(), any())(any(), any()))
+        .thenReturn(Future.failed(new IndexOutOfBoundsException("")))
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          bind[TrustService].toInstance(mockService)
+        )
+        .build()
+
+      val request = FakeRequest(GET, extractAndRenderRoute)
+
+      val result = route(application, request).value
+
+      val view = application.injector.instanceOf[OutOfBoundsPageNotFoundView]
+
+      status(result) mustEqual NOT_FOUND
+
+      contentAsString(result) mustEqual
+        view()(request, messages).toString
+
+      application.stop()
+    }
+
     "onSubmit should return Internal server error via ErrorHandler when mapper returns None" in {
+
       val mockMapper     = mock[OtherIndividualMapper]
       val mockErrHandler = mock[ErrorHandler]
 
@@ -192,7 +223,8 @@ class CheckDetailsControllerSpec extends SpecBase with MockitoSugar with ScalaFu
         .build()
 
       val request = FakeRequest(POST, submitDetailsRoute)
-      val result  = route(application, request).value
+
+      val result = route(application, request).value
 
       status(result) mustEqual INTERNAL_SERVER_ERROR
       contentAsString(result) must include("server error")
