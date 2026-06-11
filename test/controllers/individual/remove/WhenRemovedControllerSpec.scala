@@ -29,6 +29,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.{TrustService, TrustServiceImpl}
 import uk.gov.hmrc.http.HttpResponse
+import views.html.OutOfBoundsPageNotFoundView
 import views.html.individual.remove.WhenRemovedView
 
 import java.time.{LocalDate, ZoneOffset}
@@ -37,22 +38,19 @@ import scala.concurrent.Future
 class WhenRemovedControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new DateRemovedFromTrustFormProvider()
-
   private def form = formProvider.withPrefixAndEntityStartDate("otherIndividual.whenRemoved", LocalDate.now())
 
   val validAnswer: LocalDate = LocalDate.now(ZoneOffset.UTC)
 
   val index = 0
+  val name  = "Name 1"
 
-  val name                          = "Name 1"
   val mockConnector: TrustConnector = mock[TrustConnector]
-
-  val fakeService = new TrustServiceImpl(mockConnector)
+  val fakeService                   = new TrustServiceImpl(mockConnector)
 
   lazy val dateRemovedFromTrustRoute: String = routes.WhenRemovedController.onPageLoad(index).url
 
-  def getRequest(): FakeRequest[AnyContentAsEmpty.type] =
-    FakeRequest(GET, dateRemovedFromTrustRoute)
+  def getRequest(): FakeRequest[AnyContentAsEmpty.type] = FakeRequest(GET, dateRemovedFromTrustRoute)
 
   def postRequest(): FakeRequest[AnyContentAsFormUrlEncoded] =
     FakeRequest(POST, dateRemovedFromTrustRoute)
@@ -79,13 +77,13 @@ class WhenRemovedControllerSpec extends SpecBase with MockitoSugar {
   "WhenRemoved Controller" must {
 
     "return OK and the correct view for a GET" in {
-
       when(mockConnector.getOtherIndividuals(any())(any(), any()))
         .thenReturn(Future.successful(OtherIndividuals(otherIndividuals)))
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-        .overrides(bind[TrustConnector].toInstance(mockConnector))
-        .build()
+      val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(bind[TrustConnector].toInstance(mockConnector))
+          .build()
 
       val result = route(application, getRequest()).value
 
@@ -93,23 +91,20 @@ class WhenRemovedControllerSpec extends SpecBase with MockitoSugar {
 
       status(result) mustEqual OK
 
-      contentAsString(result) mustEqual
-        view(form, index, name)(getRequest(), messages).toString
+      contentAsString(result) mustEqual view(form, index, name)(getRequest(), messages).toString
 
       application.stop()
     }
 
     "redirect to the next page when valid data is submitted" in {
-
       when(mockConnector.removeOtherIndividual(any(), any())(any(), any()))
         .thenReturn(Future.successful(HttpResponse(OK, "")))
 
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            bind[TrustService].toInstance(fakeService)
-          )
-          .build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(
+          bind[TrustService].toInstance(fakeService)
+        )
+        .build()
 
       val result = route(application, postRequest()).value
 
@@ -121,14 +116,13 @@ class WhenRemovedControllerSpec extends SpecBase with MockitoSugar {
     }
 
     "return a Bad Request and errors when invalid data is submitted" in {
+      val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(bind[TrustConnector].toInstance(mockConnector))
+          .build()
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-        .overrides(bind[TrustConnector].toInstance(mockConnector))
-        .build()
-
-      val request =
-        FakeRequest(POST, dateRemovedFromTrustRoute)
-          .withFormUrlEncodedBody(("value", ""))
+      val request = FakeRequest(POST, dateRemovedFromTrustRoute)
+        .withFormUrlEncodedBody(("value", ""))
 
       val boundForm = form.bind(Map("value" -> ""))
 
@@ -138,26 +132,24 @@ class WhenRemovedControllerSpec extends SpecBase with MockitoSugar {
 
       status(result) mustEqual BAD_REQUEST
 
-      contentAsString(result) mustEqual
-        view(boundForm, index, name)(request, messages).toString
+      contentAsString(result) mustEqual view(boundForm, index, name)(request, messages).toString
 
       application.stop()
     }
 
     "redirect to Session Expired for a GET if no existing data is found" in {
-
       val application = applicationBuilder(userAnswers = None).build()
 
       val result = route(application, getRequest()).value
 
       status(result) mustEqual SEE_OTHER
+
       redirectLocation(result).value mustEqual controllers.routes.SessionExpiredController.onPageLoad.url
 
       application.stop()
     }
 
     "redirect to Session Expired for a POST if no existing data is found" in {
-
       val application = applicationBuilder(userAnswers = None).build()
 
       val result = route(application, postRequest()).value
@@ -165,6 +157,46 @@ class WhenRemovedControllerSpec extends SpecBase with MockitoSugar {
       status(result) mustEqual SEE_OTHER
 
       redirectLocation(result).value mustEqual controllers.routes.SessionExpiredController.onPageLoad.url
+
+      application.stop()
+    }
+
+    "return Not Found and the out of bounds page when getOtherIndividual throws IndexOutOfBoundsException on a GET" in {
+      when(mockConnector.getOtherIndividuals(any())(any(), any()))
+        .thenReturn(Future.failed(new IndexOutOfBoundsException("")))
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(bind[TrustConnector].toInstance(mockConnector))
+        .build()
+
+      val result = route(application, getRequest()).value
+
+      val view = application.injector.instanceOf[OutOfBoundsPageNotFoundView]
+
+      status(result) mustEqual NOT_FOUND
+
+      contentAsString(result) mustEqual
+        view()(getRequest(), messages).toString
+
+      application.stop()
+    }
+
+    "return Not Found and the out of bounds page when getOtherIndividual throws IndexOutOfBoundsException on a POST" in {
+      when(mockConnector.getOtherIndividuals(any())(any(), any()))
+        .thenReturn(Future.failed(new IndexOutOfBoundsException("")))
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(bind[TrustConnector].toInstance(mockConnector))
+        .build()
+
+      val result = route(application, postRequest()).value
+
+      val view = application.injector.instanceOf[OutOfBoundsPageNotFoundView]
+
+      status(result) mustEqual NOT_FOUND
+
+      contentAsString(result) mustEqual
+        view()(getRequest(), messages).toString
 
       application.stop()
     }

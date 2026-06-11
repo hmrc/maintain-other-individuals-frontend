@@ -336,3 +336,10 @@ otherIndividualsInfo.bulletpoint11 = analluedd i gyfathrebu
 
 otherIndividualsInfo.details = Yr hyn a olygwn wrth ddweud gwlad breswyl
 otherIndividualsInfo.details.paragraph1 = Fel arfer, dyma’r wlad lle mae’r unigolyn yn byw ac yn gweithio’r rhan fwyaf o’r amser yn ystod y flwyddyn dreth. Gallwch wirio ei statws preswylio drwy’r Prawf Preswylio Statudol (SRT).
+
+outOfBoundsPageNotFound.title = Heb ddod o hyd i’r dudalen
+outOfBoundsPageNotFound.heading = Heb ddod o hyd i’r dudalen
+outOfBoundsPageNotFound.p1 = Ni ellir dod o hyd i’r dudalen yr ydych yn chwilio amdani.
+outOfBoundsPageNotFound.p2 = Er mwyn parhau i gofrestru ymddiriedolaeth gallwch wneud y canlynol:
+outOfBoundsPageNotFound.bullet1 = mynd i drosolwg yr ymddiriedolaeth
+outOfBoundsPageNotFound.bullet2 = ychwanegu neu newid manylion ar gyfer unigolion eraill sy’n gysylltiedig â’r ymddiriedolaeth
