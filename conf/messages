@@ -374,10 +374,3 @@ otherIndividualsInfo.bulletpoint11 = being unable to communicate
 
 otherIndividualsInfo.details = What we mean by country of residence
 otherIndividualsInfo.details.paragraph1 = This is usually the country where the individual lives and works most of the time during the tax year. You can check the status of their residency through the Statutory Residence Test (SRT).
-
-outOfBoundsPageNotFound.title = Page not found
-outOfBoundsPageNotFound.heading = Page not found
-outOfBoundsPageNotFound.p1 = The page you are looking for cannot be found.
-outOfBoundsPageNotFound.p2 = To continue making changes to your trust you can:
-outOfBoundsPageNotFound.bullet1 = go to the trust overview
-outOfBoundsPageNotFound.bullet2 = add or change details for other individuals linked to the trust

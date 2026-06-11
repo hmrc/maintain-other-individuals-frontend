@@ -16,9 +16,10 @@
 
 package controllers.individual.remove
 
-import controllers.actions.{IndexAndGenericExceptionRecovery, StandardActionSets}
+import controllers.actions.StandardActionSets
 import forms.YesNoFormProvider
 import handlers.ErrorHandler
+import javax.inject.Inject
 import models.RemoveOtherIndividual
 import pages.individual.RemoveYesNoPage
 import play.api.Logging
@@ -28,10 +29,8 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.PlaybackRepository
 import services.TrustService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.OutOfBoundsPageNotFoundView
 import views.html.individual.remove.RemoveOtherIndividualView
 
-import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class RemoveOtherIndividualController @Inject() (
@@ -42,10 +41,9 @@ class RemoveOtherIndividualController @Inject() (
   formProvider: YesNoFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: RemoveOtherIndividualView,
-  val outOfBoundsView: OutOfBoundsPageNotFoundView,
-  val errorHandler: ErrorHandler
+  errorHandler: ErrorHandler
 )(implicit ec: ExecutionContext)
-    extends FrontendBaseController with I18nSupport with Logging with IndexAndGenericExceptionRecovery {
+    extends FrontendBaseController with I18nSupport with Logging {
 
   private val messagesPrefix: String = "removeOtherIndividualYesNo"
 
@@ -57,14 +55,24 @@ class RemoveOtherIndividualController @Inject() (
       case Some(value) => form.fill(value)
     }
 
-    trustService
-      .getOtherIndividual(request.userAnswers.identifier, index)
-      .map { otherIndividual =>
-        Ok(view(preparedForm, index, otherIndividual.name.displayName))
-      }
-      .recoverWith {
-        recoverIndexAndGenericException(index, request.userAnswers.identifier, "onPageLoad")
-      }
+    trustService.getOtherIndividual(request.userAnswers.identifier, index).map { otherIndividual =>
+      Ok(view(preparedForm, index, otherIndividual.name.displayName))
+    } recoverWith {
+      case iobe: IndexOutOfBoundsException =>
+        logger.warn(
+          s"[Session ID: ${utils.Session.id(hc)}][UTR: ${request.userAnswers.identifier}]" +
+            s" error showing the user the other individual to remove for index $index from trusts service ${iobe.getMessage}: IndexOutOfBoundsException"
+        )
+
+        Future.successful(Redirect(controllers.routes.AddAnOtherIndividualController.onPageLoad()))
+      case _                               =>
+        logger.error(
+          s"[Remove Individual][UTR: ${request.userAnswers.identifier}][Session ID: ${utils.Session.id(hc)}]" +
+            s" no other individual found in trusts service to remove"
+        )
+        errorHandler.internalServerErrorTemplate.map(res => InternalServerError(res))
+    }
+
   }
 
   def onSubmit(index: Int): Action[AnyContent] = standardActionSets.identifiedUserWithData.async { implicit request =>
@@ -89,14 +97,17 @@ class RemoveOtherIndividualController @Inject() (
                   _              <- repository.set(updatedAnswers)
                 } yield Redirect(controllers.individual.remove.routes.WhenRemovedController.onPageLoad(index).url)
               }
+            } recoverWith { case _ =>
+              logger.error(
+                s"[Remove Individual][UTR: ${request.userAnswers.identifier}][Session ID: ${utils.Session.id(hc)}]" +
+                  s" no other individual found in trusts service to remove"
+              )
+              errorHandler.internalServerErrorTemplate.map(res => InternalServerError(res))
             }
           } else {
             Future.successful(Redirect(controllers.routes.AddAnOtherIndividualController.onPageLoad().url))
           }
       )
-      .recoverWith {
-        recoverIndexAndGenericException(index, request.userAnswers.identifier, "onSubmit")
-      }
   }
 
 }

@@ -16,19 +16,16 @@
 
 package controllers.individual.remove
 
-import controllers.actions.{IndexAndGenericExceptionRecovery, StandardActionSets}
+import controllers.actions.StandardActionSets
 import forms.DateRemovedFromTrustFormProvider
-import handlers.ErrorHandler
+import javax.inject.Inject
 import models.RemoveOtherIndividual
-import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.TrustService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.OutOfBoundsPageNotFoundView
 import views.html.individual.remove.WhenRemovedView
 
-import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class WhenRemovedController @Inject() (
@@ -38,43 +35,31 @@ class WhenRemovedController @Inject() (
   trust: TrustService,
   val controllerComponents: MessagesControllerComponents,
   view: WhenRemovedView,
-  val outOfBoundsView: OutOfBoundsPageNotFoundView,
-  trustService: TrustService,
-  val errorHandler: ErrorHandler
+  trustService: TrustService
 )(implicit ec: ExecutionContext)
-    extends FrontendBaseController with I18nSupport with Logging with IndexAndGenericExceptionRecovery {
+    extends FrontendBaseController with I18nSupport {
 
   def onPageLoad(index: Int): Action[AnyContent] = standardActionSets.verifiedForUtr.async { implicit request =>
-    trust
-      .getOtherIndividual(request.userAnswers.identifier, index)
-      .map { otherIndividual =>
-        val form = formProvider.withPrefixAndEntityStartDate("otherIndividual.whenRemoved", otherIndividual.entityStart)
-        Ok(view(form, index, otherIndividual.name.displayName))
-      }
-      .recoverWith {
-        recoverIndexAndGenericException(index, request.userAnswers.identifier, "onPageLoad")
-      }
+    trust.getOtherIndividual(request.userAnswers.identifier, index).map { otherIndividual =>
+      val form = formProvider.withPrefixAndEntityStartDate("otherIndividual.whenRemoved", otherIndividual.entityStart)
+      Ok(view(form, index, otherIndividual.name.displayName))
+    }
   }
 
   def onSubmit(index: Int): Action[AnyContent] = standardActionSets.verifiedForUtr.async { implicit request =>
-    trust
-      .getOtherIndividual(request.userAnswers.identifier, index)
-      .flatMap { otherIndividual =>
-        val form = formProvider.withPrefixAndEntityStartDate("otherIndividual.whenRemoved", otherIndividual.entityStart)
-        form
-          .bindFromRequest()
-          .fold(
-            formWithErrors =>
-              Future.successful(BadRequest(view(formWithErrors, index, otherIndividual.name.displayName))),
-            value =>
-              trustService
-                .removeOtherIndividual(request.userAnswers.identifier, RemoveOtherIndividual(index, value))
-                .map(_ => Redirect(controllers.routes.AddAnOtherIndividualController.onPageLoad()))
-          )
-      }
-      .recoverWith {
-        recoverIndexAndGenericException(index, request.userAnswers.identifier, "onSubmit")
-      }
+    trust.getOtherIndividual(request.userAnswers.identifier, index).flatMap { otherIndividual =>
+      val form = formProvider.withPrefixAndEntityStartDate("otherIndividual.whenRemoved", otherIndividual.entityStart)
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors =>
+            Future.successful(BadRequest(view(formWithErrors, index, otherIndividual.name.displayName))),
+          value =>
+            trustService
+              .removeOtherIndividual(request.userAnswers.identifier, RemoveOtherIndividual(index, value))
+              .map(_ => Redirect(controllers.routes.AddAnOtherIndividualController.onPageLoad()))
+        )
+    }
   }
 
 }

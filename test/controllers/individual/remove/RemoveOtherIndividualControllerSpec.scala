@@ -30,7 +30,6 @@ import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HttpResponse
-import views.html.OutOfBoundsPageNotFoundView
 import views.html.individual.remove.RemoveOtherIndividualView
 
 import java.time.LocalDate
@@ -70,6 +69,7 @@ class RemoveOtherIndividualControllerSpec extends SpecBase with ScalaCheckProper
   "RemoveOtherIndividual Controller" when {
 
     "return OK and the correct view for a GET" in {
+
       val index = 0
 
       when(mockConnector.getOtherIndividuals(any())(any(), any()))
@@ -93,6 +93,7 @@ class RemoveOtherIndividualControllerSpec extends SpecBase with ScalaCheckProper
     }
 
     "populate the view correctly on a GET when the question has previously been answered" in {
+
       val userAnswers = emptyUserAnswers
         .set(RemoveYesNoPage, true)
         .success
@@ -101,10 +102,9 @@ class RemoveOtherIndividualControllerSpec extends SpecBase with ScalaCheckProper
       when(mockConnector.getOtherIndividuals(any())(any(), any()))
         .thenReturn(Future.successful(OtherIndividuals(otherIndividuals)))
 
-      val application =
-        applicationBuilder(userAnswers = Some(userAnswers))
-          .overrides(bind[TrustConnector].toInstance(mockConnector))
-          .build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(bind[TrustConnector].toInstance(mockConnector))
+        .build()
 
       val request = FakeRequest(GET, routes.RemoveOtherIndividualController.onPageLoad(0).url)
 
@@ -114,7 +114,8 @@ class RemoveOtherIndividualControllerSpec extends SpecBase with ScalaCheckProper
 
       status(result) mustEqual OK
 
-      contentAsString(result) mustEqual view(form.fill(true), 0, name)(request, messages).toString
+      contentAsString(result) mustEqual
+        view(form.fill(true), 0, name)(request, messages).toString
 
       application.stop()
     }
@@ -122,14 +123,16 @@ class RemoveOtherIndividualControllerSpec extends SpecBase with ScalaCheckProper
     "not removing the otherIndividual" must {
 
       "redirect to the add to page when valid data is submitted" in {
+
         val index = 0
 
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(bind[TrustConnector].toInstance(mockConnector))
           .build()
 
-        val request = FakeRequest(POST, routes.RemoveOtherIndividualController.onSubmit(index).url)
-          .withFormUrlEncodedBody(("value", "false"))
+        val request =
+          FakeRequest(POST, routes.RemoveOtherIndividualController.onSubmit(index).url)
+            .withFormUrlEncodedBody(("value", "false"))
 
         val result = route(application, request).value
 
@@ -144,6 +147,7 @@ class RemoveOtherIndividualControllerSpec extends SpecBase with ScalaCheckProper
     "removing an existing otherIndividual" must {
 
       "redirect to the next page when valid data is submitted" in {
+
         val index = 0
 
         when(mockConnector.getOtherIndividuals(any())(any(), any()))
@@ -153,8 +157,9 @@ class RemoveOtherIndividualControllerSpec extends SpecBase with ScalaCheckProper
           .overrides(bind[TrustConnector].toInstance(mockConnector))
           .build()
 
-        val request = FakeRequest(POST, routes.RemoveOtherIndividualController.onSubmit(index).url)
-          .withFormUrlEncodedBody(("value", "true"))
+        val request =
+          FakeRequest(POST, routes.RemoveOtherIndividualController.onSubmit(index).url)
+            .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
 
@@ -170,7 +175,8 @@ class RemoveOtherIndividualControllerSpec extends SpecBase with ScalaCheckProper
 
     "removing a new otherIndividual" must {
 
-      "return Internal server error when a generic exception is thrown" in {
+      "redirect to the add to page, when IndexOutOfBoundsException" in {
+
         val index = 0
 
         when(mockConnector.getOtherIndividuals(any())(any(), any()))
@@ -190,6 +196,7 @@ class RemoveOtherIndividualControllerSpec extends SpecBase with ScalaCheckProper
       }
 
       "redirect to the add to page, removing the otherIndividual" in {
+
         val index = 2
 
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -202,8 +209,9 @@ class RemoveOtherIndividualControllerSpec extends SpecBase with ScalaCheckProper
         when(mockConnector.removeOtherIndividual(any(), any())(any(), any()))
           .thenReturn(Future.successful(HttpResponse(OK, "")))
 
-        val request = FakeRequest(POST, routes.RemoveOtherIndividualController.onSubmit(index).url)
-          .withFormUrlEncodedBody(("value", "true"))
+        val request =
+          FakeRequest(POST, routes.RemoveOtherIndividualController.onSubmit(index).url)
+            .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
 
@@ -216,15 +224,16 @@ class RemoveOtherIndividualControllerSpec extends SpecBase with ScalaCheckProper
     }
 
     "return a Bad Request and errors when invalid data is submitted" in {
+
       val index = 0
 
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(bind[TrustConnector].toInstance(mockConnector))
-          .build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(bind[TrustConnector].toInstance(mockConnector))
+        .build()
 
-      val request = FakeRequest(POST, routes.RemoveOtherIndividualController.onSubmit(index).url)
-        .withFormUrlEncodedBody(("value", ""))
+      val request =
+        FakeRequest(POST, routes.RemoveOtherIndividualController.onSubmit(index).url)
+          .withFormUrlEncodedBody(("value", ""))
 
       val boundForm = form.bind(Map("value" -> ""))
 
@@ -234,12 +243,14 @@ class RemoveOtherIndividualControllerSpec extends SpecBase with ScalaCheckProper
 
       status(result) mustEqual BAD_REQUEST
 
-      contentAsString(result) mustEqual view(boundForm, index, name)(request, messages).toString
+      contentAsString(result) mustEqual
+        view(boundForm, index, name)(request, messages).toString
 
       application.stop()
     }
 
     "redirect to Session Expired for a GET if no existing data is found" in {
+
       val index = 0
 
       val application = applicationBuilder(userAnswers = None).build()
@@ -256,12 +267,14 @@ class RemoveOtherIndividualControllerSpec extends SpecBase with ScalaCheckProper
     }
 
     "redirect to Session Expired for a POST if no existing data is found" in {
+
       val index = 0
 
       val application = applicationBuilder(userAnswers = None).build()
 
-      val request = FakeRequest(POST, routes.RemoveOtherIndividualController.onSubmit(index).url)
-        .withFormUrlEncodedBody(("value", "true"))
+      val request =
+        FakeRequest(POST, routes.RemoveOtherIndividualController.onSubmit(index).url)
+          .withFormUrlEncodedBody(("value", "true"))
 
       val result = route(application, request).value
 
@@ -272,53 +285,23 @@ class RemoveOtherIndividualControllerSpec extends SpecBase with ScalaCheckProper
       application.stop()
     }
 
-    "return Not Found and the out of bounds page when getOtherIndividual throws IndexOutOfBoundsException on a GET" in {
+    "redirect to the Add Other Individual page when we get an IndexOutOfBoundsException" in {
       val index = 0
 
       when(mockConnector.getOtherIndividuals(any())(any(), any()))
         .thenReturn(Future.failed(new IndexOutOfBoundsException("")))
 
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(bind[TrustConnector].toInstance(mockConnector))
-          .build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(bind[TrustConnector].toInstance(mockConnector))
+        .build()
 
       val request = FakeRequest(GET, routes.RemoveOtherIndividualController.onPageLoad(index).url)
 
       val result = route(application, request).value
 
-      val view = application.injector.instanceOf[OutOfBoundsPageNotFoundView]
+      status(result) mustEqual SEE_OTHER
 
-      status(result) mustEqual NOT_FOUND
-
-      contentAsString(result) mustEqual
-        view()(request, messages).toString
-
-      application.stop()
-    }
-
-    "return Not Found and the out of bounds page when getOtherIndividual throws IndexOutOfBoundsException on a POST" in {
-      val index = 0
-
-      when(mockConnector.getOtherIndividuals(any())(any(), any()))
-        .thenReturn(Future.failed(new IndexOutOfBoundsException("")))
-
-      val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(bind[TrustConnector].toInstance(mockConnector))
-          .build()
-
-      val request = FakeRequest(POST, routes.RemoveOtherIndividualController.onSubmit(index).url)
-        .withFormUrlEncodedBody(("value", "true"))
-
-      val result = route(application, request).value
-
-      val view = application.injector.instanceOf[OutOfBoundsPageNotFoundView]
-
-      status(result) mustEqual NOT_FOUND
-
-      contentAsString(result) mustEqual
-        view()(request, messages).toString
+      redirectLocation(result).value mustEqual controllers.routes.AddAnOtherIndividualController.onPageLoad().url
 
       application.stop()
     }
