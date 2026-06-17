@@ -141,8 +141,6 @@ trait ViewBehaviours extends ViewSpecBase {
       }
     }
 
-
-
   def normalPageTitleWithSectionSubheading(
     view: HtmlFormat.Appendable,
     messageKeyPrefix: String,
