@@ -32,7 +32,7 @@ class FrontendAppConfigSpec extends SpecBase {
 
           config.helplineUrl(
             messages
-          ) mustBe "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/trusts?useServiceNavigation"
+          ) mustBe "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/trusts"
         }
       }
 
@@ -42,7 +42,7 @@ class FrontendAppConfigSpec extends SpecBase {
 
           config.helplineUrl(
             messages
-          ) mustBe "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/welsh-language-helplines?useServiceNavigation"
+          ) mustBe "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/welsh-language-helplines"
         }
       }
     }

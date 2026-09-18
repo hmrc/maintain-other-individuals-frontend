@@ -78,8 +78,7 @@ class FrontendAppConfig @Inject() (
       case _     => "urls.trustsHelpline"
     }
 
-    val helplineUrl: String = configuration.get[String](path)
-    s"$helplineUrl?useServiceNavigation"
+    configuration.get[String](path)
   }
 
   val cachettlplaybackInSeconds: Long = configuration.get[Long]("mongodb.playback.ttlSeconds")
