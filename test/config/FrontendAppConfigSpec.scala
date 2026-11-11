@@ -48,10 +48,13 @@ class FrontendAppConfigSpec extends SpecBase {
     }
 
     "return login, continue, logout URLs and logoutAudit" in {
-      config.loginUrl         mustBe "http://localhost:9949/auth-login-stub/gg-sign-in"
-      config.loginContinueUrl mustBe "http://localhost:9781/trusts-registration"
-      config.logoutUrl        mustBe "http://localhost:9514/feedback/trusts?useServiceNavigation"
-      config.logoutAudit      mustBe false
+      config.loginUrl                mustBe "http://localhost:9949/auth-login-stub/gg-sign-in"
+      config.loginContinueUrl        mustBe "http://localhost:9781/trusts-registration"
+      config.logoutUrl               mustBe "/gg/sign-out"
+      config.timeOutUrl              mustBe "http://localhost:9799/maintain-a-trust/other-individuals/this-service-has-been-reset"
+      config.logoutWithBasGatewayUrl mustBe "http://localhost:9553/gg/sign-out"
+      config.feedbackFrontendUrl     mustBe "http://localhost:9514/feedback/trusts?useServiceNavigation"
+      config.logoutAudit             mustBe false
     }
   }
 
