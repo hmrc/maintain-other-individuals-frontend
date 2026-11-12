@@ -25,7 +25,13 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import org.mockito.ArgumentCaptor
 
+import java.net.URLEncoder
+
 class LogoutControllerSpec extends SpecBase {
+
+  val continueUrl: String = URLEncoder.encode(frontendAppConfig.feedbackFrontendUrl, "UTF-8")
+
+  val expectedUrl: String = s"${frontendAppConfig.logoutWithBasGatewayUrl}?continue=$continueUrl"
 
   "logout should redirect to feedback and audit" in {
 
@@ -41,7 +47,7 @@ class LogoutControllerSpec extends SpecBase {
 
     status(result) mustEqual SEE_OTHER
 
-    redirectLocation(result).value mustBe frontendAppConfig.logoutUrl
+    redirectLocation(result).value mustBe expectedUrl
 
     verify(mockAuditConnector, never)
       .sendExplicitAudit(eqTo("trusts"), any[Map[String, String]])(any(), any())
@@ -62,7 +68,7 @@ class LogoutControllerSpec extends SpecBase {
     val result  = route(application, request).value
 
     status(result) mustEqual SEE_OTHER
-    redirectLocation(result).value mustBe frontendAppConfig.logoutUrl
+    redirectLocation(result).value mustBe expectedUrl
 
     val captor: ArgumentCaptor[Map[String, String]] =
       ArgumentCaptor.forClass(classOf[Map[String, String]])
